@@ -369,6 +369,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
         <button type="button" id="mEdit" aria-pressed="false">편집본 재생</button>
       </div>
       <button class="btn" type="button" id="btnIntro" aria-pressed="false">인트로 전체 삽입</button>
+      <button class="btn pri" type="button" id="btnQuickSave" hidden>+ 새 버전으로 저장</button>
       <span class="tmr" id="tmr">00:00.0 / 52:29</span>
     </div>
     <div class="sk" id="sk">
@@ -659,12 +660,27 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
   }
   function snapshotRows(){ return rows.map(function(r){return Object.assign({},r);}); }
+  function isDirty(){
+    if(!rows.length) return false;
+    var ver=activeVerId==null ? null : versions.filter(function(v){return v.id===activeVerId;})[0];
+    if(!ver) return true;
+    return JSON.stringify(ver.rows)!==JSON.stringify(rows);
+  }
+  function syncQuickSave(){
+    document.getElementById('btnQuickSave').hidden = !isDirty();
+  }
   function saveVersion(label, badge){
     var id=++verSeq;
     versions.push({id:id, label:label, badge:badge, rows:snapshotRows(), ts:new Date()});
     activeVerId=id;
-    renderVersions();
+    renderVersions(); syncQuickSave();
     return id;
+  }
+  function manualSave(){
+    if(!rows.length){ alert('저장할 편집 내용이 없습니다. 먼저 자막에서 구간을 추가하거나 AI 편집안을 생성하세요.'); return; }
+    var label=prompt('이 편집안의 이름을 입력하세요', '수동 편집 '+(versions.filter(function(v){return v.badge==='manual';}).length+1));
+    if(label===null) return;
+    saveVersion(label.trim()||'수동 편집', 'manual');
   }
   function loadVersion(id){
     var ver=versions.filter(function(v){return v.id===id;})[0];
@@ -674,11 +690,12 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     resetRangeUI();
     selTab('E'); renderEL(); renderSk(); markCues();
     mode = shows().length ? 'edit' : 'all'; setMode(); ci=-1;
+    syncQuickSave();
   }
   function deleteVersion(id){
     versions=versions.filter(function(v){return v.id!==id;});
     if(activeVerId===id) activeVerId=null;
-    renderVersions();
+    renderVersions(); syncQuickSave();
   }
   function renderVersions(){
     var pane=document.getElementById('paneV');
@@ -691,7 +708,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
         var sh=ver.rows.filter(function(r){return r.m==='Show';});
         var n=sh.length, tot=sh.reduce(function(a,r){return a+(r.e-r.s);},0);
         var isActive=ver.id===activeVerId;
-        var dirty=isActive && JSON.stringify(ver.rows)!==JSON.stringify(rows);
+        var dirty=isActive && isDirty();
         h+='<div class="verrow'+(isActive?' active':'')+'" data-id="'+ver.id+'">'+
            '<div class="verhd">'+
              '<span class="bdg '+(ver.badge==='ai'?'ai':'manual')+'">'+(ver.badge==='ai'?'AI':'수동')+'</span>'+
@@ -706,12 +723,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     }
     pane.innerHTML=h;
   }
+  document.getElementById('btnQuickSave').onclick=manualSave;
   document.getElementById('paneV').addEventListener('click',function(e){
     if(e.target.id==='btnSaveVersion'){
-      if(!rows.length){ alert('저장할 편집 내용이 없습니다. 먼저 자막에서 구간을 추가하거나 AI 편집안을 생성하세요.'); return; }
-      var label=prompt('이 편집안의 이름을 입력하세요', '수동 편집 '+(versions.filter(function(v){return v.badge==='manual';}).length+1));
-      if(label===null) return;
-      saveVersion(label.trim()||'수동 편집', 'manual');
+      manualSave();
       return;
     }
     var ld=e.target.closest('[data-load]');
@@ -804,7 +819,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   function renderEL(){
     var pane=document.getElementById('paneE'); stampIntro();
     if(!rows.length){ pane.innerHTML='<p class="empty">프롬프트를 입력하면<br>AI가 Edit List를 채웁니다.<br><br>편집 전에는 원본 전체가 재생됩니다.</p>';
-      document.getElementById('cntE').textContent=''; syncIntroBtn(); return; }
+      document.getElementById('cntE').textContent=''; syncIntroBtn(); syncQuickSave(); return; }
     var h='';
     rows.forEach(function(r,i){
       var on = r.m!=='Hide';
@@ -841,7 +856,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     var n=shows().length, tot=shows().reduce(function(a,r){return a+(r.e-r.s);},0);
     tot += rows.filter(function(r){return r.m==='Intro';}).length*INTRO;
     document.getElementById('cntE').textContent=n+'/'+f1(tot);
-    syncIntroBtn();
+    syncIntroBtn(); syncQuickSave();
   }
   document.getElementById('paneE').addEventListener('click',function(e){
     var g=e.target.closest('[data-go]');
