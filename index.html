@@ -368,7 +368,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
         <button type="button" id="mAll" aria-pressed="true">전체 재생</button>
         <button type="button" id="mEdit" aria-pressed="false">편집본 재생</button>
       </div>
-      <button class="btn" type="button" id="btnIntro">인트로 전체 삽입</button>
+      <button class="btn" type="button" id="btnIntro" aria-pressed="false">인트로 전체 삽입</button>
       <span class="tmr" id="tmr">00:00.0 / 52:29</span>
     </div>
     <div class="sk" id="sk">
@@ -793,10 +793,18 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       }
     }
   }
+  function syncIntroBtn(){
+    var btn=document.getElementById('btnIntro');
+    var has=rows.some(function(r){return r.m==='Intro'||r.m==='IntroOff';});
+    var inserted = has && !rows.some(function(r){return r.m==='IntroOff';});
+    btn.classList.toggle('pri', inserted);
+    btn.setAttribute('aria-pressed', inserted?'true':'false');
+    btn.title = !has ? '' : (inserted?'인트로가 모든 구간에 삽입되어 있습니다 (누르면 전체 해제)':'인트로가 삽입되지 않았습니다 (누르면 전체 삽입)');
+  }
   function renderEL(){
     var pane=document.getElementById('paneE'); stampIntro();
     if(!rows.length){ pane.innerHTML='<p class="empty">프롬프트를 입력하면<br>AI가 Edit List를 채웁니다.<br><br>편집 전에는 원본 전체가 재생됩니다.</p>';
-      document.getElementById('cntE').textContent=''; return; }
+      document.getElementById('cntE').textContent=''; syncIntroBtn(); return; }
     var h='';
     rows.forEach(function(r,i){
       var on = r.m!=='Hide';
@@ -833,6 +841,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     var n=shows().length, tot=shows().reduce(function(a,r){return a+(r.e-r.s);},0);
     tot += rows.filter(function(r){return r.m==='Intro';}).length*INTRO;
     document.getElementById('cntE').textContent=n+'/'+f1(tot);
+    syncIntroBtn();
   }
   document.getElementById('paneE').addEventListener('click',function(e){
     var g=e.target.closest('[data-go]');
