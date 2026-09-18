@@ -1,38 +1,53 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>LABY 에디터 AI 편집 화면설계</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Archivo:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
-  --page:#F2F0F5; --panel:#FFFFFF; --panel-2:#F7F5FA; --stage:#0E0D11;
-  --line:#DFDAE6; --line-2:#EDE9F2;
-  --ink:#1D1A22; --ink-2:#4C4557; --muted:#7A7288;
-  --show:#2563EB; --show-soft:#E3ECFD;
-  --hide:#B4AEC0; --hide-soft:#EFECF3;
-  --intro:#7A2E7A; --intro-soft:#F4E9F4;
-  --bar:#E8833F; --ai:#7A2E7A; --ok:#15706B; --warn:#C2552F; --ppt-soft:#E1F1EF;
+  /* Neutral — design.md Core + [확장] */
+  --page:#F7F8F9; --panel:#FFFFFF; --panel-2:#FAFBFC; --stage:#0B0C0F;
+  --line:#DCDFE4; --line-2:#EDEFF2;
+  --ink:#172B4D; --ink-2:#44546F; --muted:#6B778C;
+  /* 상태 색 — design.md Brand/Status/Timeline Amber */
+  --show:#1868DB; --show-soft:#E9F2FE;
+  --hide:#C1C7D0; --hide-soft:#F4F5F7;
+  --intro:#1D7F8C; --intro-soft:#E6F5F4;
+  --bar:#B65C1F; --bar-soft:#FBEEE3;
+  --ai:#6E5DC6; --ai-soft:#F3F1FC;
+  --ok:#22A06B; --ok-soft:#E3FCEF;
+  --warn:#B38600;
+  --err:#CA3521;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --ui:"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --disp:"Archivo","Noto Sans KR",sans-serif;
+  --disp:var(--ui); /* 헤딩도 Noto Sans KR 700로 통일 — 별도 디스플레이 서체 사용 안 함 */
+  --sp-050:4px; --sp-100:8px; --sp-150:12px; --sp-200:16px; --sp-300:24px; --sp-400:32px;
   --sh:0 1px 2px rgba(29,26,34,.06),0 10px 30px -18px rgba(29,26,34,.4);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --page:#141118; --panel:#1E1A25; --panel-2:#262030; --stage:#07060A;
+  --page:#141118; --panel:#1E1A25; --panel-2:#262030;
   --line:#372F42; --line-2:#2B2534;
   --ink:#EDE8F2; --ink-2:#C2BACF; --muted:#948BA3;
   --show:#6699FF; --show-soft:#1C2740;
   --hide:#6A6379; --hide-soft:#27222F;
-  --intro:#CE8ACE; --intro-soft:#2E2034;
-  --bar:#F0965A; --ai:#CE8ACE; --ok:#5CC0B7; --warn:#E8906B; --ppt-soft:#16302D;
+  --intro:#6CC3D3; --intro-soft:#16302D;
+  --bar:#F0965A; --bar-soft:#3A2417;
+  --ai:#CE8ACE; --ai-soft:#2E2034;
+  --ok:#4BCE97; --ok-soft:#164B35;
+  --warn:#E2B203;
+  --err:#F87462;
   --sh:0 1px 2px rgba(0,0,0,.5),0 10px 30px -18px rgba(0,0,0,.9);
 }}
 :root[data-theme="dark"]{
-  --page:#141118; --panel:#1E1A25; --panel-2:#262030; --stage:#07060A;
+  --page:#141118; --panel:#1E1A25; --panel-2:#262030;
   --line:#372F42; --line-2:#2B2534;
   --ink:#EDE8F2; --ink-2:#C2BACF; --muted:#948BA3;
   --show:#6699FF; --show-soft:#1C2740;
   --hide:#6A6379; --hide-soft:#27222F;
-  --intro:#CE8ACE; --intro-soft:#2E2034;
-  --bar:#F0965A; --ai:#CE8ACE; --ok:#5CC0B7; --warn:#E8906B; --ppt-soft:#16302D;
+  --intro:#6CC3D3; --intro-soft:#16302D;
+  --bar:#F0965A; --bar-soft:#3A2417;
+  --ai:#CE8ACE; --ai-soft:#2E2034;
+  --ok:#4BCE97; --ok-soft:#164B35;
+  --warn:#E2B203;
+  --err:#F87462;
   --sh:0 1px 2px rgba(0,0,0,.5),0 10px 30px -18px rgba(0,0,0,.9);
 }
 *{box-sizing:border-box}
@@ -62,14 +77,14 @@ p{margin:0}
 .badge{font-size:11px;font-weight:500;padding:4px 9px;border-radius:999px;display:inline-flex;
   align-items:center;gap:6px;white-space:nowrap}
 .badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
-.badge.ok{background:var(--intro-soft);color:var(--ok)}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
 .badge.run{background:var(--hide-soft);color:var(--muted)}
 .badge.none{background:var(--hide-soft);color:var(--warn)}
-.btn{font:500 12px/1 var(--ui);padding:7px 13px;border-radius:5px;cursor:pointer;border:1px solid var(--line);
-  background:var(--panel);color:var(--ink-2)}
+.btn{font:500 12px/1 var(--ui);padding:var(--sp-100) var(--sp-150);border-radius:6px;cursor:pointer;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink-2)}
 .btn:hover{border-color:var(--ai);color:var(--ai)}
-.btn.pri{background:var(--ink);border-color:var(--ink);color:var(--page)}
-.btn.pri:hover{opacity:.87;color:var(--page)}
+.btn.pri{background:var(--show);border-color:var(--show);color:#fff}
+.btn.pri:hover{opacity:.87;color:#fff}
 
 /* AI prompt bar */
 .aibar{display:flex;gap:10px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);
@@ -94,7 +109,7 @@ p{margin:0}
 .stage{background:var(--stage);position:relative;display:flex;align-items:center;justify-content:center;
   aspect-ratio:1084/812;max-height:460px}
 .stage video{width:100%;height:100%;object-fit:contain;display:block;background:var(--stage)}
-.ovl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(122,46,122,.93);
+.ovl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(29,127,140,.93);
   color:#fff;text-align:center;padding:16px}
 .ovl b{display:block;font-family:var(--disp);font-size:17px;font-weight:700}
 .ovl small{display:block;font-size:11.5px;opacity:.85;margin-top:5px;font-family:var(--mono)}
@@ -124,9 +139,9 @@ p{margin:0}
 .bdg.off{background:transparent;border:1px solid var(--hide);color:var(--hide)}
 
 /* script */
-.slidehd{position:sticky;top:0;background:var(--teal-hd,var(--intro-soft));color:var(--ok);z-index:2;
+.slidehd{position:sticky;top:0;background:var(--intro-soft);color:var(--intro);z-index:2;
   padding:7px 12px;font-size:11.5px;font-weight:700;display:flex;gap:8px;align-items:flex-start;
-  border-bottom:1px solid var(--line-2);cursor:pointer;background:var(--ppt-soft)}
+  border-bottom:1px solid var(--line-2);cursor:pointer}
 .slidehd .t{font-family:var(--mono);font-size:10.5px;opacity:.85;flex:none;width:42px;
   padding-top:2px;font-weight:400}
 .slidehd .x{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-top:1px}
@@ -141,7 +156,7 @@ p{margin:0}
 .cue.cur .t{color:var(--show);font-weight:500}
 .cue.inedit{box-shadow:inset 3px 0 0 var(--show)}
 .cue.rngsel{background:var(--hide-soft);box-shadow:inset 3px 0 0 var(--bar)}
-.cue.rngsel.rngedge{background:var(--ppt-soft)}
+.cue.rngsel.rngedge{background:var(--bar-soft)}
 .cue.rngsel .t{color:var(--bar);font-weight:500}
 
 /* 구간 추가 바 */
@@ -228,7 +243,7 @@ tr:last-child td{border-bottom:none}
 td.k2{font-weight:700;white-space:nowrap;color:var(--ink)}
 td.n{font-family:var(--mono);white-space:nowrap}
 code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1px 5px;border-radius:3px}
-.note{background:var(--intro-soft);border-left:4px solid var(--ai);border-radius:0 8px 8px 0;padding:13px 15px}
+.note{background:var(--ai-soft);border-left:4px solid var(--ai);border-radius:0 8px 8px 0;padding:13px 15px}
 .note h3{font-size:13px;font-weight:700;color:var(--ai)}
 .note p{font-size:12.5px;color:var(--ink-2);margin-top:5px}
 .foot{font-size:11px;color:var(--muted);text-align:center;border-top:1px solid var(--line);padding-top:14px}
@@ -253,8 +268,8 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
 .steps .dot{width:14px;height:14px;border-radius:50%;flex:none;display:grid;place-items:center;
   font-size:9px;border:1.5px solid var(--line);color:#fff}
 .steps li.done .dot{background:var(--ok);border-color:var(--ok)}
-.steps li.active .dot{border-color:var(--ai);box-shadow:0 0 0 0 rgba(122,46,122,.35);animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(122,46,122,.35)}50%{box-shadow:0 0 0 5px rgba(122,46,122,0)}}
+.steps li.active .dot{border-color:var(--ai);box-shadow:0 0 0 0 rgba(110,93,198,.35);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(110,93,198,.35)}50%{box-shadow:0 0 0 5px rgba(110,93,198,0)}}
 .modalcard .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 :focus-visible{outline:2px solid var(--ai);outline-offset:2px}
