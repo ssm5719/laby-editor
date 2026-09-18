@@ -523,6 +523,16 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       }
     }
   }
+  /* Show/Hide로 나뉜 인접 구간이 같은 상태가 되면 하나로 합쳐서
+     add/remove를 반복해도 목록이 계속 토막나지 않게 한다. */
+  function mergeAdjacent(){
+    for(var i=rows.length-2;i>=0;i--){
+      var a=rows[i], b=rows[i+1];
+      if((a.m==='Show'||a.m==='Hide') && a.m===b.m && Math.abs(a.e-b.s)<0.05){
+        a.e=b.e; rows.splice(i+1,1);
+      }
+    }
+  }
   function addRange(t0,t1){
     t0=Math.max(0,t0); t1=Math.min(TOT,t1);
     if(t1<=t0) return;
@@ -534,6 +544,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
         if(r.m!=='Intro' && r.m!=='IntroOff' && r.s>=t0-0.05 && r.e<=t1+0.05) r.m='Show';
       });
     }
+    mergeAdjacent();
     renderEL(); renderSk(); markCues(); selTab('E');
     if(shows().length){ mode='edit'; setMode(); }
   }
@@ -544,6 +555,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     rows.forEach(function(r){
       if(r.m!=='Intro' && r.m!=='IntroOff' && r.s>=t0-0.05 && r.e<=t1+0.05) r.m='Hide';
     });
+    mergeAdjacent();
     renderEL(); renderSk(); markCues(); selTab('E');
     if(!shows().length){ mode='all'; setMode(); }
   }
@@ -748,6 +760,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     else if(r.m==='Hide') r.m='Show';
     else if(r.m==='Intro') r.m='IntroOff';
     else if(r.m==='IntroOff') r.m='Intro';
+    mergeAdjacent();
     renderEL(); renderSk(); markCues();
   });
   document.getElementById('btnIntro').onclick=function(){
