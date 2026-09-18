@@ -441,6 +441,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
 (function(){
   var D=window.D, TOT=D.dur, INTRO=D.intro;
   var v=document.getElementById('v');
+  v.addEventListener('error',function(){
+    var e=v.error;
+    console.warn('[LABY] video error:', e && ('code '+e.code+' — '+e.message));
+  });
   var rows=[], curPlan=null, mode='all', ci=-1, seeking=false, introUntil=0, introIdx=-1;
   var capState=2; /* 0 none 1 running 2 done */
 
@@ -472,7 +476,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   paneS.addEventListener('mousedown',function(e){ if(e.shiftKey) e.preventDefault(); });
   paneS.addEventListener('click',function(e){
     var h=e.target.closest('.slidehd');
-    if(h){ mode='all'; setMode(); killIntro(); v.currentTime=+h.dataset.t; setPh(+h.dataset.t); v.play().catch(function(){}); return; }
+    if(h){ mode='all'; setMode(); killIntro(); v.currentTime=+h.dataset.t; setPh(+h.dataset.t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); }); return; }
     var t=e.target.closest('.cue'); if(!t) return;
     var i=+t.dataset.i, c=D.cues[i];
     if(e.shiftKey && rangeStart>=0){
@@ -481,7 +485,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     }
     rangeStart=i; clearRangeSel(); t.classList.add('rngsel','rngedge');
     hideAddBar();
-    mode='all'; setMode(); killIntro(); v.currentTime=c.t; setPh(c.t); v.play().catch(function(){});
+    mode='all'; setMode(); killIntro(); v.currentTime=c.t; setPh(c.t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
   });
 
   /* ---------- 구간 추가(자막 범위 선택) ---------- */
@@ -746,10 +750,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       if(gr.m==='Show'){
         var k=shows().indexOf(gr);
         if(mode==='edit') playFrom(k, true);   /* 직접 클릭은 인트로 건너뜀 */
-        else { killIntro(); v.currentTime=gr.s; setPh(gr.s); v.play().catch(function(){});
+        else { killIntro(); v.currentTime=gr.s; setPh(gr.s); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
                document.getElementById('btnPlay').textContent='❚❚'; }
       }else if(mode!=='edit'){
-        killIntro(); v.currentTime=gr.s; setPh(gr.s); v.play().catch(function(){});
+        killIntro(); v.currentTime=gr.s; setPh(gr.s); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
         document.getElementById('btnPlay').textContent='❚❚';
       }
       return;
@@ -854,10 +858,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       var idx=-1;
       for(var i=0;i<sh.length;i++){ if(t>=sh[i].s && t<sh[i].e){ idx=i; break; } }
       if(idx<0) return;           /* OFF 구간은 클릭 무시 */
-      killIntro(); ci=idx; seeking=true; v.currentTime=t; setPh(t); v.play().catch(function(){});
+      killIntro(); ci=idx; seeking=true; v.currentTime=t; setPh(t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
       document.getElementById('btnPlay').textContent='❚❚'; markRow(); return;
     }
-    killIntro(); v.currentTime=t; setPh(t); v.play().catch(function(){});
+    killIntro(); v.currentTime=t; setPh(t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
     document.getElementById('btnPlay').textContent='❚❚';
   };
   skEl.onmousemove=function(e){
@@ -903,7 +907,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     else { killIntro(); jump(sh[k].s); }
     markRow();
   }
-  function jump(t){ seeking=true; v.currentTime=t; setPh(t); v.play().catch(function(){});
+  function jump(t){ seeking=true; v.currentTime=t; setPh(t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
     document.getElementById('btnPlay').textContent='❚❚'; }
   function showIntro(done){
     v.pause(); var my=++introTok;
@@ -928,7 +932,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   document.getElementById('btnPlay').onclick=function(){
     if(!v.paused){ v.pause(); this.textContent='▶'; return; }
     if(mode==='edit'&&ci<0) playFrom(0);
-    else { v.play().catch(function(){}); this.textContent='❚❚'; }
+    else { v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); }); this.textContent='❚❚'; }
   };
   document.getElementById('btnStop').onclick=function(){
     v.pause(); v.currentTime=0; setPh(0); ci=-1; killIntro();
