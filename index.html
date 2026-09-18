@@ -472,7 +472,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   paneS.addEventListener('mousedown',function(e){ if(e.shiftKey) e.preventDefault(); });
   paneS.addEventListener('click',function(e){
     var h=e.target.closest('.slidehd');
-    if(h){ mode='all'; setMode(); killIntro(); v.currentTime=+h.dataset.t; v.play().catch(function(){}); return; }
+    if(h){ mode='all'; setMode(); killIntro(); v.currentTime=+h.dataset.t; setPh(+h.dataset.t); v.play().catch(function(){}); return; }
     var t=e.target.closest('.cue'); if(!t) return;
     var i=+t.dataset.i, c=D.cues[i];
     if(e.shiftKey && rangeStart>=0){
@@ -481,7 +481,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     }
     rangeStart=i; clearRangeSel(); t.classList.add('rngsel','rngedge');
     hideAddBar();
-    mode='all'; setMode(); killIntro(); v.currentTime=c.t; v.play().catch(function(){});
+    mode='all'; setMode(); killIntro(); v.currentTime=c.t; setPh(c.t); v.play().catch(function(){});
   });
 
   /* ---------- 구간 추가(자막 범위 선택) ---------- */
@@ -734,10 +734,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       if(gr.m==='Show'){
         var k=shows().indexOf(gr);
         if(mode==='edit') playFrom(k, true);   /* 직접 클릭은 인트로 건너뜀 */
-        else { killIntro(); v.currentTime=gr.s; v.play().catch(function(){});
+        else { killIntro(); v.currentTime=gr.s; setPh(gr.s); v.play().catch(function(){});
                document.getElementById('btnPlay').textContent='❚❚'; }
       }else if(mode!=='edit'){
-        killIntro(); v.currentTime=gr.s; v.play().catch(function(){});
+        killIntro(); v.currentTime=gr.s; setPh(gr.s); v.play().catch(function(){});
         document.getElementById('btnPlay').textContent='❚❚';
       }
       return;
@@ -841,10 +841,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       var idx=-1;
       for(var i=0;i<sh.length;i++){ if(t>=sh[i].s && t<sh[i].e){ idx=i; break; } }
       if(idx<0) return;           /* OFF 구간은 클릭 무시 */
-      killIntro(); ci=idx; seeking=true; v.currentTime=t; v.play().catch(function(){});
+      killIntro(); ci=idx; seeking=true; v.currentTime=t; setPh(t); v.play().catch(function(){});
       document.getElementById('btnPlay').textContent='❚❚'; markRow(); return;
     }
-    killIntro(); v.currentTime=t; v.play().catch(function(){});
+    killIntro(); v.currentTime=t; setPh(t); v.play().catch(function(){});
     document.getElementById('btnPlay').textContent='❚❚';
   };
   skEl.onmousemove=function(e){
@@ -890,7 +890,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     else { killIntro(); jump(sh[k].s); }
     markRow();
   }
-  function jump(t){ seeking=true; v.currentTime=t; v.play().catch(function(){});
+  function jump(t){ seeking=true; v.currentTime=t; setPh(t); v.play().catch(function(){});
     document.getElementById('btnPlay').textContent='❚❚'; }
   function showIntro(done){
     v.pause(); var my=++introTok;
@@ -918,7 +918,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     else { v.play().catch(function(){}); this.textContent='❚❚'; }
   };
   document.getElementById('btnStop').onclick=function(){
-    v.pause(); v.currentTime=0; ci=-1; killIntro();
+    v.pause(); v.currentTime=0; setPh(0); ci=-1; killIntro();
     document.getElementById('btnPlay').textContent='▶';
     document.getElementById('tagSeg').hidden=true; markRow();
   };
@@ -932,11 +932,16 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   };
   v.addEventListener('seeked',function(){ seeking=false; });
 
+  function setPh(t){
+    var p=(Math.max(0,Math.min(TOT,t))/TOT*100)+'%';
+    document.getElementById('skPh').style.left=p;
+    document.getElementById('skProg').style.width=p;
+  }
+
   var lastCue=-1;
   v.addEventListener('timeupdate',function(){
     var t=v.currentTime;
-    document.getElementById('skPh').style.left=(t/TOT*100)+'%';
-    document.getElementById('skProg').style.width=(t/TOT*100)+'%';
+    setPh(t);
     /* 현재 자막 */
     var lo=0,hi=D.cues.length-1,k=-1;
     while(lo<=hi){var m=(lo+hi)>>1; if(D.cues[m].t<=t){k=m;lo=m+1;}else hi=m-1;}
