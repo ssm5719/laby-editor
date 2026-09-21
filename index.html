@@ -894,7 +894,6 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     else if(r.m==='Hide') r.m='Show';
     else if(r.m==='Intro') r.m='IntroOff';
     else if(r.m==='IntroOff') r.m='Intro';
-    mergeAdjacent();
     renderEL(); renderSk(); markCues();
   });
   document.getElementById('btnIntro').onclick=function(){
@@ -985,7 +984,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       var r=rows[skToggleRi];
       if(r && (r.m==='Hide'||r.m==='Show')){
         r.m = r.m==='Hide' ? 'Show' : 'Hide';
-        mergeAdjacent(); renderEL(); renderSk(); markCues();
+        renderEL(); renderSk(); markCues();
       }
     }
     skToggleRi=null;
