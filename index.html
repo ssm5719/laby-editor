@@ -232,20 +232,28 @@ p{margin:0}
 #btnIntro,#btnQuickSave{height:29.5px;padding-top:0;padding-bottom:0;display:inline-flex;align-items:center}
 .tmr{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin-left:auto}
 
-.sk{position:relative;height:30px;background:var(--hide-soft);border-radius:4px;cursor:pointer;overflow:hidden}
-.sk .tick{position:absolute;top:0;bottom:0;width:1px;background:var(--ok);opacity:.4}
+.sk{position:relative;height:30px;background:var(--hide-soft);border-radius:4px;overflow:hidden}
 .sk .blk{position:absolute;top:4px;bottom:4px;background:var(--show);border-radius:2px}
 .sk .blk .rh{position:absolute;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:2}
 .sk .blk .rh.l{left:-4px}
 .sk .blk .rh.r{right:-4px}
 .sk .blk .rh:hover{background:rgba(255,255,255,.45);border-radius:2px}
+.sk .offbk{position:absolute;top:4px;bottom:4px;background:var(--hide);border-radius:2px;
+  cursor:pointer;transition:background .12s}
+.sk .offbk:hover{background:var(--muted)}
 .sk .ib{position:absolute;top:4px;bottom:4px;width:3px;background:var(--intro);border-radius:1px}
 .sk .prog{position:absolute;top:0;bottom:0;left:0;background:var(--bar);opacity:.18}
 .sk .ph{position:absolute;top:-1px;bottom:-1px;width:2px;background:var(--bar)}
 .sk .selrng{position:absolute;top:2px;bottom:2px;background:rgba(232,131,63,.32);
   border:1px solid var(--bar);border-radius:2px;pointer-events:none}
-.sklab{display:flex;justify-content:space-between;margin-top:5px;font-family:var(--mono);
+.sklab{display:flex;justify-content:space-between;margin-bottom:5px;font-family:var(--mono);
   font-size:10px;color:var(--muted)}
+.skr{position:relative;height:15px;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:4px;cursor:pointer;margin-bottom:4px;overflow:visible}
+.skrhead{position:absolute;top:-1px;pointer-events:none;transform:translateX(-50%)}
+.skrhead .tri{display:block;width:0;height:0;margin:0 auto;
+  border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--bar)}
+.skrhead .ln{display:block;width:2px;height:9px;margin:0 auto;background:var(--bar)}
 .lgnd{display:flex;gap:13px;flex-wrap:wrap;margin-top:8px;font-size:10.5px;color:var(--muted)}
 .lgnd i{display:inline-block;width:11px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 
@@ -373,16 +381,18 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       <button class="btn pri" type="button" id="btnQuickSave" hidden>+ 새 버전으로 저장</button>
       <span class="tmr" id="tmr">00:00.0 / 52:29</span>
     </div>
+    <div class="sklab"><span>00:00</span><span>13:07</span><span>26:14</span><span>39:21</span><span>52:29</span></div>
+    <div class="skr" id="skr" title="드래그하거나 클릭해서 재생 위치를 조정합니다">
+      <div class="skrhead" id="skrHead" style="left:0"><i class="tri"></i><i class="ln"></i></div>
+    </div>
     <div class="sk" id="sk">
-      <div id="skTicks"></div><div class="prog" id="skProg"></div>
+      <div class="prog" id="skProg"></div>
       <div id="skBlks"></div><div class="selrng" id="skSel" hidden></div><div class="ph" id="skPh" style="left:0"></div>
     </div>
-    <div class="sklab"><span>00:00</span><span>13:07</span><span>26:14</span><span>39:21</span><span>52:29</span></div>
     <div class="lgnd">
       <span><i style="background:var(--show)"></i>ON — 결과물에 포함</span>
-      <span><i style="background:var(--hide)"></i>OFF — 제외</span>
+      <span><i style="background:var(--hide)"></i>OFF — 제외 (클릭하면 ON으로 전환)</span>
       <span><i style="background:var(--intro)"></i><span class="bdg intro">intro</span> 전환 클립</span>
-      <span><i style="background:var(--line);border:1px solid var(--muted)"></i><span class="bdg ppt">ppt</span> 슬라이드 전환</span>
       <span><i style="background:var(--bar)"></i>재생 위치</span>
     </div>
   </div>
@@ -405,7 +415,8 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
         <tr><td class="k2">Edit List</td><td>모든 행이 <strong>시간 · 길이 · ON/OFF</strong>의 같은 형식을 가집니다. 시간은 원본 영상 기준 하나만 씁니다. ON/OFF 버튼으로 결과물에 넣을지만 정하며, 이것이 기존 에디터의 Show/Hide와 같은 값입니다. <strong>시간을 클릭하면 그 구간의 시작 지점부터 재생</strong>합니다 — 편집본 재생 중이면 그 구간부터 편집본이 이어집니다.</td></tr>
         <tr><td class="k2">ON / OFF</td><td><strong>ON</strong>은 결과물에 포함(기존 Show), <strong>OFF</strong>는 제외(기존 Hide)입니다. 행을 지우는 대신 OFF로 두면 되돌리기가 쉽고, 삭제 버튼이 없어 실수로 구간을 잃지 않습니다. <strong>OFF로 바뀌어도 행과 내용은 그대로 보이고 색만 흐려집니다</strong> — 접히거나 사라지지 않으므로 목록의 줄 위치가 흔들리지 않습니다. 인트로 행도 같은 ON/OFF로 켜고 끕니다.</td></tr>
         <tr><td class="k2">행 뱃지</td><td><span class="bdg intro">intro</span> 구간 사이에 삽입되는 전환 클립, <span class="bdg ppt">ppt</span> 슬라이드 전환 지점. 파일명은 적지 않고 뱃지로만 구분하며, 어떤 클립인지는 마우스 오버 툴팁과 패널 하단 범례로 확인합니다. 원본 구간 행에는 뱃지가 없어 세 종류가 한눈에 갈립니다. <strong>인트로 행에는 시간을 적지 않습니다</strong> — 바로 아래 구간 앞에 붙는다는 것이 위치로 이미 드러나기 때문입니다.</td></tr>
-        <tr><td class="k2">시크바</td><td>ON 구간을 파란색으로 표시합니다(기존 Show 규칙 유지). 얇은 세로선은 슬라이드 전환 지점, 보라색 막대는 인트로 삽입 지점입니다. <strong>클릭하면 그 위치로 이동해 재생</strong>하며, 마우스를 올리면 해당 시각이 툴팁으로 표시됩니다. 편집본 재생 중에는 <strong>OFF 구간이 클릭되지 않고</strong> 커서가 금지 표시로 바뀝니다 — 결과물에 없는 지점으로는 이동할 수 없다는 뜻입니다. 전체 재생 모드에서는 어디든 이동할 수 있습니다.</td></tr>
+        <tr><td class="k2">탐색 구역</td><td>시간 눈금 아래 놓인 얇은 막대로, 역삼각형 헤드가 현재 재생 위치를 가리킵니다. <strong>클릭하거나 드래그하면 그 위치로 이동해 재생</strong>하며, 헤드와 아래 시크바의 재생 위치 표시가 함께 움직입니다. 편집본 재생 중에는 OFF 구간으로 이동할 수 없어 커서가 금지 표시로 바뀝니다. 전체 재생 모드에서는 어디든 이동할 수 있습니다.</td></tr>
+        <tr><td class="k2">시크바</td><td>ON 구간은 파란 박스, OFF 구간은 회색 박스로 표시합니다. 보라색 막대는 인트로 삽입 지점입니다. <strong>OFF 박스를 클릭하면 그 구간 전체가 즉시 ON으로 전환</strong>되며, 드래그하면 일부 구간만 선택해 추가/제외할 수 있습니다. ON 박스는 양 끝을 드래그해 길이를 조절합니다(드래그 중 ESC로 취소). 재생 위치 이동은 위쪽 탐색 구역이 담당합니다.</td></tr>
         <tr><td class="k2">저장</td><td>확정된 Edit List를 CMS로 전달합니다. 이후 처리는 기존 편집 기능과 동일하게 ffmpeg concat으로 새 콘텐츠를 생성하고 DB에 등록합니다.</td></tr>
       </tbody>
     </table>
@@ -604,7 +615,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     if(skResizing){
       var r=rows[skResizing.ri];
       if(r){ r.s=skResizing.origS; r.e=skResizing.origE; }
-      skResizing=null; suppressSkClick=true;
+      skResizing=null;
       renderSk(); renderEL(); markCues();
       return;
     }
@@ -892,12 +903,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     renderEL(); renderSk();
   };
 
-  /* ---------- 시크바 ---------- */
-  (function(){
-    var tk=document.getElementById('skTicks');
-    D.heads.forEach(function(h){ if(h.t<1) return;
-      var d=document.createElement('div'); d.className='tick'; d.style.left=(h.t/TOT*100)+'%'; tk.appendChild(d); });
-  })();
+  /* ---------- 시크바(편집 영역) ---------- */
   function renderSk(){
     var b=document.getElementById('skBlks'); b.innerHTML='';
     rows.forEach(function(r,i){
@@ -906,6 +912,11 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
         d.title='ON 구간 · 양 끝을 드래그하면 길이를 조절할 수 있습니다 (드래그 중 ESC로 취소)';
         d.style.left=(r.s/TOT*100)+'%'; d.style.width=Math.max(.3,(r.e-r.s)/TOT*100)+'%';
         d.innerHTML='<i class="rh l"></i><i class="rh r"></i>';
+        b.appendChild(d);
+      }else if(r.m==='Hide'){
+        var d=document.createElement('div'); d.className='offbk'; d.dataset.ri=i;
+        d.title='OFF 구간 · 클릭하면 결과물에 포함됩니다 (ON으로 전환) · 드래그하면 일부만 선택할 수 있습니다';
+        d.style.left=(r.s/TOT*100)+'%'; d.style.width=Math.max(.3,(r.e-r.s)/TOT*100)+'%';
         b.appendChild(d);
       }
     });
@@ -920,9 +931,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     var r=skEl.getBoundingClientRect();
     return Math.max(0, Math.min(TOT, (e.clientX-r.left)/r.width*TOT));
   }
-  /* ---- 시크바 드래그로 구간 선택 / ON 구간 경계 리사이즈 ---- */
-  var skDragging=false, skDragMoved=false, skDragStartT=0, skDragStartX=0, suppressSkClick=false;
+  /* ---- 드래그로 구간 선택 / ON 구간 경계 리사이즈 / OFF 박스 클릭으로 즉시 ON 전환 ---- */
+  var skDragging=false, skDragMoved=false, skDragStartT=0, skDragStartX=0;
   var skResizing=null; /* {ri, side:'l'|'r'} */
+  var skToggleRi=null;
   skEl.addEventListener('mousedown',function(e){
     var rh=e.target.closest('.rh');
     if(rh){
@@ -931,6 +943,8 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       e.stopPropagation();
       return;
     }
+    var ob=e.target.closest('.offbk');
+    skToggleRi = ob ? +ob.dataset.ri : null;
     skDragging=true; skDragMoved=false;
     skDragStartT=skTime(e); skDragStartX=e.clientX;
   });
@@ -954,40 +968,58 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   });
   document.addEventListener('mouseup',function(e){
     if(skResizing){
-      skResizing=null; suppressSkClick=true;
+      skResizing=null;
       renderEL(); markCues();
       return;
     }
     if(!skDragging) return;
     skDragging=false;
     if(skDragMoved){
-      suppressSkClick=true;
       var t=skTime(e), lo=Math.min(skDragStartT,t), hi=Math.max(skDragStartT,t);
       if(hi-lo>0.3){ selTab('S'); showAddBar(lo,hi); }
       else document.getElementById('skSel').hidden=true;
+    }else if(skToggleRi!=null){
+      var r=rows[skToggleRi];
+      if(r && r.m==='Hide'){ r.m='Show'; mergeAdjacent(); renderEL(); renderSk(); markCues(); }
+    }
+    skToggleRi=null;
+  });
+  /* ---------- 탐색 구역(재생 위치 스크러빙) ---------- */
+  var skrEl=document.getElementById('skr'), skrHead=document.getElementById('skrHead');
+  var skrDragging=false;
+  function skrTime(e){
+    var r=skrEl.getBoundingClientRect();
+    return Math.max(0, Math.min(TOT, (e.clientX-r.left)/r.width*TOT));
+  }
+  function skrBlocked(t){
+    var sh=shows();
+    if(!(mode==='edit' && sh.length)) return false;
+    for(var i=0;i<sh.length;i++){ if(t>=sh[i].s && t<sh[i].e) return false; }
+    return true;
+  }
+  function skrSeek(t){
+    if(skrBlocked(t)) return false;
+    killIntro(); seeking=true; v.currentTime=t; setPh(t);
+    return true;
+  }
+  skrEl.addEventListener('mousedown',function(e){
+    skrDragging=true;
+    if(skrSeek(skrTime(e))){
+      v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
+      document.getElementById('btnPlay').textContent='❚❚';
     }
   });
-  skEl.onclick=function(e){
-    if(suppressSkClick){ suppressSkClick=false; return; }
-    var t=skTime(e), sh=shows();
-    if(mode==='edit' && sh.length){
-      var idx=-1;
-      for(var i=0;i<sh.length;i++){ if(t>=sh[i].s && t<sh[i].e){ idx=i; break; } }
-      if(idx<0) return;           /* OFF 구간은 클릭 무시 */
-      killIntro(); ci=idx; seeking=true; v.currentTime=t; setPh(t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
-      document.getElementById('btnPlay').textContent='❚❚'; markRow(); return;
-    }
-    killIntro(); v.currentTime=t; setPh(t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
-    document.getElementById('btnPlay').textContent='❚❚';
-  };
-  skEl.onmousemove=function(e){
-    var t=skTime(e), sh=shows(), inShow=false;
-    for(var i=0;i<sh.length;i++){ if(t>=sh[i].s&&t<sh[i].e){ inShow=true; break; } }
-    var blocked = (mode==='edit' && sh.length && !inShow);
-    skEl.style.cursor = blocked ? 'not-allowed' : 'pointer';
-    skEl.title = blocked ? f1(t)+'  ·  OFF 구간 — 편집본 재생 중에는 이동할 수 없습니다'
-                         : f1(t)+(sh.length&&inShow?'  ·  ON 구간':'');
-  };
+  document.addEventListener('mousemove',function(e){
+    if(!skrDragging) return;
+    skrSeek(skrTime(e));
+  });
+  document.addEventListener('mouseup',function(){ skrDragging=false; });
+  skrEl.addEventListener('mousemove',function(e){
+    var t=skrTime(e), blocked=skrBlocked(t);
+    skrEl.style.cursor = blocked ? 'not-allowed' : 'pointer';
+    skrEl.title = blocked ? f1(t)+'  ·  OFF 구간 — 편집본 재생 중에는 이동할 수 없습니다'
+                          : f1(t)+'  ·  드래그하거나 클릭해서 재생 위치를 조정합니다';
+  });
 
   function markCues(){
     var sh=shows();
@@ -1069,6 +1101,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     var p=(Math.max(0,Math.min(TOT,t))/TOT*100)+'%';
     document.getElementById('skPh').style.left=p;
     document.getElementById('skProg').style.width=p;
+    skrHead.style.left=p;
   }
 
   var lastCue=-1;
