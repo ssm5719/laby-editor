@@ -253,17 +253,17 @@ p{margin:0}
 .sk .mrg .mt.l{border-left:4px solid var(--ink-2)}
 .sk .mrg .mt.r{border-right:4px solid var(--ink-2)}
 .sk .prog{position:absolute;top:0;bottom:0;left:0;background:var(--bar);opacity:.18}
-.sk .ph{position:absolute;top:-1px;bottom:-1px;width:1px;background:var(--bar)}
 .sk .selrng{position:absolute;top:2px;bottom:2px;background:rgba(232,131,63,.32);
   border:1px solid var(--bar);border-radius:2px;pointer-events:none}
 .sklab{display:flex;justify-content:space-between;margin-bottom:5px;font-family:var(--mono);
   font-size:10px;color:var(--muted)}
-.skr{position:relative;height:15px;background:var(--panel-2);border:1px solid var(--line);
-  border-radius:4px;cursor:pointer;margin-bottom:4px;overflow:visible}
-.skrhead{position:absolute;top:-1px;pointer-events:none;transform:translateX(-50%)}
-.skrhead .tri{display:block;width:0;height:0;margin:0 auto;
+.skwrap{position:relative}
+.skr{height:15px;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:4px;cursor:pointer;margin-bottom:4px;box-sizing:border-box}
+.skhead{position:absolute;top:-1px;bottom:0;pointer-events:none;z-index:5;transform:translateX(-50%)}
+.skhead .tri{display:block;width:0;height:0;margin:0 auto;
   border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--bar)}
-.skrhead .ln{display:block;width:1px;height:9px;margin:0 auto;background:var(--bar)}
+.skhead .ln{position:absolute;top:6px;bottom:0;left:50%;width:1px;margin-left:-.5px;background:var(--bar)}
 .lgnd{display:flex;gap:13px;flex-wrap:wrap;margin-top:8px;font-size:10.5px;color:var(--muted)}
 .lgnd i{display:inline-block;width:11px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 
@@ -392,12 +392,13 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       <span class="tmr" id="tmr">00:00.0 / 52:29</span>
     </div>
     <div class="sklab"><span>00:00</span><span>13:07</span><span>26:14</span><span>39:21</span><span>52:29</span></div>
-    <div class="skr" id="skr" title="드래그하거나 클릭해서 재생 위치를 조정합니다">
-      <div class="skrhead" id="skrHead" style="left:0"><i class="tri"></i><i class="ln"></i></div>
-    </div>
-    <div class="sk" id="sk">
-      <div class="prog" id="skProg"></div>
-      <div id="skBlks"></div><div class="selrng" id="skSel" hidden></div><div class="ph" id="skPh" style="left:0"></div>
+    <div class="skwrap" id="skwrap">
+      <div class="skr" id="skr" title="드래그하거나 클릭해서 재생 위치를 조정합니다"></div>
+      <div class="sk" id="sk">
+        <div class="prog" id="skProg"></div>
+        <div id="skBlks"></div><div class="selrng" id="skSel" hidden></div>
+      </div>
+      <div class="skhead" id="skHead" style="left:0"><i class="tri"></i><i class="ln"></i></div>
     </div>
     <div class="lgnd">
       <span><i style="background:var(--show)"></i>ON — 결과물에 포함 (클릭하면 OFF로 전환)</span>
@@ -1018,7 +1019,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     skToggleRi=null;
   });
   /* ---------- 탐색 구역(재생 위치 스크러빙) ---------- */
-  var skrEl=document.getElementById('skr'), skrHead=document.getElementById('skrHead');
+  var skrEl=document.getElementById('skr'), skHead=document.getElementById('skHead');
   var skrDragging=false;
   function skrTime(e){
     var r=skrEl.getBoundingClientRect();
@@ -1132,9 +1133,8 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
 
   function setPh(t){
     var p=(Math.max(0,Math.min(TOT,t))/TOT*100)+'%';
-    document.getElementById('skPh').style.left=p;
     document.getElementById('skProg').style.width=p;
-    skrHead.style.left=p;
+    skHead.style.left=p;
   }
 
   var lastCue=-1;
