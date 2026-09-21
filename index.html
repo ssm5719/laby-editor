@@ -233,7 +233,8 @@ p{margin:0}
 .tmr{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin-left:auto}
 
 .sk{position:relative;height:30px;background:var(--hide-soft);border-radius:4px;overflow:hidden}
-.sk .blk{position:absolute;top:4px;bottom:4px;background:var(--show);border-radius:2px}
+.sk .blk{position:absolute;top:4px;bottom:4px;background:var(--show);border-radius:2px;
+  cursor:pointer;box-sizing:border-box;border:1px solid rgba(255,255,255,.28)}
 .sk .blk .rh{position:absolute;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:2}
 .sk .blk .rh.l{left:-4px}
 .sk .blk .rh.r{right:-4px}
@@ -390,7 +391,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       <div id="skBlks"></div><div class="selrng" id="skSel" hidden></div><div class="ph" id="skPh" style="left:0"></div>
     </div>
     <div class="lgnd">
-      <span><i style="background:var(--show)"></i>ON — 결과물에 포함</span>
+      <span><i style="background:var(--show)"></i>ON — 결과물에 포함 (클릭하면 OFF로 전환)</span>
       <span><i style="background:var(--hide)"></i>OFF — 제외 (클릭하면 ON으로 전환)</span>
       <span><i style="background:var(--intro)"></i><span class="bdg intro">intro</span> 전환 클립</span>
       <span><i style="background:var(--bar)"></i>재생 위치</span>
@@ -416,7 +417,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
         <tr><td class="k2">ON / OFF</td><td><strong>ON</strong>은 결과물에 포함(기존 Show), <strong>OFF</strong>는 제외(기존 Hide)입니다. 행을 지우는 대신 OFF로 두면 되돌리기가 쉽고, 삭제 버튼이 없어 실수로 구간을 잃지 않습니다. <strong>OFF로 바뀌어도 행과 내용은 그대로 보이고 색만 흐려집니다</strong> — 접히거나 사라지지 않으므로 목록의 줄 위치가 흔들리지 않습니다. 인트로 행도 같은 ON/OFF로 켜고 끕니다.</td></tr>
         <tr><td class="k2">행 뱃지</td><td><span class="bdg intro">intro</span> 구간 사이에 삽입되는 전환 클립, <span class="bdg ppt">ppt</span> 슬라이드 전환 지점. 파일명은 적지 않고 뱃지로만 구분하며, 어떤 클립인지는 마우스 오버 툴팁과 패널 하단 범례로 확인합니다. 원본 구간 행에는 뱃지가 없어 세 종류가 한눈에 갈립니다. <strong>인트로 행에는 시간을 적지 않습니다</strong> — 바로 아래 구간 앞에 붙는다는 것이 위치로 이미 드러나기 때문입니다.</td></tr>
         <tr><td class="k2">탐색 구역</td><td>시간 눈금 아래 놓인 얇은 막대로, 역삼각형 헤드가 현재 재생 위치를 가리킵니다. <strong>클릭하거나 드래그하면 그 위치로 이동해 재생</strong>하며, 헤드와 아래 시크바의 재생 위치 표시가 함께 움직입니다. 편집본 재생 중에는 OFF 구간으로 이동할 수 없어 커서가 금지 표시로 바뀝니다. 전체 재생 모드에서는 어디든 이동할 수 있습니다.</td></tr>
-        <tr><td class="k2">시크바</td><td>ON 구간은 파란 박스, OFF 구간은 회색 박스로 표시합니다. 보라색 막대는 인트로 삽입 지점입니다. <strong>OFF 박스를 클릭하면 그 구간 전체가 즉시 ON으로 전환</strong>되며, 드래그하면 일부 구간만 선택해 추가/제외할 수 있습니다. ON 박스는 양 끝을 드래그해 길이를 조절합니다(드래그 중 ESC로 취소). 재생 위치 이동은 위쪽 탐색 구역이 담당합니다.</td></tr>
+        <tr><td class="k2">시크바</td><td>ON 구간은 파란 박스, OFF 구간은 회색 박스로 표시합니다. 보라색 막대는 인트로 삽입 지점입니다. <strong>박스를 클릭하면 ON↔OFF가 즉시 전환</strong>되며, 드래그하면 일부 구간만 선택해 추가/제외할 수 있습니다. ON 박스는 양 끝을 드래그해 길이를 조절합니다(드래그 중 ESC로 취소). 서로 맞닿은 ON 박스는 옅은 테두리로 경계를 구분합니다. 재생 위치 이동은 위쪽 탐색 구역이 담당합니다.</td></tr>
         <tr><td class="k2">저장</td><td>확정된 Edit List를 CMS로 전달합니다. 이후 처리는 기존 편집 기능과 동일하게 ffmpeg concat으로 새 콘텐츠를 생성하고 DB에 등록합니다.</td></tr>
       </tbody>
     </table>
@@ -909,7 +910,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     rows.forEach(function(r,i){
       if(r.m==='Show'){
         var d=document.createElement('div'); d.className='blk'; d.dataset.ri=i;
-        d.title='ON 구간 · 양 끝을 드래그하면 길이를 조절할 수 있습니다 (드래그 중 ESC로 취소)';
+        d.title='ON 구간 · 클릭하면 제외됩니다 (OFF로 전환) · 양 끝을 드래그하면 길이를 조절할 수 있습니다 (드래그 중 ESC로 취소)';
         d.style.left=(r.s/TOT*100)+'%'; d.style.width=Math.max(.3,(r.e-r.s)/TOT*100)+'%';
         d.innerHTML='<i class="rh l"></i><i class="rh r"></i>';
         b.appendChild(d);
@@ -931,7 +932,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     var r=skEl.getBoundingClientRect();
     return Math.max(0, Math.min(TOT, (e.clientX-r.left)/r.width*TOT));
   }
-  /* ---- 드래그로 구간 선택 / ON 구간 경계 리사이즈 / OFF 박스 클릭으로 즉시 ON 전환 ---- */
+  /* ---- 드래그로 구간 선택 / ON 구간 경계 리사이즈 / 박스 클릭으로 즉시 ON↔OFF 전환 ---- */
   var skDragging=false, skDragMoved=false, skDragStartT=0, skDragStartX=0;
   var skResizing=null; /* {ri, side:'l'|'r'} */
   var skToggleRi=null;
@@ -943,8 +944,8 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       e.stopPropagation();
       return;
     }
-    var ob=e.target.closest('.offbk');
-    skToggleRi = ob ? +ob.dataset.ri : null;
+    var box=e.target.closest('.offbk,.blk');
+    skToggleRi = box ? +box.dataset.ri : null;
     skDragging=true; skDragMoved=false;
     skDragStartT=skTime(e); skDragStartX=e.clientX;
   });
@@ -980,7 +981,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       else document.getElementById('skSel').hidden=true;
     }else if(skToggleRi!=null){
       var r=rows[skToggleRi];
-      if(r && r.m==='Hide'){ r.m='Show'; mergeAdjacent(); renderEL(); renderSk(); markCues(); }
+      if(r && (r.m==='Hide'||r.m==='Show')){
+        r.m = r.m==='Hide' ? 'Show' : 'Hide';
+        mergeAdjacent(); renderEL(); renderSk(); markCues();
+      }
     }
     skToggleRi=null;
   });
