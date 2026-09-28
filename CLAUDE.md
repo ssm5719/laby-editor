@@ -1,0 +1,43 @@
+# CLAUDE.md
+
+LABY 에디터 "AI 편집 화면설계" 프로토타입. 강의자가 본인 강의 영상을 AI 편집안으로 다듬은 뒤 바로 업로드하는 흐름이 핵심이다.
+사용자는 편집 툴에 익숙하지 않은 강의자라고 가정하고, 기능은 단순하고 눈에 보이게 만든다.
+
+## 구조
+
+- 빌드 도구 없음. 순수 바닐라 JS/CSS/HTML 정적 파일.
+- `index.html` — 마크업·스타일·로직 전부 (로직은 파일 하단 IIFE 하나)
+- `data.js` — `window.D` 목데이터: `dur`(총 길이), `intro`(인트로 길이), `cues`(자막), `heads`(슬라이드), `plans`(AI 프롬프트별 편집안)
+- `design.md` — 디자인 시스템(Atlassian 기반 + [확장] 토큰). UI를 바꿀 때 먼저 참고
+- `proxy.mp4` — 데모용 강의 영상 (용량 큼, 수정하지 않음)
+- `README.md`의 기능 목록은 오래됨 — 현재 동작은 코드 기준으로 판단
+
+## 핵심 상태 모델
+
+- `rows` 배열 = Edit List. 각 항목 `{s, e, m}`, `m`은 `Show`(ON) / `Hide`(OFF) / `Intro` / `IntroOff`
+- `Intro`·`IntroOff`는 길이 없는 마커 행 (바로 다음 Show 구간 앞에 인트로 삽입)
+- `rows`를 바꾼 뒤에는 `renderEL(); renderSk(); markCues();`로 화면 갱신
+
+## 규칙
+
+- **`rows`를 바꾸는 코드를 새로 넣을 때는 변경 직전에 `recordUndo('설명')`을 호출한다.** 빠뜨리면 실행취소가 조용히 동작하지 않는다.
+  설명 문구는 토스트/툴팁에 그대로 노출되므로 강의자가 읽을 수 있는 한국어로 (예: `08:07–09:01 구간 ON → OFF`).
+- 쓰지 않게 된 기능은 삭제하지 않고 `FEATURES` 플래그로 끈다 (코드는 백업으로 유지).
+  현재 꺼진 것: `timelineDragSelect`(타임라인 드래그 구간 선택), `versionList`(편집안 목록 탭 + 새 버전으로 저장 버튼)
+- UI 문구는 강의자 대상 한국어. 색은 `:root`의 CSS 변수만 쓰고, 다크 모드 블록 두 곳(`prefers-color-scheme`, `[data-theme="dark"]`)에도 같이 반영한다.
+- 주변 코드 스타일(짧은 변수명, 한 줄 몰아쓰기, 한국어 주석)에 맞춘다.
+
+## 확인 방법
+
+```bash
+python3 -m http.server 8000   # 브라우저로 http://localhost:8000/index.html
+```
+
+- Claude Code 원격 환경에서는 Playwright + `/opt/pw-browsers/chromium`으로 확인.
+  이 환경은 H.264 영상 재생이 안 되고 웹폰트 인증서 오류가 나므로, 영상/폰트 관련 콘솔 오류는 무시해도 된다.
+- 테스트 스위트는 없음. 변경한 동작을 브라우저에서 직접 클릭해 확인하고 콘솔 에러(`pageerror`)가 없는지 본다.
+
+## 배포
+
+- `main` 브랜치가 Vercel(laby-editor.vercel.app)에 자동 배포된다.
+- 작업 흐름: 작업 브랜치에 커밋·푸시 → `main`에 `--no-ff` 머지 → `main` 푸시
