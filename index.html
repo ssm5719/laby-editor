@@ -160,6 +160,10 @@ p{margin:0}
 .cue .ctgl{margin-left:auto;padding:2px 8px;min-width:38px;opacity:0}
 .cue:hover .ctgl,.cue .ctgl:focus-visible{opacity:1}
 @media(hover:none){.cue .ctgl{opacity:1}}
+.pane.painting{cursor:ns-resize}
+.pane.painting .cue{cursor:ns-resize}
+.pane.painting .ctgl{opacity:1}
+.cue.pv{background:var(--panel-2)}
 .cue.rngsel{background:var(--hide-soft);box-shadow:inset 3px 0 0 var(--bar)}
 .cue.rngsel.rngedge{background:var(--bar-soft)}
 .cue.rngsel .t{color:var(--bar);font-weight:500}
@@ -381,7 +385,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       <div class="pane" id="paneS" role="tabpanel"></div>
       <div class="pane" id="paneE" role="tabpanel" hidden></div>
       <div class="pane" id="paneV" role="tabpanel" hidden></div>
-      <div class="hint-range" id="hintRange">자막에 마우스를 올리면 나오는 <b>ON/OFF</b>로 문장을 빼거나 넣을 수 있습니다. 여러 줄은 첫 줄 클릭 후 끝 줄을 <b>Shift+클릭</b>하세요.</div>
+      <div class="hint-range" id="hintRange">자막에 마우스를 올리면 나오는 <b>ON/OFF</b>로 문장을 빼거나 넣을 수 있습니다. 버튼을 <b>누른 채 위아래로 끌면</b> 여러 줄을 한 번에 바꿉니다.</div>
       <div class="addbar" id="addBar" hidden>
         <span class="lbl" id="addBarLabel"></span>
         <button class="btn" type="button" id="addBarCancel">취소</button>
@@ -438,7 +442,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
         <tr><td class="k2">프롬프트 예시 칩</td><td>자주 쓰는 프롬프트를 칩으로 제공. 자막이 없으면 자막 필요 칩에 자물쇠가 표시되고 비활성화됩니다.</td></tr>
         <tr><td class="k2">플레이어</td><td>편집 전에는 원본 전체를 재생합니다. 편집안 생성 후 &lsquo;편집본 재생&rsquo;으로 전환하면 Show 구간만 이어서 재생합니다.</td></tr>
         <tr><td class="k2">자막 스크립트 / Edit List 탭</td><td>기본은 자막 스크립트. 편집안이 생성되면 Edit List 탭으로 자동 전환됩니다.</td></tr>
-        <tr><td class="k2">자막 행</td><td>시간과 발화 텍스트. 클릭하면 시크바가 해당 시간으로 이동합니다. 재생 중에는 현재 자막이 강조되고 자동 스크롤됩니다. 편집안에 포함된 구간의 자막은 왼쪽에 파란 띠가 붙습니다. <strong>마우스를 올리면 나오는 ON/OFF 버튼으로 그 문장을 결과물에서 빼거나 넣습니다</strong> — 뺀 문장은 취소선으로 표시되어 자막만 읽어도 결과물의 대본이 보입니다. 연속된 문장을 빼면 사이의 짧은 공백도 함께 빠집니다.</td></tr>
+        <tr><td class="k2">자막 행</td><td>시간과 발화 텍스트. 클릭하면 시크바가 해당 시간으로 이동합니다. 재생 중에는 현재 자막이 강조되고 자동 스크롤됩니다. 편집안에 포함된 구간의 자막은 왼쪽에 파란 띠가 붙습니다. <strong>마우스를 올리면 나오는 ON/OFF 버튼으로 그 문장을 결과물에서 빼거나 넣습니다</strong> — 뺀 문장은 취소선으로 표시되어 자막만 읽어도 결과물의 대본이 보입니다. 연속된 문장을 빼면 사이의 짧은 공백도 함께 빠집니다. 버튼을 누른 채 위아래로 끌면 지나간 줄이 모두 같은 상태로 바뀝니다.</td></tr>
         <tr><td class="k2">슬라이드 구분 헤더</td><td>OCR로 추출한 PPT 제목을 자막 흐름 사이에 삽입해 목차 역할을 합니다. <strong>시간이 자막 행과 같은 열에 정렬되고 <span class="bdg ppt">ppt</span> 뱃지로 구분</strong>됩니다. 클릭하면 해당 슬라이드 시작 지점으로 이동합니다. 제목을 인식하지 못한 구간은 회색 처리합니다.</td></tr>
         <tr><td class="k2">Edit List</td><td>모든 행이 <strong>시간 · 길이 · ON/OFF</strong>의 같은 형식을 가집니다. 시간은 원본 영상 기준 하나만 씁니다. ON/OFF 버튼으로 결과물에 넣을지만 정하며, 이것이 기존 에디터의 Show/Hide와 같은 값입니다. <strong>시간을 클릭하면 그 구간의 시작 지점부터 재생</strong>합니다 — 편집본 재생 중이면 그 구간부터 편집본이 이어집니다.</td></tr>
         <tr><td class="k2">ON / OFF</td><td><strong>ON</strong>은 결과물에 포함(기존 Show), <strong>OFF</strong>는 제외(기존 Hide)입니다. 행을 지우는 대신 OFF로 두면 되돌리기가 쉽고, 삭제 버튼이 없어 실수로 구간을 잃지 않습니다. <strong>OFF로 바뀌어도 행과 내용은 그대로 보이고 색만 흐려집니다</strong> — 접히거나 사라지지 않으므로 목록의 줄 위치가 흔들리지 않습니다. 인트로 행도 같은 ON/OFF로 켜고 끕니다.</td></tr>
@@ -512,7 +516,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   var versions=[], verSeq=0, activeVerId=null; /* 편집안 목록 — AI 결과 + 수동 저장본 */
   var capState=2; /* 0 none 1 running 2 done */
   /* 임시 비활성화 — 필요해지면 아래 값을 true로 되돌리면 해당 기능/UI가 그대로 복원됩니다 */
-  var FEATURES = { timelineDragSelect:false, versionList:false };
+  var FEATURES = { timelineDragSelect:false, versionList:false, cueRangeSelect:false };
 
   /* ---------- 실행취소 / 다시실행 ----------
      편집 상태(rows)를 바꾸는 모든 동작 직전에 recordUndo(설명)을 호출해 스냅샷을 쌓는다. */
@@ -586,20 +590,25 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     paneS.appendChild(frag);
     document.getElementById('cntS').textContent=D.cues.length;
   })();
-  paneS.addEventListener('mousedown',function(e){ if(e.shiftKey) e.preventDefault(); });
+  paneS.addEventListener('mousedown',function(e){ if(FEATURES.cueRangeSelect && e.shiftKey) e.preventDefault(); });
   paneS.addEventListener('click',function(e){
     var tb=e.target.closest('.ctgl');
-    if(tb){ toggleCue(+tb.parentElement.dataset.i); return; }   /* ON/OFF 버튼은 재생 위치를 바꾸지 않음 */
+    if(tb){                       /* 마우스는 아래 드래그 처리에서 반영, 여기서는 키보드(Enter/Space)만 */
+      if(e.detail===0) toggleCue(+tb.parentElement.dataset.i);
+      return;                     /* ON/OFF 버튼은 재생 위치를 바꾸지 않음 */
+    }
     var h=e.target.closest('.slidehd');
     if(h){ mode='all'; setMode(); killIntro(); v.currentTime=+h.dataset.t; setPh(+h.dataset.t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); }); return; }
     var t=e.target.closest('.cue'); if(!t) return;
     var i=+t.dataset.i, c=D.cues[i];
-    if(e.shiftKey && rangeStart>=0){
-      setRange(rangeStart, i);
-      return;                       /* shift+클릭은 재생 위치를 바꾸지 않음 */
+    if(FEATURES.cueRangeSelect){
+      if(e.shiftKey && rangeStart>=0){
+        setRange(rangeStart, i);
+        return;                     /* shift+클릭은 재생 위치를 바꾸지 않음 */
+      }
+      rangeStart=i; clearRangeSel(); t.classList.add('rngsel','rngedge');
+      hideAddBar();
     }
-    rangeStart=i; clearRangeSel(); t.classList.add('rngsel','rngedge');
-    hideAddBar();
     mode='all'; setMode(); killIntro(); v.currentTime=c.t; setPh(c.t); v.play().catch(function(err){ console.warn('[LABY] video.play() 실패:', err && (err.name+': '+err.message)); });
   });
 
@@ -638,6 +647,65 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     var on=!cueOn(i), sp=cueSpan(i,on), x=D.cues[i].x;
     setSpan(sp[0], sp[1], on, '자막 “'+(x.length>14 ? x.slice(0,14)+'…' : x)+'” '+(on?'OFF → ON':'ON → OFF'));
   }
+
+  function setCues(lo,hi,on){
+    if(lo===hi){ if(cueOn(lo)!==on) toggleCue(lo); return; }
+    var same=true; for(var i=lo;i<=hi;i++){ if(cueOn(i)!==on){ same=false; break; } }
+    if(same) return;             /* 이미 모두 같은 상태면 실행취소 기록도 남기지 않음 */
+    setSpan(cueSpan(lo,on)[0], cueSpan(hi,on)[1], on, '자막 '+(hi-lo+1)+'줄 → '+(on?'ON':'OFF'));
+  }
+
+  /* ---- ON/OFF 버튼을 누른 채 위아래로 쓸어서 여러 줄을 한 번에 바꾸기 ----
+     누른 줄의 반대 상태로 칠하고, 놓을 때 한 번에 반영(실행취소도 한 번) */
+  var paint=null; /* {from, to, on, y} */
+  function clearPaint(){
+    paint=null; paneS.classList.remove('painting');
+    cueEls.forEach(function(el){ el.classList.remove('pv'); });
+  }
+  function paintPreview(){
+    var lo=Math.min(paint.from,paint.to), hi=Math.max(paint.from,paint.to);
+    markCues();
+    cueEls.forEach(function(el){ el.classList.remove('pv'); });
+    for(var i=lo;i<=hi;i++){
+      var el=cueEls[i], b=el.lastChild;
+      el.classList.add('pv'); el.classList.toggle('cut', !paint.on); el.classList.toggle('inedit', paint.on && rows.length>0);
+      b.setAttribute('aria-pressed', paint.on?'true':'false'); b.textContent=paint.on?'ON':'OFF';
+    }
+  }
+  function paintUpdate(){
+    var r=paneS.getBoundingClientRect();
+    var y=Math.max(r.top+2, Math.min(r.bottom-2, paint.y));
+    var el=document.elementFromPoint(r.left+r.width/2, y);   /* 가로로 벗어나도 줄만 따라가도록 패널 가운데 기준 */
+    el=el && el.closest('.cue');
+    if(el && paneS.contains(el) && +el.dataset.i!==paint.to){ paint.to=+el.dataset.i; paintPreview(); }
+  }
+  function paintScroll(){
+    if(!paint) return;
+    var r=paneS.getBoundingClientRect(), d=0;
+    if(paint.y<r.top+34) d=-Math.min(24, (r.top+34-paint.y)/2+4);        /* 위쪽은 고정된 슬라이드 제목 높이만큼 */
+    else if(paint.y>r.bottom-10) d=Math.min(24, (paint.y-(r.bottom-10))/2+4);
+    if(d){ paneS.scrollTop+=d; paintUpdate(); }
+    requestAnimationFrame(paintScroll);
+  }
+  paneS.addEventListener('mousedown',function(e){
+    var tb=e.target.closest('.ctgl');
+    if(!tb || e.button!==0) return;
+    e.preventDefault();
+    var i=+tb.parentElement.dataset.i;
+    paint={ from:i, to:i, on:!cueOn(i), y:e.clientY };
+    paneS.classList.add('painting'); paintPreview(); paintScroll();
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!paint) return;
+    paint.y=e.clientY; paintUpdate();
+  });
+  document.addEventListener('mouseup',function(){
+    if(!paint) return;
+    var lo=Math.min(paint.from,paint.to), hi=Math.max(paint.from,paint.to), on=paint.on;
+    clearPaint();
+    setCues(lo,hi,on);
+    markCues();
+  });
 
   /* ---------- 구간 추가(자막 범위 선택) ---------- */
   var rangeStart=-1, pendingRange=null;
@@ -729,6 +797,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   document.getElementById('addBarCancel').onclick=resetRangeUI;
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape') return;
+    if(paint){ clearPaint(); markCues(); return; }
     if(!aiModal.hidden){ closeAiModal(); return; }
     if(skResizing){
       var r=rows[skResizing.ri];
@@ -1181,7 +1250,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       el.classList.toggle('inedit', has && on);
       el.classList.toggle('cut', has && !on);
       b.setAttribute('aria-pressed', on?'true':'false'); b.textContent=on?'ON':'OFF';
-      b.title=on ? '이 문장을 결과물에서 뺍니다 (OFF)' : '이 문장을 다시 결과물에 넣습니다 (ON)';
+      b.title=(on ? '이 문장을 결과물에서 뺍니다 (OFF)' : '이 문장을 다시 결과물에 넣습니다 (ON)')+' · 누른 채 위아래로 끌면 여러 줄을 한 번에 바꿉니다';
     });
   }
 
