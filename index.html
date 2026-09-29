@@ -14,7 +14,7 @@
   --bar:#B65C1F; --bar-soft:#FBEEE3;
   --ai:#6E5DC6; --ai-soft:#F3F1FC;
   --ok:#22A06B; --ok-soft:#E3FCEF;
-  --warn:#B38600;
+  --warn:#B38600; --warn-soft:#FFF7D6;
   --err:#CA3521;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --ui:"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -32,7 +32,7 @@
   --bar:#F0965A; --bar-soft:#3A2417;
   --ai:#CE8ACE; --ai-soft:#2E2034;
   --ok:#4BCE97; --ok-soft:#164B35;
-  --warn:#E2B203;
+  --warn:#E2B203; --warn-soft:#3A3113;
   --err:#F87462;
   --sh:0 1px 2px rgba(0,0,0,.5),0 10px 30px -18px rgba(0,0,0,.9);
 }}
@@ -46,7 +46,7 @@
   --bar:#F0965A; --bar-soft:#3A2417;
   --ai:#CE8ACE; --ai-soft:#2E2034;
   --ok:#4BCE97; --ok-soft:#164B35;
-  --warn:#E2B203;
+  --warn:#E2B203; --warn-soft:#3A3113;
   --err:#F87462;
   --sh:0 1px 2px rgba(0,0,0,.5),0 10px 30px -18px rgba(0,0,0,.9);
 }
@@ -85,6 +85,26 @@ p{margin:0}
 .btn:hover{border-color:var(--ai);color:var(--ai)}
 .btn.pri{background:var(--show);border-color:var(--show);color:#fff}
 .btn.pri:hover{opacity:.87;color:#fff}
+/* 결과물 길이 상시 표시 + 목표 시간 */
+.lenbox{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:4px 6px 4px 11px;border-radius:999px;
+  border:1px solid var(--line);background:var(--panel);font-size:11.5px;color:var(--muted);white-space:nowrap;max-width:100%}
+@media(max-width:520px){.lenbox{border-radius:8px}}
+.lenbox .lv{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.lenbox .lv b{font-size:13px;font-weight:600;color:var(--ink)}
+.lenbox .lt{display:inline-flex;align-items:center;gap:4px;border-left:1px solid var(--line);padding-left:10px}
+.lenbox input{width:44px;font:500 12px/1 var(--mono);padding:4px 5px;border:1px solid var(--line);border-radius:5px;
+  background:var(--panel);color:var(--ink);text-align:right}
+.lenbox input::-webkit-inner-spin-button,.lenbox input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.lenbox input{-moz-appearance:textfield}
+.lenbox input:focus{outline:2px solid var(--show);outline-offset:-1px;border-color:var(--show)}
+.lenbox .ls{font-weight:600;padding:3px 8px;border-radius:999px}
+.lenbox .ls:empty{display:none}
+.lenbox.ok{border-color:var(--ok)}
+.lenbox.ok .lv b{color:var(--ok)}
+.lenbox.ok .ls{background:var(--ok-soft);color:var(--ok)}
+.lenbox.over{border-color:var(--warn);background:var(--warn-soft)}
+.lenbox.over .lv b{color:var(--warn)}
+.lenbox.over .ls{background:var(--panel);color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn)}
 
 /* AI prompt bar */
 .aibar{display:flex;gap:10px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);
@@ -352,6 +372,12 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   <div class="mk-top">
     <span class="brand">LABY <span>에디터</span> v2.0</span>
     <span class="ctitle" id="ctitle">면역과 병인기전 — 세포손상 (Cell injury and adaptation)</span>
+    <div class="lenbox" id="lenbox">
+      <span class="lv" title="결과물 길이(ON 구간 + 인트로) / 원본 길이">편집본 <b id="lenOut">52:29</b> / 원본 <span id="lenSrc">52:29</span></span>
+      <label class="lt" title="목표 길이를 넣으면 넘었는지 색으로 알려줍니다 (비워두면 표시 안 함)">목표
+        <input id="lenTarget" type="number" min="1" max="999" step="1" inputmode="numeric" placeholder="—" aria-label="목표 길이(분)">분</label>
+      <span class="ls" id="lenState" aria-live="polite"></span>
+    </div>
     <span class="badge ok" id="capbadge"><span class="dot"></span>자막 추출 완료</span>
     <button class="btn" type="button" id="btnCapCycle">상태 전환</button>
     <button class="btn pri" type="button" id="btnSave">저장</button>
@@ -440,6 +466,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       <thead><tr><th>구성 요소</th><th>동작 정의</th></tr></thead>
       <tbody>
         <tr><td class="k2">콘텐츠명</td><td>편집 대상 콘텐츠 제목. CMS 콘텐츠 목록에서 &lsquo;편집&rsquo;으로 진입할 때 전달받습니다.</td></tr>
+        <tr><td class="k2">결과물 길이</td><td>상단에 <strong>편집본 길이 / 원본 길이</strong>를 항상 표시합니다(ON 구간 + 인트로 합계). 편집할 때마다 즉시 바뀝니다. 목표 시간(분)을 넣으면 이내일 때 초록색으로 남은 여유를, 넘으면 노란색으로 초과 시간을 보여줍니다.</td></tr>
         <tr><td class="k2">자막 추출 상태</td><td>세 상태를 가집니다. <strong>완료</strong>면 모든 프롬프트 사용 가능, <strong>추출 중</strong>이면 진행률과 함께 자막 필요 프롬프트가 잠김, <strong>미추출</strong>이면 &lsquo;자막 추출&rsquo; 버튼이 노출되고 시간 연산형 프롬프트만 허용됩니다. 상태 전환 버튼으로 확인하십시오.</td></tr>
         <tr><td class="k2">AI 프롬프트 입력</td><td>자연어 입력 후 &lsquo;편집안 생성&rsquo;. 결과는 Edit List와 시크바에 즉시 반영되며 <strong>이 시점에 렌더링은 발생하지 않습니다.</strong></td></tr>
         <tr><td class="k2">프롬프트 예시 칩</td><td>자주 쓰는 프롬프트를 칩으로 제공. 자막이 없으면 자막 필요 칩에 자물쇠가 표시되고 비활성화됩니다.</td></tr>
@@ -569,6 +596,21 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
 
   function f1(s){s=Math.max(0,s);var m=Math.floor(s/60);return String(m).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');}
   function f2(s){s=Math.max(0,s);var m=Math.floor(s/60);return String(m).padStart(2,'0')+':'+(s-m*60).toFixed(1).padStart(4,'0');}
+  /* ---------- 결과물 길이 상시 표시 ---------- */
+  function outLen(){               /* 편집안이 없으면 원본 전체가 결과물 */
+    if(!rows.length) return TOT;
+    var t=0;
+    rows.forEach(function(r){ if(r.m==='Show') t+=r.e-r.s; else if(r.m==='Intro') t+=INTRO; });
+    return t;
+  }
+  function updateLen(){
+    var L=Math.floor(outLen()), box=document.getElementById('lenbox'), st=document.getElementById('lenState');
+    var tg=parseFloat(document.getElementById('lenTarget').value), T=tg>0 ? Math.round(tg*60) : 0;  /* 길이는 초 단위로 내림해 표시값과 여유/초과 계산을 맞춤 */
+    document.getElementById('lenOut').textContent=f1(L);
+    box.classList.toggle('ok', T>0 && L<=T);
+    box.classList.toggle('over', T>0 && L>T);
+    st.textContent = !T ? '' : L>T ? f1(L-T)+' 초과' : f1(T-L)+' 여유';
+  }
   function f3(s){var m=Math.floor(s/60);return String(m).padStart(2,'0')+':'+(s-m*60).toFixed(3).padStart(6,'0');}
 
   /* ---------- 자막 스크립트 ---------- */
@@ -1059,7 +1101,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   function renderEL(){
     var pane=document.getElementById('paneE'); stampIntro();
     if(!rows.length){ pane.innerHTML='<p class="empty">프롬프트를 입력하면<br>AI가 Edit List를 채웁니다.<br><br>편집 전에는 원본 전체가 재생됩니다.</p>';
-      document.getElementById('cntE').textContent=''; syncIntroBtn(); syncQuickSave(); return; }
+      document.getElementById('cntE').textContent=''; syncIntroBtn(); syncQuickSave(); updateLen(); return; }
     var h='';
     rows.forEach(function(r,i){
       var on = r.m!=='Hide';
@@ -1095,7 +1137,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     pane.innerHTML=h; markRow();
     var n=shows().length, tot=shows().reduce(function(a,r){return a+(r.e-r.s);},0);
     tot += rows.filter(function(r){return r.m==='Intro';}).length*INTRO;
-    document.getElementById('cntE').textContent=n+'/'+f1(tot);
+    document.getElementById('cntE').textContent=n+'/'+f1(tot); updateLen();
     syncIntroBtn(); syncQuickSave();
   }
   document.getElementById('paneE').addEventListener('click',function(e){
@@ -1207,7 +1249,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
       var t=skTime(e);
       if(skResizing.side==='l') r.s=Math.max(0, Math.min(t, r.e-0.3));
       else r.e=Math.min(TOT, Math.max(t, r.s+0.3));
-      renderSk();
+      renderSk(); updateLen();
       return;
     }
     if(!skDragging || !FEATURES.timelineDragSelect) return;
@@ -1437,6 +1479,8 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
   };
 
 
+  document.getElementById('lenSrc').textContent=f1(TOT);
+  document.getElementById('lenTarget').addEventListener('input', updateLen);
   document.getElementById('btnUndo').onclick=undo;
   document.getElementById('btnRedo').onclick=redo;
   document.addEventListener('keydown',function(e){
