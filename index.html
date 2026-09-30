@@ -360,8 +360,10 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .sklab{display:flex;justify-content:space-between;margin-bottom:4px;font-family:var(--num);font-variant-numeric:tabular-nums;
   font-size:var(--fs-cap);line-height:20px;color:var(--muted)}
 .skwrap{position:relative}
-.skr{height:16px;background:var(--panel-2);border:1px solid var(--line);
-  border-radius:4px;cursor:pointer;margin-bottom:4px;box-sizing:border-box}
+/* 탐색 구역 = 유튜브식 재생바: 재생한 부분 주황 / 남은 부분 회색 */
+.skr{position:relative;height:16px;background:var(--hide);border-radius:4px;cursor:pointer;margin-bottom:4px;
+  box-sizing:border-box;overflow:hidden}
+.skr .fill{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--pri);pointer-events:none}
 .skhead{position:absolute;top:-1px;bottom:0;pointer-events:none;z-index:5;transform:translateX(-50%)}
 .skhead .tri{display:block;width:0;height:0;margin:0 auto;
   border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--bar)}
@@ -522,7 +524,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     </div>
     <div class="sklab"><span>00:00</span><span>13:07</span><span>26:14</span><span>39:21</span><span>52:29</span></div>
     <div class="skwrap" id="skwrap">
-      <div class="skr" id="skr" title="드래그하거나 클릭해서 재생 위치를 조정합니다"></div>
+      <div class="skr" id="skr" title="드래그하거나 클릭해서 재생 위치를 조정합니다"><div class="fill" id="skrFill"></div></div>
       <div class="sk" id="sk">
         <div class="prog" id="skProg"></div>
         <div id="skBlks"></div><div class="selrng" id="skSel" hidden></div><div class="hov" id="skHov" hidden></div>
@@ -534,6 +536,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       <span><i style="background:var(--hide)"></i>OFF — 제외 (클릭하면 ON으로 전환)</span>
       <span><i class="lg-ib"></i>인트로 삽입 — ON 구간 앞에 인트로가 붙음 (툴바 &lsquo;인트로 전체 삽입&rsquo;으로 켜고 끔)</span>
       <span><i class="lg-ph"></i>재생 위치</span>
+      <span><i style="background:var(--pri)"></i>위쪽 재생바 — 지금까지 재생한 부분 (회색은 남은 부분)</span>
       <span>경계의 작은 원 아이콘 — 클릭하면 같은 상태의 두 구간을 병합</span>
     </div>
   </div>
@@ -558,7 +561,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
         <tr><td class="k2">Edit List</td><td>모든 행이 <strong>시간 · 길이 · ON/OFF</strong>의 같은 형식을 가집니다. 시간은 원본 영상 기준 하나만 씁니다. ON/OFF 버튼으로 결과물에 넣을지만 정하며, 이것이 기존 에디터의 Show/Hide와 같은 값입니다. <strong>시간을 클릭하면 그 구간의 시작 지점부터 재생</strong>합니다 — 편집본 재생 중이면 그 구간부터 편집본이 이어집니다.</td></tr>
         <tr><td class="k2">ON / OFF</td><td><strong>ON</strong>은 결과물에 포함(기존 Show), <strong>OFF</strong>는 제외(기존 Hide)입니다. 행을 지우는 대신 OFF로 두면 되돌리기가 쉽고, 삭제 버튼이 없어 실수로 구간을 잃지 않습니다. <strong>OFF로 바뀌어도 행과 내용은 그대로 보이고 색만 흐려집니다</strong> — 접히거나 사라지지 않으므로 목록의 줄 위치가 흔들리지 않습니다. 인트로 행도 같은 ON/OFF로 켜고 끕니다.</td></tr>
         <tr><td class="k2">행 뱃지</td><td><span class="bdg intro">intro</span> 구간 사이에 삽입되는 전환 클립, <span class="bdg ppt">ppt</span> 슬라이드 전환 지점. 파일명은 적지 않고 뱃지로만 구분하며, 어떤 클립인지는 마우스 오버 툴팁과 패널 하단 범례로 확인합니다. 원본 구간 행에는 뱃지가 없어 세 종류가 한눈에 갈립니다. <strong>인트로 행에는 시간을 적지 않습니다</strong> — 바로 아래 구간 앞에 붙는다는 것이 위치로 이미 드러나기 때문입니다.</td></tr>
-        <tr><td class="k2">탐색 구역</td><td>시간 눈금 아래 놓인 얇은 막대로, 역삼각형 헤드가 현재 재생 위치를 가리킵니다. <strong>클릭하거나 드래그하면 그 위치로 이동해 재생</strong>하며, 헤드와 아래 시크바의 재생 위치 표시가 함께 움직입니다. 편집본 재생 중에는 OFF 구간으로 이동할 수 없어 커서가 금지 표시로 바뀝니다. 전체 재생 모드에서는 어디든 이동할 수 있습니다.</td></tr>
+        <tr><td class="k2">탐색 구역</td><td>시간 눈금 아래 놓인 재생바로, 유튜브처럼 <strong>지금까지 재생한 부분은 주황, 남은 부분은 회색</strong>으로 채워지고 역삼각형 헤드가 현재 재생 위치를 가리킵니다. <strong>클릭하거나 드래그하면 그 위치로 이동해 재생</strong>하며, 헤드와 아래 시크바의 재생 위치 표시가 함께 움직입니다. 편집본 재생 중에는 OFF 구간으로 이동할 수 없어 커서가 금지 표시로 바뀝니다. 전체 재생 모드에서는 어디든 이동할 수 있습니다.</td></tr>
         <tr><td class="k2">시크바</td><td>ON 구간은 파란 박스, OFF 구간은 회색 박스로 표시합니다. 짙은 회색 막대는 인트로 삽입 지점, 세로선은 현재 재생 위치입니다. <strong>박스를 클릭하면 ON↔OFF가 즉시 전환</strong>됩니다. ON 박스는 양 끝을 드래그해 길이를 조절합니다(드래그 중 ESC로 취소). 서로 맞닿은 ON 박스는 옅은 테두리로 경계를 구분합니다. 편집으로 생긴 경계는 자동으로 합쳐지지 않으며, 같은 상태끼리 맞닿은 경계에는 작은 원 아이콘이 떠서 <strong>클릭하면 그 둘만 하나로 병합</strong>할 수 있습니다. 재생 위치 이동은 위쪽 탐색 구역이 담당합니다.</td></tr>
         <tr><td class="k2">편집 완료 · 업로드</td><td>누르면 <strong>최종 길이 · ON 구간 수 · 인트로 수</strong>를 요약한 확인 창이 뜨고, &lsquo;업로드&rsquo;를 눌러야 확정된 Edit List를 CMS로 전달합니다. &lsquo;계속 편집&rsquo;이나 ESC로 돌아갈 수 있습니다. 이후 처리는 기존 편집 기능과 동일하게 ffmpeg concat으로 새 콘텐츠를 생성하고 DB에 등록합니다.</td></tr>
       </tbody>
@@ -1594,7 +1597,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
 
   function setPh(t){
     var p=(Math.max(0,Math.min(TOT,t))/TOT*100)+'%';
-    document.getElementById('skProg').style.width=p;
+    document.getElementById('skProg').style.width=p; document.getElementById('skrFill').style.width=p;
     skHead.style.left=p;
   }
 
