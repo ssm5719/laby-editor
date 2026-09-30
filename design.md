@@ -23,6 +23,7 @@ LABY 에디터는 **laby-GUI 디자인 시스템**(Laby-4k 설정 프로그램�
   "편집안 생성"은 primary outlined.
 - **초록(success)** 은 상태 표시 전용(자막 추출 완료, 목표 시간 여유, 완료 아이콘). 버튼·토글에 쓰지 않는다.
 - **파랑(secondary)·보라(custom)는 쓰지 않는다.** AI 기능도 별도 색 없이 기본 컴포넌트로 표현한다.
+  - 예외: **타임라인(시크바) ON 블록만 secondary 파랑** (사용자 결정). 영상 트랙이 주황 UI 강조와 섞이지 않게 분리한 것으로, 다른 곳에 파랑을 쓰는 근거로 삼지 않는다.
 - 주의(목표 시간 초과) = warning 주홍. 되돌릴 수 없는 파괴적 액션 = error 빨강.
 - 활성/선택 줄은 회색 배경이 아니라 **좌측 4px primary 인디케이터** + row-highlight 배경.
 
@@ -62,6 +63,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | CSS 변수 | 의미 | 매핑 | 라이트 | 다크 |
 |---|---|---|---|---|
 | `--show` / `--show-soft` | ON 구간(결과물에 포함) | primary/default / surface | `#FF9800` / `#FFF3E0` | `#FF9800` / `#3D2C14` |
+| `--tl-on` / `--tl-on-strong` / `--tl-on-subtle` | 시크바 ON 블록 / 경계·리사이즈 hover / 블록 hover | secondary/default · strong · subtle | `#2196F3` / `#1976D2` / `#42A5F5` | 동일 |
 | `--hide` | OFF 구간 채우기 | state/disabled · border/hi(다크) | `#E0E0E0` | `#3D3833` |
 | `--hide-soft` | 시크바 트랙 | inherit/default · bg/base(다크) | `#F5F5F5` | `#16130F` |
 | `--intro` | 인트로 삽입 표시(시크바 막대·범례) | channel/scene strong · scene(라이트값) | `#45495D` | `#C9C4BC` |
@@ -107,7 +109,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 
 | 요소 | 스펙 |
 |---|---|
-| 시크바 | 높이 32 트랙(`--hide-soft`, radius 4). ON 블록 = primary(양 끝 1px primary/strong 경계), OFF 블록 = `--hide`, 인트로 = 4px `--intro` 막대 |
+| 시크바 | 높이 44 트랙(`--hide-soft`, radius 4). ON 블록 = secondary 파랑 `--tl-on`(양 끝 1px `--tl-on-strong` 경계), OFF 블록 = `--hide`, 인트로 = 4px `--intro` 막대 |
 | 탐색 구역 | 높이 16, raised 배경. 재생 헤드 = `--bar` 삼각형 + 2px 세로선 |
 | 자막 행 | 시간(12px, 44px 폭) + 문장(caption 12px/20). 편집본 포함 = 좌측 4px primary, 재생 중 = row-highlight + 주황 시간, 제외 = 취소선 + caption 색 |
 | 슬라이드 헤더 | sticky, raised 배경, 15px 600 |
