@@ -38,6 +38,7 @@ LABY 에디터는 **laby-GUI 디자인 시스템**(Laby-4k 설정 프로그램�
 | `--line-hi` | border/hi | `#BDBDBD` | `#3D3833` |
 | `--ink` | text/primary | `#212121` | `#F5F5F5` |
 | `--ink-2` | text/secondary | `#616161` | `#E0E0E0` |
+| `--neutral` | neutral/default (outlined 버튼·아이콘 버튼 글자) | `#424242` | `#F5F5F5` |
 | `--muted` | text/caption | `#9E9E9E` | `#9E9E9E` |
 | `--dis` / `--dis-bg` | text/disabled / bg/surface·disabled-surface | `#BDBDBD` / `#EEEEEE` | `#757575` / `#2E2E2E` |
 | `--pri` | primary/default | `#FF9800` | `#FF9800` |
@@ -87,7 +88,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 
 | 컴포넌트 | 스펙 | 클래스 |
 |---|---|---|
-| Button md | 높이 32, radius 6, 좌우 12, 15px. contained(primary) = `.btn.pri`, outlined(neutral) = `.btn`, outlined(primary) = `.btn.pri-o` | `.btn` |
+| Button md | 높이 32, radius 6, 좌우 12, 15px **Regular(400)** — contained도 굵게 하지 않음(600은 lg 40px 전용). contained(primary) = `.btn.pri` 흰 글자, outlined(neutral) = `.btn` 글자 neutral/default, outlined(primary) = `.btn.pri-o` 글자 primary/default | `.btn` |
 | Button sm | 높이 28, radius 4, 12px | `.btn.sm` |
 | 아이콘 버튼 | 32×32, radius 6, 아이콘 20. `title`·`aria-label` 필수 | `.tb` |
 | ON/OFF | Button xs: 높이 22, radius 4, 12px. ON = primary 채움, OFF = neutral outlined, 일부 = primary surface | `.tgl` |
