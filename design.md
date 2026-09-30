@@ -21,10 +21,10 @@ LABY 에디터는 **laby-GUI 디자인 시스템**(Laby-4k 설정 프로그램�
 - **primary(주황)** = 선택 · 포함 · 강조. 에디터에서는 **ON 구간**, 선택된 칩, 현재 재생 중인 줄, 활성 탭 인디케이터.
 - 카드(화면 영역) 하나에 **primary 채움 버튼은 하나**. 에디터 전체에서 채움은 "편집 완료 · 업로드"뿐이고,
   "편집안 생성"은 primary outlined.
-- **초록(success)** 은 상태 표시 전용(자막 추출 완료, 목표 시간 여유, 완료 아이콘). 버튼·토글에 쓰지 않는다.
+- **초록(success)** 은 상태 표시 전용(자막 추출 완료, 완료 아이콘. 꺼둔 목표 시간 여유 표시 포함). 버튼·토글에 쓰지 않는다.
 - **파랑(secondary)·보라(custom)는 쓰지 않는다.** AI 기능도 별도 색 없이 기본 컴포넌트로 표현한다.
   - 예외: **타임라인(시크바) ON 블록만 secondary 파랑** (사용자 결정). 영상 트랙이 주황 UI 강조와 섞이지 않게 분리한 것으로, 다른 곳에 파랑을 쓰는 근거로 삼지 않는다.
-- 주의(목표 시간 초과) = warning 주홍. 되돌릴 수 없는 파괴적 액션 = error 빨강.
+- 주의(꺼둔 기능인 목표 시간 초과) = warning 주홍. 되돌릴 수 없는 파괴적 액션 = error 빨강.
 - 활성/선택 줄은 회색 배경이 아니라 **좌측 4px primary 인디케이터** + row-highlight 배경.
 
 ## 토큰 → CSS 변수
@@ -115,7 +115,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | 필터 칩 | 높이 28, pill, 12px. 선택 = primary 채움, 비선택 = default outlined, hover = primary 테두리·surface | `.chip` |
 | Tabs | 언더라인. 좌우 16·상하 10, 15px. 활성 600 + 하단 2px primary, 비활성 text/secondary 500 | `.tab` |
 | Segmented Toggle | 트랙 `--seg-track` · radius 6 · 안쪽 2. 활성 아이템은 흰 배경 + 보더 + 그림자(primary 채움 없음) | `.seg` |
-| Input | md 32(에디터 입력은 모두 md; 목표 시간만 sm 28), radius 4, 좌우 10. hover primary/subtle, focus primary/strong 테두리 | `.ai-in input`, `.srch input`, `.lenbox input` |
+| Input | md 32(에디터 입력은 모두 md; 꺼둔 목표 시간 입력만 sm 28), radius 4, 좌우 10. hover primary/subtle, focus primary/strong 테두리 | `.ai-in input`, `.srch input`, `.lenbox input` |
 | Card | 보더 1px, radius 8. 제목 영역 raised 배경 · 좌우 20 · 상하 12 · 16px 600 | `.mock`, `.note`, `.tbl` |
 | Modal basic | 최대 572px, radius 8. 헤더·푸터 좌우 24 · 상하 16 + 구분선, 본문 24. 취소 = outlined, 확인 = contained, 간격 10 | `.modalcard` |
 | Spinner | 지름 20, 테두리 2, 트랙 `--hide` + 회전 구간 primary | `.spin` |
@@ -126,6 +126,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | 요소 | 스펙 |
 |---|---|
 | 시크바 | 높이 44 트랙(`--hide-soft`, radius 4). ON 블록 = secondary 파랑 `--tl-on`(양 끝 1px `--tl-on-strong` 경계), OFF 블록 = `--hide`, 인트로 = 4px `--intro` 막대 |
+| 시크바 범례 | 스와치는 실제 표시와 같은 모양: ON/OFF = 12×10 사각형, 인트로 = 4×14 `--intro` 막대, 재생 위치 = 2×14 `--bar` 세로선(다크 흰색 · 라이트 검정) |
 | 탐색 구역 | 높이 16, raised 배경. 재생 헤드 = `--bar` 삼각형 + 2px 세로선 |
 | 자막 행 | 시간(12px, 44px 폭) + 문장(caption 12px/20). 편집본 포함 = 좌측 4px primary, 재생 중 = row-highlight + 주황 시간, 제외 = 취소선 + caption 색 |
 | 슬라이드 헤더 | sticky, raised 배경, 15px 600 |
