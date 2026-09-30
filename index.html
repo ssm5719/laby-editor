@@ -625,7 +625,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   var versions=[], verSeq=0, activeVerId=null; /* 편집안 목록 — AI 결과 + 수동 저장본 */
   var capState=2; /* 0 none 1 running 2 done */
   /* 임시 비활성화 — 필요해지면 아래 값을 true로 되돌리면 해당 기능/UI가 그대로 복원됩니다 */
-  var FEATURES = { timelineDragSelect:false, versionList:false, cueRangeSelect:false, lengthTarget:false };
+  var FEATURES = { timelineDragSelect:false, versionList:false, cueRangeSelect:false, lengthTarget:false, autosave:false };
 
   /* ---------- 실행취소 / 다시실행 ----------
      편집 상태(rows)를 바꾸는 모든 동작 직전에 recordUndo(설명)을 호출해 스냅샷을 쌓는다. */
@@ -699,13 +699,13 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
      브라우저를 실수로 닫거나 새로고침해도 다시 열면 그대로 복원됨. 콘텐츠별로 키를 나눈다. */
   var SAVE_KEY='laby-editor.autosave.v1.'+D.dur, saveTimer=null, saveReady=false;
   function scheduleSave(){
-    if(!saveReady) return;        /* 복원 전 초기 렌더링이 저장본을 덮어쓰지 않도록 */
+    if(!saveReady || !FEATURES.autosave) return;        /* 복원 전 초기 렌더링이 저장본을 덮어쓰지 않도록 */
     clearTimeout(saveTimer);
     saveTimer=setTimeout(saveNow, 400);
   }
   function saveNow(){
     clearTimeout(saveTimer); saveTimer=null;
-    if(!saveReady) return;
+    if(!saveReady || !FEATURES.autosave) return;
     var tg=document.getElementById('lenTarget').value;
     try{
       if(!rows.length && !tg) localStorage.removeItem(SAVE_KEY);
@@ -1715,7 +1715,8 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   });
 
   document.getElementById('lenTargetBox').hidden=!FEATURES.lengthTarget;   /* 목표 시간 입력 — 꺼두면 입력이 비어 있어 여유/초과 표시도 전부 사라짐 */
-  restoreSaved();
+  if(FEATURES.autosave) restoreSaved();
+  else { try{ localStorage.removeItem(SAVE_KEY); }catch(err){} }   /* 목업은 새로고침하면 처음 상태로 — 예전 저장본도 정리 */
   renderCap(); renderEL(); renderSk(); markCues(); syncUndoBtns(); if(FEATURES.versionList) renderVersions();
   saveReady=true;
   window.addEventListener('pagehide', saveNow);   /* 저장 대기 중에 창을 닫아도 마지막 변경까지 남김 */
