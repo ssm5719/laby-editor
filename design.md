@@ -23,7 +23,10 @@ LABY 에디터는 **laby-GUI 디자인 시스템**(Laby-4k 설정 프로그램�
   primary 버튼·선택된 칩·ON 버튼 모두 **primary outlined**(흰 바탕 + 주황 테두리·글자)로 통일한다.
   주황 채움은 버튼이 아닌 표시(스위치 켜짐 트랙, 영상 위 태그, 검색 현재 결과)에만 남는다.
 - **초록(success)** 은 상태 표시 전용(자막 추출 완료, 완료 아이콘. 꺼둔 목표 시간 여유 표시 포함). 버튼·토글에 쓰지 않는다.
-- **파랑(secondary)·보라(custom)는 쓰지 않는다.** AI 기능도 별도 색 없이 기본 컴포넌트로 표현한다.
+- **파랑(secondary)은 쓰지 않는다.** (예외: 타임라인 ON 블록, 아래 참고)
+- **[에디터 확장] 보라(custom) = AI가 제안·생성한 것** (사용자 결정, 09-30). laby의 원래 뜻(조정 가능한 레이아웃)은 에디터에 없어 겹치지 않는다.
+  - 쓰는 곳: "AI 편집" 라벨, 프롬프트 칩(hover·선택), "편집안 생성"·AI 처리 모달 "저장" 버튼(`.btn.ai`), 프롬프트 입력 hover·focus, AI 진행 스피너, Edit List의 `AI` 뱃지와 AI 설명 제목.
+  - **보라 = AI가 제안, 주황 = 사용자가 결정**(ON, 스위치, 재생바, 업로드). 보라는 테두리·글자·옅은 바탕으로만 쓰고 넓은 채움·그라데이션·반짝이 아이콘은 쓰지 않는다 ("AI 티" 방지).
   - 예외: **타임라인(시크바) ON 블록만 secondary 파랑** (사용자 결정). 영상 트랙이 주황 UI 강조와 섞이지 않게 분리한 것으로, 다른 곳에 파랑을 쓰는 근거로 삼지 않는다.
 - 주의(꺼둔 기능인 목표 시간 초과) = warning 주홍. 되돌릴 수 없는 파괴적 액션 = error 빨강.
 - 활성/선택 줄은 회색 배경이 아니라 **좌측 4px primary 인디케이터** + row-highlight 배경.
@@ -64,6 +67,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | CSS 변수 | 의미 | 매핑 | 라이트 | 다크 |
 |---|---|---|---|---|
 | `--show` / `--show-soft` | ON 구간(결과물에 포함) | primary/default / surface | `#FF9800` / `#FFF3E0` | `#FF9800` / `#3D2C14` |
+| `--ai` / `--ai-ink` / `--ai-soft` | AI 테두리 / AI 글자 / AI 옅은 바탕 | custom/default · strong(다크는 subtle) · surface | `#9575CD` / `#673AB7` / `#EDE7F6` | `#9575CD` / `#B39DDB` / `#2A2340` |
 | `--tl-on` / `--tl-on-strong` / `--tl-on-subtle` | 시크바 ON 블록 / 경계·리사이즈 hover / 블록 hover | secondary/default · strong · subtle | `#2196F3` / `#1976D2` / `#42A5F5` | 동일 |
 | `--hide` | OFF 구간 채우기 | state/disabled · border/hi(다크) | `#E0E0E0` | `#3D3833` |
 | `--hide-soft` | 시크바 트랙 | inherit/default · bg/base(다크) | `#F5F5F5` | `#16130F` |
@@ -113,13 +117,15 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | Toggle(Switch) sm + 라벨 | 트랙 40×24(`.sw`), 노브 20, 라벨 caption 12px, 간격 8. 대상이 없으면 disabled | `.swl` |
 | Badge xs | 높이 22, pill, 12px. 상태는 시맨틱 subtle, 그 외 default | `.badge` |
 | 정적 라벨 뱃지 | 높이 22, radius 4, 12px. `ppt` = default outlined, `intro` = scene 채움 | `.bdg` |
-| 필터 칩 | 높이 28, pill, 12px. 선택 = primary outlined, 비선택 = default outlined, hover = primary 테두리·surface | `.chip` |
+| 필터 칩(AI 프롬프트) | 높이 28, pill, 12px. 선택 = AI outlined(`--ai` 테두리 · `--ai-ink` 글자), 비선택 = default outlined, hover = AI 테두리·`--ai-soft` | `.chip` |
+| AI 버튼 | Button md와 같은 outlined, 테두리 `--ai` · 글자 `--ai-ink` · hover `--ai-soft` | `.btn.ai` |
+| AI 뱃지 | 정적 라벨 뱃지(높이 22, radius 4)에 `--ai` 테두리 · `--ai-ink` 글자. AI 구간을 사용자가 고치면 `AI · 수정` | `.bdg.ai` |
 | Tabs | 언더라인. 좌우 16·상하 10, 15px. 활성 600 + 하단 2px primary, 비활성 text/secondary 500 | `.tab` |
 | Segmented Toggle | 트랙 `--seg-track` · radius 6 · 안쪽 2. 활성 아이템은 흰 배경 + 보더 + 그림자(primary 채움 없음) | `.seg` |
 | Input | md 32(에디터 입력은 모두 md; 꺼둔 목표 시간 입력만 sm 28), radius 4, 좌우 10. hover primary/subtle, focus primary/strong 테두리 | `.ai-in input`, `.srch input`, `.lenbox input` |
 | Card | 보더 1px, radius 8. 제목 영역 raised 배경 · 좌우 20 · 상하 12 · 16px 600 | `.mock`, `.note`, `.tbl` |
 | Modal basic | 최대 572px, radius 8. 헤더·푸터 좌우 24 · 상하 16 + 구분선, 본문 24. 취소 = neutral outlined, 확인 = primary outlined, 간격 10 | `.modalcard` |
-| Spinner | 지름 20, 테두리 2, 트랙 `--hide` + 회전 구간 primary | `.spin` |
+| Spinner | 지름 20, 테두리 2, 트랙 `--hide` + 회전 구간 `--ai`(AI 처리 중에만 쓰임) | `.spin` |
 | Toast | 하단 중앙, radius 8, 좌우 16 · 상하 8, 12px, `--tip` 배경 | `.toast` |
 
 ### [에디터 확장] 편집 전용 요소

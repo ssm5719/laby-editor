@@ -26,6 +26,8 @@
   --err:#F44336; --err-soft:#FEEBEE;
   /* 세그먼트 토글 · 툴팁/토스트 */
   --seg-track:#F5F5F5; --seg-on:#FFFFFF; --seg-on-line:#9E9E9E;
+  /* [에디터 확장] 보라 = AI가 제안·생성한 것 (laby custom 팔레트). 테두리 / 글자 / 옅은 바탕 */
+  --ai:#9575CD; --ai-ink:#673AB7; --ai-soft:#EDE7F6;
   --tip:#212121; --tip-ink:#FAFAFA;
   /* 서체: 한글 Noto Sans KR · 영문/숫자 IBM Plex Sans KR */
   --ui:"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -46,6 +48,7 @@
   --warn:#FFA83D; --warn-soft:#3A2018;
   --err:#FF6B5E; --err-soft:#31161A;
   --seg-track:#16130F; --seg-on:#302C28; --seg-on-line:#4A443E;
+  --ai-ink:#B39DDB; --ai-soft:#2A2340;
   --tip:#302C28; --tip-ink:#F5F5F5;
 }}
 :root[data-theme="dark"]{
@@ -60,6 +63,7 @@
   --warn:#FFA83D; --warn-soft:#3A2018;
   --err:#FF6B5E; --err-soft:#31161A;
   --seg-track:#16130F; --seg-on:#302C28; --seg-on-line:#4A443E;
+  --ai-ink:#B39DDB; --ai-soft:#2A2340;
   --tip:#302C28; --tip-ink:#F5F5F5;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
@@ -80,7 +84,7 @@ p{margin:0}
 .ic.fill{font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 20}
 .ic.s16{font-size:16px} .ic.s12{font-size:12px}
 .spin{display:inline-block;width:20px;height:20px;flex:none;border-radius:9999px;border:2px solid var(--hide);
-  border-top-color:var(--pri);animation:spin 1s linear infinite}
+  border-top-color:var(--ai);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .dochdr{border-bottom:1px solid var(--line);padding-bottom:16px;
@@ -112,6 +116,9 @@ p{margin:0}
 /* primary 버튼은 모두 outlined(흰 바탕 + 주황 테두리·글자) — 주황 채움 위 흰 글자가 잘 안 보여 사용자 결정으로 통일 */
 .btn.pri,.btn.pri-o{border-color:var(--pri);color:var(--pri)}
 .btn.pri:hover,.btn.pri-o:hover{background:var(--pri-surface)}
+/* AI 동작 버튼(편집안 생성, AI 편집안 저장) — 같은 outlined 모양에 보라 */
+.btn.ai{border-color:var(--ai);color:var(--ai-ink)}
+.btn.ai:hover{background:var(--ai-soft)}
 .btn.sm{height:28px;border-radius:4px;font-size:var(--fs-cap);line-height:20px;gap:2px}
 .btn.txt{border-color:transparent;background:transparent}
 .btn.txt:hover{border-color:transparent;background:var(--hide-soft)}
@@ -138,19 +145,20 @@ p{margin:0}
 
 /* AI prompt bar */
 .aibar{display:flex;gap:8px 12px;align-items:center;padding:12px 20px 8px;background:var(--panel);flex-wrap:wrap}
-.ai-lb{font-size:var(--fs-body);line-height:22px;font-weight:600;flex:none}
+.ai-lb{font-size:var(--fs-body);line-height:22px;font-weight:600;flex:none;color:var(--ai-ink)}
 .ai-in{flex:1 1 260px;min-width:0;display:flex;gap:6px}
 .ai-in input{flex:1;min-width:0;height:32px;font:400 var(--fs-body)/22px var(--ui);padding:0 10px;border-radius:4px;
   border:1px solid var(--line);background:var(--panel);color:var(--ink)}
 .ai-in input::placeholder{font-size:var(--fs-cap);color:var(--ink-2)}
 .ai-in input:hover{border-color:var(--pri-subtle)}
-.ai-in input:focus{outline:none;border-color:var(--pri-strong)}
+.ai-in input:hover{border-color:var(--ai)}
+.ai-in input:focus{outline:none;border-color:var(--ai-ink)}
 /* 필터 칩 — 클릭 가능: 선택=primary 채움 / 비선택=default outlined */
 .chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 12px;background:var(--panel);border-bottom:1px solid var(--line)}
 .chip{font:400 var(--fs-cap)/20px var(--ui);height:28px;padding:0 10px;border-radius:9999px;cursor:pointer;display:inline-flex;
   align-items:center;gap:4px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2)}
-.chip:hover{border-color:var(--pri);background:var(--pri-surface);color:var(--pri-strong)}
-.chip[aria-pressed="true"]{background:var(--panel);border-color:var(--pri);color:var(--pri)}
+.chip:hover{border-color:var(--ai);background:var(--ai-soft);color:var(--ai-ink)}
+.chip[aria-pressed="true"]{background:var(--panel);border-color:var(--ai);color:var(--ai-ink)}
 .chip:disabled{background:var(--dis-bg);border-color:var(--dis-bg);color:var(--dis);cursor:not-allowed}
 .chip .lock{font-size:16px}
 
@@ -283,7 +291,7 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .swl:disabled .sw{background:var(--dis-bg)}
 .elmeta{padding:0 12px 8px 12px;font-size:var(--fs-cap);line-height:20px;color:var(--ink-2);
   border-bottom:1px solid var(--line-2)}
-.elmeta b{color:var(--ink);font-weight:600}
+.elmeta b{color:var(--ai-ink);font-weight:600}
 .elmeta .sn{font-family:var(--num);color:var(--muted);display:block;margin-top:2px}
 .empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:var(--fs-cap);line-height:20px}
 .symkey{position:sticky;bottom:0;display:flex;gap:12px;flex-wrap:wrap;padding:8px 12px;
@@ -291,7 +299,7 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .symkey b{font-weight:400;display:inline-flex;align-items:center;gap:4px}
 
 /* 편집안 목록(버전) */
-.bdg.ai{background:var(--panel);border:1px solid var(--line);color:var(--ink-2)}
+.bdg.ai{background:var(--panel);border:1px solid var(--ai);color:var(--ai-ink);text-transform:none}
 .bdg.manual{background:transparent;border:1px solid var(--line);color:var(--ink-2)}
 .veractions{position:sticky;top:0;z-index:1;padding:12px;border-bottom:1px solid var(--line-2);
   background:var(--panel)}
@@ -421,7 +429,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
 .steps .dot{width:16px;height:16px;border-radius:9999px;flex:none;display:grid;place-items:center;
   border:2px solid var(--line)}
 .steps li.done .dot{background:var(--ok-dot);border-color:var(--ok-dot)}
-.steps li.active .dot{border-color:var(--hide);border-top-color:var(--pri);animation:spin 1s linear infinite}
+.steps li.active .dot{border-color:var(--hide);border-top-color:var(--ai);animation:spin 1s linear infinite}
 .modalcard .actions{display:flex;justify-content:flex-end;gap:10px;margin:24px 0 -24px;padding:16px 24px;border-top:1px solid var(--line-2)}
 /* 편집 완료 · 업로드 확인 */
 .upsum{margin:0 24px;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;padding:16px 20px;border:1px solid var(--line);
@@ -471,7 +479,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     <label class="ai-lb" for="prompt">AI 편집</label>
     <div class="ai-in">
       <input id="prompt" type="text" placeholder="원하는 편집을 문장으로 입력하세요 — 예) 괴사 부분만 모아줘" aria-label="AI 편집 프롬프트">
-      <button class="btn pri-o" type="button" id="btnRun">편집안 생성</button>
+      <button class="btn ai" type="button" id="btnRun">편집안 생성</button>
     </div>
   </div>
   <div class="chips" id="chips"></div>
@@ -568,7 +576,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
         <tr><td class="k2">슬라이드 구분 헤더</td><td>OCR로 추출한 PPT 제목을 자막 흐름 사이에 삽입해 목차 역할을 합니다. <strong>시간이 자막 행과 같은 열에 정렬되고 <span class="bdg ppt">ppt</span> 뱃지로 구분</strong>됩니다. 클릭하면 해당 슬라이드 시작 지점으로 이동합니다. 제목을 인식하지 못한 구간은 회색 처리합니다. <strong>헤더 오른쪽 ON/OFF 버튼으로 그 슬라이드 구간을 통째로 빼거나 넣습니다</strong> — 일부 문장만 포함된 슬라이드는 &lsquo;일부&rsquo;로 표시되고, 누르면 전체가 빠집니다.</td></tr>
         <tr><td class="k2">Edit List</td><td>모든 행이 <strong>시간 · 길이 · ON/OFF</strong>의 같은 형식을 가집니다. 시간은 원본 영상 기준 하나만 씁니다. ON/OFF 버튼으로 결과물에 넣을지만 정하며, 이것이 기존 에디터의 Show/Hide와 같은 값입니다. <strong>시간을 클릭하면 그 구간의 시작 지점부터 재생</strong>합니다 — 편집본 재생 중이면 그 구간부터 편집본이 이어집니다.</td></tr>
         <tr><td class="k2">ON / OFF</td><td><strong>ON</strong>은 결과물에 포함(기존 Show), <strong>OFF</strong>는 제외(기존 Hide)입니다. 행을 지우는 대신 OFF로 두면 되돌리기가 쉽고, 삭제 버튼이 없어 실수로 구간을 잃지 않습니다. <strong>OFF로 바뀌어도 행과 내용은 그대로 보이고 색만 흐려집니다</strong> — 접히거나 사라지지 않으므로 목록의 줄 위치가 흔들리지 않습니다. 인트로 행도 같은 ON/OFF로 켜고 끕니다.</td></tr>
-        <tr><td class="k2">행 뱃지</td><td><span class="bdg intro">intro</span> 구간 사이에 삽입되는 전환 클립, <span class="bdg ppt">ppt</span> 슬라이드 전환 지점. 파일명은 적지 않고 뱃지로만 구분하며, 어떤 클립인지는 마우스 오버 툴팁과 패널 하단 범례로 확인합니다. 원본 구간 행에는 뱃지가 없어 세 종류가 한눈에 갈립니다. <strong>인트로 행에는 시간을 적지 않습니다</strong> — 바로 아래 구간 앞에 붙는다는 것이 위치로 이미 드러나기 때문입니다.</td></tr>
+        <tr><td class="k2">행 뱃지</td><td><span class="bdg ai">AI</span> AI 편집안이 고른 구간(사용자가 경계를 고치면 <span class="bdg ai">AI · 수정</span>), <span class="bdg intro">intro</span> 구간 사이에 삽입되는 전환 클립, <span class="bdg ppt">ppt</span> 슬라이드 전환 지점. 파일명은 적지 않고 뱃지로만 구분하며, 어떤 클립인지는 마우스 오버 툴팁과 패널 하단 범례로 확인합니다. 원본 구간 행에는 뱃지가 없어 세 종류가 한눈에 갈립니다. <strong>인트로 행에는 시간을 적지 않습니다</strong> — 바로 아래 구간 앞에 붙는다는 것이 위치로 이미 드러나기 때문입니다.</td></tr>
         <tr><td class="k2">탐색 구역</td><td>시간 눈금 아래 놓인 재생바로, 유튜브처럼 <strong>지금까지 재생한 부분은 주황, 남은 부분은 회색</strong>으로 채워지고 동그란 손잡이가 현재 재생 위치를 가리킵니다. <strong>클릭하거나 드래그하면 그 위치로 이동해 재생</strong>하며, 헤드와 아래 시크바의 재생 위치 표시가 함께 움직입니다. 편집본 재생 중에는 OFF 구간으로 이동할 수 없어 커서가 금지 표시로 바뀝니다. 전체 재생 모드에서는 어디든 이동할 수 있습니다.</td></tr>
         <tr><td class="k2">시크바</td><td>ON 구간은 파란 박스, OFF 구간은 회색 박스로 표시합니다. 짙은 회색 막대는 인트로 삽입 지점, 세로선은 현재 재생 위치입니다. <strong>박스를 클릭하면 ON↔OFF가 즉시 전환</strong>됩니다. ON 박스는 양 끝을 드래그해 길이를 조절합니다(드래그 중 ESC로 취소). 서로 맞닿은 ON 박스는 옅은 테두리로 경계를 구분합니다. 편집으로 생긴 경계는 자동으로 합쳐지지 않으며, 같은 상태끼리 맞닿은 경계에는 작은 원 아이콘이 떠서 <strong>클릭하면 그 둘만 하나로 병합</strong>할 수 있습니다. 재생 위치 이동은 위쪽 탐색 구역이 담당합니다.</td></tr>
         <tr><td class="k2">편집 완료 · 업로드</td><td>누르면 <strong>최종 길이 · ON 구간 수 · 인트로 수</strong>를 요약한 확인 창이 뜨고, &lsquo;업로드&rsquo;를 눌러야 확정된 Edit List를 CMS로 전달합니다. &lsquo;계속 편집&rsquo;이나 ESC로 돌아갈 수 있습니다. 이후 처리는 기존 편집 기능과 동일하게 ffmpeg concat으로 새 콘텐츠를 생성하고 DB에 등록합니다.</td></tr>
@@ -1065,7 +1073,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   }
   function applyPlan(k,p){
     recordUndo('AI 편집안 적용 · '+p.prompt);
-    curPlan=k; rows=p.rows.map(function(r){return Object.assign({},r);});
+    curPlan=k; rows=p.rows.map(function(r){ var o=Object.assign({},r); if(o.title){ o.os=o.s; o.oe=o.e; } return o; });  /* os/oe: AI가 정한 원래 경계 — 사용자가 바꾸면 'AI · 수정' */
     resetRangeUI();
     selTab('E'); renderEL(); renderSk(); markCues();
     if(FEATURES.versionList) saveVersion('AI · '+p.prompt, 'ai'); /* renderEL()의 stampIntro() 이후에 스냅샷해야 저장본과 실제 상태가 일치함 */
@@ -1258,7 +1266,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
         '<br>이 편집안을 화면에 저장하시겠습니까?</p>'+
         '<div class="actions">'+
           '<button class="btn" type="button" id="aiModalCancel">취소</button>'+
-          '<button class="btn pri" type="button" id="aiModalSave">저장</button>'+
+          '<button class="btn ai" type="button" id="aiModalSave">저장</button>'+
         '</div>'+
       '</div>';
     document.getElementById('aiModalX').onclick=closeAiModal;
@@ -1307,7 +1315,9 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
            'title="'+(ion?'이 지점에 인트로가 삽입됩니다 (누르면 해제)':'삽입되지 않습니다 (누르면 삽입)')+'">'+
            (ion?'ON':'OFF')+'</button></div>';
       }else{
+        var ed = r.title && (Math.abs(r.s-r.os)>0.01 || Math.abs(r.e-r.oe)>0.01);   /* AI 구간을 사용자가 자르거나 길이 조절함 */
         h+='<div class="elrow '+(on?'on':'off')+'">'+
+           (r.title ? '<span class="bdg ai" title="'+(ed?'AI가 고른 구간을 직접 수정했습니다':'AI가 고른 구간입니다')+'">'+(ed?'AI · 수정':'AI')+'</span>' : '')+
            '<span class="src" data-go="'+i+'" title="클릭하면 이 지점부터 재생합니다">'+
            f3(r.s)+' – '+f3(r.e)+'</span>'+
            '<span class="len">'+f1(r.e-r.s)+'</span>'+
@@ -1316,13 +1326,15 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
            (on?'ON':'OFF')+'</button></div>';
         if(r.title){
           h+='<div class="elmeta'+(on?'':' off')+'" data-go="'+i+'"><b>'+r.title+'</b> — '+r.reason+
+             (ed ? '' :   /* 경계를 바꿨으면 AI의 원시 경계·무음 스냅 값은 더 이상 맞지 않으므로 숨김 */
              '<span class="sn">원시 '+f3(r.raw[0])+' / '+f3(r.raw[1])+
              ' → 무음 스냅 '+(r.snap[0]>=0?'+':'')+r.snap[0].toFixed(2)+'s / '+
-             (r.snap[1]>=0?'+':'')+r.snap[1].toFixed(2)+'s</span></div>';
+             (r.snap[1]>=0?'+':'')+r.snap[1].toFixed(2)+'s</span>')+'</div>';
         }
       }
     });
     h+='<div class="symkey">'+
+       '<b><span class="bdg ai">AI</span>AI가 고른 구간</b>'+
        '<b><span class="bdg intro">intro</span>전환 클립</b>'+
        '<b><span class="bdg ppt">ppt</span>슬라이드 전환</b>'+
        '<b><span class="tgl" aria-pressed="true" style="cursor:default">ON</span>결과물에 포함</b></div>';
