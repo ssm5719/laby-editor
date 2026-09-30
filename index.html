@@ -375,6 +375,12 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .lgnd i{display:inline-block;width:12px;height:10px;border-radius:2px}
 .lgnd i.lg-ib{width:4px;height:14px;background:var(--intro)}
 .lgnd i.lg-ph{width:2px;height:14px;border-radius:0;background:var(--bar)}
+/* 범례용 병합 버튼 — 시크바의 .mrg와 같은 모양(범례라 흐리게 하지 않음) */
+.lgnd .lg-mrg{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:2px;width:22px;height:22px;box-sizing:border-box;
+  border-radius:9999px;background:var(--panel);border:1px solid var(--line-hi)}
+.lgnd .lg-mrg b{width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.lgnd .lg-mrg b.l{border-left:5px solid var(--ink-2)}
+.lgnd .lg-mrg b.r{border-right:5px solid var(--ink-2)}
 
 
 /* spec */
@@ -539,7 +545,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       <span><i class="lg-ib"></i>인트로 삽입 — ON 구간 앞에 인트로가 붙음 (툴바 &lsquo;인트로 전체 삽입&rsquo;으로 켜고 끔)</span>
       <span><i class="lg-ph"></i>재생 위치</span>
       <span><i style="background:var(--pri)"></i>위쪽 재생바 — 지금까지 재생한 부분 (회색은 남은 부분)</span>
-      <span>경계의 작은 원 아이콘 — 클릭하면 같은 상태의 두 구간을 병합</span>
+      <span><span class="lg-mrg" aria-hidden="true"><b class="l"></b><b class="r"></b></span>경계의 작은 원 아이콘 — 클릭하면 같은 상태의 두 구간을 병합</span>
     </div>
   </div>
 </div>
