@@ -610,6 +610,41 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     box.classList.toggle('ok', T>0 && L<=T);
     box.classList.toggle('over', T>0 && L>T);
     st.textContent = !T ? '' : L>T ? f1(L-T)+' 초과' : f1(T-L)+' 여유';
+    scheduleSave();               /* 편집 상태가 바뀌는 곳은 모두 여기를 거치므로 자동 임시저장도 여기서 */
+  }
+
+  /* ---------- 자동 임시저장 ----------
+     화면에는 드러내지 않고 브라우저(localStorage)에 마지막 편집 상태 하나만 유지한다.
+     브라우저를 실수로 닫거나 새로고침해도 다시 열면 그대로 복원됨. 콘텐츠별로 키를 나눈다. */
+  var SAVE_KEY='laby-editor.autosave.v1.'+D.dur, saveTimer=null, saveReady=false;
+  function scheduleSave(){
+    if(!saveReady) return;        /* 복원 전 초기 렌더링이 저장본을 덮어쓰지 않도록 */
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(saveNow, 400);
+  }
+  function saveNow(){
+    clearTimeout(saveTimer); saveTimer=null;
+    if(!saveReady) return;
+    var tg=document.getElementById('lenTarget').value;
+    try{
+      if(!rows.length && !tg) localStorage.removeItem(SAVE_KEY);
+      else localStorage.setItem(SAVE_KEY, JSON.stringify({ rows:rows, curPlan:curPlan, target:tg, ts:Date.now() }));
+    }catch(err){ /* 사생활 보호 모드 등 저장소를 못 쓰면 조용히 건너뜀 */ }
+  }
+  function restoreSaved(){
+    var d=null;
+    try{ d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); }catch(err){ d=null; }
+    if(!d || !Array.isArray(d.rows)) return;
+    var M={Show:1,Hide:1,Intro:1,IntroOff:1};
+    var ok=d.rows.every(function(r){
+      if(!r || !M[r.m]) return false;
+      if(r.m==='Intro'||r.m==='IntroOff') return true;   /* 인트로는 시간 없는 마커 행 */
+      return typeof r.s==='number' && typeof r.e==='number' && r.s>=0 && r.e<=TOT+0.5 && r.e>=r.s;
+    });
+    if(!ok) return;               /* 깨진 저장본은 무시하고 빈 상태로 시작 */
+    rows=d.rows; curPlan = d.curPlan && D.plans[d.curPlan] ? d.curPlan : null;
+    if(d.target) document.getElementById('lenTarget').value=d.target;
+    if(shows().length){ mode='edit'; setMode(); }
   }
   function f3(s){var m=Math.floor(s/60);return String(m).padStart(2,'0')+':'+(s-m*60).toFixed(3).padStart(6,'0');}
 
@@ -1495,7 +1530,10 @@ code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);padding:1
     if(y || e.shiftKey) redo(); else undo();
   });
 
+  restoreSaved();
   renderCap(); renderEL(); renderSk(); markCues(); syncUndoBtns(); if(FEATURES.versionList) renderVersions();
+  saveReady=true;
+  window.addEventListener('pagehide', saveNow);   /* 저장 대기 중에 창을 닫아도 마지막 변경까지 남김 */
 })();
 </script>
 
