@@ -81,8 +81,8 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | h1 | 20 / 700 / 36 | 업로드 확인의 최종 길이 숫자 |
 | h2 | 18 / 600 / 24 | 문서 섹션 제목, 인트로 화면 제목 |
 | h3 · subtitle | 16 / 600·500 / 23 | 모달 제목, 카드 제목, 브랜드 |
-| body · body-strong | 15 / 400·600 / 22 | 자막 문장, 탭, 버튼(md), 표 본문, 입력값 |
-| caption | 12 / 400 / 20 | 시간·메타 정보, 뱃지, 칩, 안내 문구, 범례, 버튼(sm·xs) |
+| body · body-strong | 15 / 400·600 / 22 | 슬라이드 헤더, 탭, 버튼(md), 표 본문, 입력값 |
+| caption | 12 / 400 / 20 | 자막 문장, 시간·메타 정보, 뱃지, 칩, 안내 문구, 범례, 버튼(sm·xs) |
 
 ## 컴포넌트
 
@@ -109,7 +109,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 |---|---|
 | 시크바 | 높이 32 트랙(`--hide-soft`, radius 4). ON 블록 = primary(양 끝 1px primary/strong 경계), OFF 블록 = `--hide`, 인트로 = 4px `--intro` 막대 |
 | 탐색 구역 | 높이 16, raised 배경. 재생 헤드 = `--bar` 삼각형 + 2px 세로선 |
-| 자막 행 | 시간(12px, 44px 폭) + 문장(15px). 편집본 포함 = 좌측 4px primary, 재생 중 = row-highlight + 주황 시간, 제외 = 취소선 + caption 색 |
+| 자막 행 | 시간(12px, 44px 폭) + 문장(caption 12px/20). 편집본 포함 = 좌측 4px primary, 재생 중 = row-highlight + 주황 시간, 제외 = 취소선 + caption 색 |
 | 슬라이드 헤더 | sticky, raised 배경, 15px 600 |
 | 검색 형광펜 | primary surface 배경 + 하단 2px primary. 현재 결과는 primary 채움 |
 
