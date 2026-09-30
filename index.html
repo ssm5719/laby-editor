@@ -113,7 +113,10 @@ p{margin:0}
 .btn.pri:hover{background:var(--pri-strong);border-color:var(--pri-strong)}
 .btn.pri-o{border-color:var(--pri);color:var(--pri)}
 .btn.pri-o:hover{background:var(--pri-surface)}
-.btn.sm{height:28px;border-radius:4px;font-size:var(--fs-cap);line-height:20px}
+.btn.sm{height:28px;border-radius:4px;font-size:var(--fs-cap);line-height:20px;gap:2px}
+.btn.txt{border-color:transparent;background:transparent}
+.btn.txt:hover{border-color:transparent;background:var(--hide-soft)}
+.demo{display:flex;align-items:center;gap:8px;font-size:var(--fs-cap);line-height:20px;color:var(--muted)}
 .btn:disabled{background:var(--dis-bg);border-color:var(--dis-bg);color:var(--dis);cursor:default}
 /* 결과물 길이 상시 표시 + 목표 시간 */
 .lenbox{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 10px;font-size:var(--fs-cap);line-height:20px;
@@ -185,17 +188,13 @@ p{margin:0}
 /* 자막·슬라이드 검색 — Input sm(28px) */
 .srch{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
 .srch .fld{flex:1;min-width:0;position:relative;display:flex;align-items:center}
-.srch .fld .ic{position:absolute;left:6px;color:var(--muted);pointer-events:none}
-.srch input{flex:1;min-width:0;height:28px;font:400 var(--fs-cap)/20px var(--ui);padding:0 10px 0 30px;border:1px solid var(--line);border-radius:4px;
+.srch .fld .ic{position:absolute;left:8px;color:var(--muted);pointer-events:none}
+.srch input{flex:1;min-width:0;height:32px;font:400 var(--fs-cap)/20px var(--ui);padding:0 10px 0 30px;border:1px solid var(--line);border-radius:4px;
   background:var(--panel);color:var(--ink)}
 .srch input::placeholder{color:var(--ink-2)}
 .srch input:hover{border-color:var(--pri-subtle)}
 .srch input:focus{outline:none;border-color:var(--pri-strong)}
 .srch .sc{font-family:var(--num);font-size:var(--fs-cap);line-height:20px;color:var(--muted);white-space:nowrap}
-.srch .sb{width:28px;height:28px;border-radius:4px;border:1px solid var(--line);background:var(--panel);color:var(--neutral);
-  cursor:pointer;display:grid;place-items:center;padding:0}
-.srch .sb:hover{border-color:var(--pri-subtle)}
-.srch .sb:disabled{color:var(--dis);border-color:var(--line);cursor:default}
 mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 var(--pri);border-radius:2px}
 .srcur mark.hl{background:var(--pri);color:#FFFFFF;box-shadow:none}
 .cue.srcur,.slidehd.srcur{box-shadow:inset 4px 0 0 var(--pri-strong)}
@@ -215,7 +214,7 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .slidehd .t{font-family:var(--num);font-size:var(--fs-cap);line-height:20px;color:var(--ink-2);flex:none;width:44px;font-weight:400}
 .slidehd .x{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .slidehd.bad{color:var(--muted);font-weight:400}
-.slidehd .stgl[aria-pressed="mixed"]{background:var(--pri-surface);border-color:var(--pri);color:var(--pri-strong)}
+.slidehd .smix{flex:none;font-size:var(--fs-cap);line-height:20px;font-weight:400;color:var(--pri-strong)}
 .slidehd.cut .x{text-decoration:line-through;color:var(--muted)}
 .cue{display:flex;gap:10px;padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--line-2);align-items:flex-start;
   -webkit-user-select:none;user-select:none}
@@ -265,11 +264,28 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .elrow.introrow, .elrow.introrow.off{background:transparent}
 .elmeta.off{opacity:.55}
 .elmeta.off b{color:var(--muted)}
-/* ON/OFF — Button xs(22px): ON = primary 채움, OFF = neutral outlined */
-.tgl{flex:none;font:400 var(--fs-cap)/20px var(--num);height:22px;padding:0 6px;border-radius:4px;cursor:pointer;
-  border:1px solid var(--line-hi);background:var(--panel);color:var(--ink-2);min-width:44px;text-align:center}
-.tgl:hover{border-color:var(--pri-subtle)}
-.tgl[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#FFFFFF}
+/* ON/OFF — laby Toggle(Switch). xs 32×20: on = primary, off = state/disabled. 안의 ON/OFF 글자는 화면에 안 보이고 스크린리더용 */
+.tgl{position:relative;flex:none;display:inline-block;width:32px;height:20px;padding:0;border:none;border-radius:9999px;cursor:pointer;
+  background:var(--hide);overflow:hidden;color:transparent;font-size:0;line-height:0;transition:background .15s}
+.tgl::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:9999px;background:#FFFFFF;
+  box-shadow:var(--sh-seg);transition:transform .15s}
+.tgl:hover{background:var(--line-hi)}
+.tgl[aria-pressed="true"]{background:var(--pri)}
+.tgl[aria-pressed="true"]:hover{background:var(--pri-strong)}
+.tgl[aria-pressed="true"]::after{transform:translateX(12px)}
+.tgl[aria-pressed="mixed"]{background:var(--pri-surface);box-shadow:inset 0 0 0 1px var(--pri)}
+.tgl[aria-pressed="mixed"]::after{transform:translateX(6px)}
+/* 라벨 붙은 스위치 — Toggle sm 40×24 + caption 라벨 */
+.swl{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 4px;border:none;background:transparent;cursor:pointer;
+  font:400 var(--fs-cap)/20px var(--num);color:var(--ink);white-space:nowrap}
+.swl .tgl{width:40px;height:24px}
+.swl .tgl::after{width:20px;height:20px}
+.swl:hover .tgl{background:var(--line-hi)}
+.swl[aria-pressed="true"] .tgl{background:var(--pri)}
+.swl[aria-pressed="true"]:hover .tgl{background:var(--pri-strong)}
+.swl[aria-pressed="true"] .tgl::after{transform:translateX(16px)}
+.swl:disabled{cursor:default;color:var(--dis)}
+.swl:disabled .tgl{background:var(--dis-bg)}
 .elmeta{padding:0 12px 8px 12px;font-size:var(--fs-cap);line-height:20px;color:var(--ink-2);
   border-bottom:1px solid var(--line-2)}
 .elmeta b{color:var(--ink);font-weight:600}
@@ -318,7 +334,6 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--seg-on);border-color:var(--seg-on-line);color:var(--ink);font-weight:600;box-shadow:var(--sh-seg)}
 .seg button:focus-visible{outline:2px solid var(--pri);outline-offset:-2px}
-#btnIntro[aria-pressed="true"]{border-color:var(--pri);color:var(--pri-strong);background:var(--pri-surface)}
 .tmr{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:var(--fs-body);color:var(--ink-2);margin-left:auto}
 
 .sk{position:relative;height:44px;background:var(--hide-soft);border:1px solid var(--line);
@@ -425,6 +440,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
 
 <section class="sec">
   <p>기존 에디터의 <strong>Cut → Show/Hide → 저장</strong> 구조를 그대로 둡니다. AI는 Edit List를 자동으로 채워 넣는 역할만 하므로, CMS의 기존 concat 저장 로직은 수정할 필요가 없습니다. 아래는 실제 강의 영상의 자막·OCR 데이터로 동작하는 화면입니다 — 자막을 클릭하고, 프롬프트 칩을 눌러 보십시오.</p>
+  <p class="demo">프로토타입 확인용 <button class="btn sm txt" type="button" id="btnCapCycle"><span class="ic s16">replay</span>자막 추출 상태 바꿔 보기</button></p>
 </section>
 
 <div class="mock" id="mock">
@@ -439,7 +455,6 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       <span class="ls" id="lenState" aria-live="polite"></span>
     </div>
     <span class="badge ok" id="capbadge"><span class="dot"></span>자막 추출 완료</span>
-    <button class="btn" type="button" id="btnCapCycle">상태 전환</button>
     <button class="btn pri" type="button" id="btnSave"><span class="ic">cloud_upload</span>편집 완료 · 업로드</button>
   </div>
 
@@ -474,13 +489,13 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       <div class="srch" id="srchBar">
         <span class="fld"><span class="ic s16" aria-hidden="true">search</span><input id="srchIn" type="search" placeholder="자막·슬라이드 검색 (예: 네크로시스)" aria-label="자막·슬라이드 검색" autocomplete="off"></span>
         <span class="sc" id="srchCnt" aria-live="polite"></span>
-        <button class="sb" type="button" id="srchPrev" title="이전 결과 (Shift+Enter)" aria-label="이전 결과" disabled><span class="ic">keyboard_arrow_up</span></button>
-        <button class="sb" type="button" id="srchNext" title="다음 결과 (Enter)" aria-label="다음 결과" disabled><span class="ic">keyboard_arrow_down</span></button>
+        <button class="tb" type="button" id="srchPrev" title="이전 결과 (Shift+Enter)" aria-label="이전 결과" disabled><span class="ic">keyboard_arrow_up</span></button>
+        <button class="tb" type="button" id="srchNext" title="다음 결과 (Enter)" aria-label="다음 결과" disabled><span class="ic">keyboard_arrow_down</span></button>
       </div>
       <div class="pane" id="paneS" role="tabpanel"></div>
       <div class="pane" id="paneE" role="tabpanel" hidden></div>
       <div class="pane" id="paneV" role="tabpanel" hidden></div>
-      <div class="hint-range" id="hintRange">자막에 마우스를 올리면 나오는 <b>ON/OFF</b>로 문장을 빼거나 넣을 수 있습니다. 버튼을 <b>누른 채 위아래로 끌면</b> 여러 줄을, 슬라이드 제목 옆 버튼으로는 슬라이드 전체를 한 번에 바꿉니다.</div>
+      <div class="hint-range" id="hintRange">자막에 마우스를 올리면 나오는 <b>ON/OFF</b>로 문장을 빼거나 넣을 수 있습니다. 스위치를 <b>누른 채 위아래로 끌면</b> 여러 줄을, 슬라이드 제목 옆 스위치로는 슬라이드 전체를 한 번에 바꿉니다.</div>
       <div class="addbar" id="addBar" hidden>
         <span class="lbl" id="addBarLabel"></span>
         <button class="btn" type="button" id="addBarCancel">취소</button>
@@ -502,7 +517,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
         <button type="button" id="mAll" aria-pressed="true">전체 재생</button>
         <button type="button" id="mEdit" aria-pressed="false">편집본 재생</button>
       </div>
-      <button class="btn" type="button" id="btnIntro" aria-pressed="false">인트로 전체 삽입</button>
+      <button class="swl" type="button" id="btnIntro" aria-pressed="false" disabled><span class="tgl" aria-hidden="true"></span>인트로 전체 삽입</button>
       <button class="btn pri" type="button" id="btnQuickSave" hidden>+ 새 버전으로 저장</button>
       <span class="tmr" id="tmr">00:00.0 / 52:29</span>
     </div>
@@ -533,15 +548,15 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       <tbody>
         <tr><td class="k2">콘텐츠명</td><td>편집 대상 콘텐츠 제목. CMS 콘텐츠 목록에서 &lsquo;편집&rsquo;으로 진입할 때 전달받습니다.</td></tr>
         <tr><td class="k2">결과물 길이</td><td>상단에 <strong>편집본 길이 / 원본 길이</strong>를 항상 표시합니다(ON 구간 + 인트로 합계). 편집할 때마다 즉시 바뀝니다. 목표 시간(분)을 넣으면 이내일 때 초록색으로 남은 여유를, 넘으면 주홍색으로 초과 시간을 보여줍니다.</td></tr>
-        <tr><td class="k2">자막 추출 상태</td><td>세 상태를 가집니다. <strong>완료</strong>면 모든 프롬프트 사용 가능, <strong>추출 중</strong>이면 진행률과 함께 자막 필요 프롬프트가 잠김, <strong>미추출</strong>이면 &lsquo;자막 추출&rsquo; 버튼이 노출되고 시간 연산형 프롬프트만 허용됩니다. 상태 전환 버튼으로 확인하십시오.</td></tr>
+        <tr><td class="k2">자막 추출 상태</td><td>세 상태를 가집니다. <strong>완료</strong>면 모든 프롬프트 사용 가능, <strong>추출 중</strong>이면 진행률과 함께 자막 필요 프롬프트가 잠김, <strong>미추출</strong>이면 &lsquo;자막 추출&rsquo; 버튼이 노출되고 시간 연산형 프롬프트만 허용됩니다. 화면 위쪽 &lsquo;자막 추출 상태 바꿔 보기&rsquo;로 확인하십시오(프로토타입 확인용이라 목업 밖에 둡니다).</td></tr>
         <tr><td class="k2">AI 프롬프트 입력</td><td>자연어 입력 후 &lsquo;편집안 생성&rsquo;. 결과는 Edit List와 시크바에 즉시 반영되며 <strong>이 시점에 렌더링은 발생하지 않습니다.</strong></td></tr>
         <tr><td class="k2">프롬프트 예시 칩</td><td>자주 쓰는 프롬프트를 칩으로 제공. 자막이 없으면 자막 필요 칩에 자물쇠가 표시되고 비활성화됩니다.</td></tr>
         <tr><td class="k2">플레이어</td><td>편집 전에는 원본 전체를 재생합니다. 편집안 생성 후 &lsquo;편집본 재생&rsquo;으로 전환하면 Show 구간만 이어서 재생합니다.</td></tr>
         <tr><td class="k2">자막 스크립트 / Edit List 탭</td><td>기본은 자막 스크립트. 편집안이 생성되면 Edit List 탭으로 자동 전환됩니다.</td></tr>
-        <tr><td class="k2">자막 행</td><td>시간과 발화 텍스트. 클릭하면 시크바가 해당 시간으로 이동합니다. 재생 중에는 현재 자막이 강조되고 자동 스크롤됩니다. 편집안에 포함된 구간의 자막은 왼쪽에 주황 띠가 붙습니다. <strong>마우스를 올리면 나오는 ON/OFF 버튼으로 그 문장을 결과물에서 빼거나 넣습니다</strong> — 뺀 문장은 취소선으로 표시되어 자막만 읽어도 결과물의 대본이 보입니다. 연속된 문장을 빼면 사이의 짧은 공백도 함께 빠집니다. 버튼을 누른 채 위아래로 끌면 지나간 줄이 모두 같은 상태로 바뀝니다.</td></tr>
+        <tr><td class="k2">자막 행</td><td>시간과 발화 텍스트. 클릭하면 시크바가 해당 시간으로 이동합니다. 재생 중에는 현재 자막이 강조되고 자동 스크롤됩니다. 편집안에 포함된 구간의 자막은 왼쪽에 주황 띠가 붙습니다. <strong>마우스를 올리면 나오는 ON/OFF 스위치로 그 문장을 결과물에서 빼거나 넣습니다</strong> — 뺀 문장은 취소선으로 표시되어 자막만 읽어도 결과물의 대본이 보입니다. 연속된 문장을 빼면 사이의 짧은 공백도 함께 빠집니다. 버튼을 누른 채 위아래로 끌면 지나간 줄이 모두 같은 상태로 바뀝니다.</td></tr>
         <tr><td class="k2">자막 검색</td><td>자막 탭 상단 검색창에 단어를 입력하면 자막과 슬라이드 제목에서 찾아 <strong>해당 줄로 이동하고 주황 형광펜으로 표시</strong>합니다. Enter로 다음, Shift+Enter로 이전 결과, ESC로 검색을 지웁니다. 음성인식이 띄어 적는 경우가 있어 띄어쓰기는 무시합니다. 목록을 거르지 않으므로 앞뒤 맥락을 보며 바로 ON/OFF 할 수 있고, 재생 위치는 바꾸지 않습니다.</td></tr>
-        <tr><td class="k2">슬라이드 구분 헤더</td><td>OCR로 추출한 PPT 제목을 자막 흐름 사이에 삽입해 목차 역할을 합니다. <strong>시간이 자막 행과 같은 열에 정렬되고 <span class="bdg ppt">ppt</span> 뱃지로 구분</strong>됩니다. 클릭하면 해당 슬라이드 시작 지점으로 이동합니다. 제목을 인식하지 못한 구간은 회색 처리합니다. <strong>헤더 오른쪽 ON/OFF 버튼으로 그 슬라이드 구간을 통째로 빼거나 넣습니다</strong> — 일부 문장만 포함된 슬라이드는 &lsquo;일부&rsquo;로 표시되고, 누르면 전체가 빠집니다.</td></tr>
-        <tr><td class="k2">Edit List</td><td>모든 행이 <strong>시간 · 길이 · ON/OFF</strong>의 같은 형식을 가집니다. 시간은 원본 영상 기준 하나만 씁니다. ON/OFF 버튼으로 결과물에 넣을지만 정하며, 이것이 기존 에디터의 Show/Hide와 같은 값입니다. <strong>시간을 클릭하면 그 구간의 시작 지점부터 재생</strong>합니다 — 편집본 재생 중이면 그 구간부터 편집본이 이어집니다.</td></tr>
+        <tr><td class="k2">슬라이드 구분 헤더</td><td>OCR로 추출한 PPT 제목을 자막 흐름 사이에 삽입해 목차 역할을 합니다. <strong>시간이 자막 행과 같은 열에 정렬되고 <span class="bdg ppt">ppt</span> 뱃지로 구분</strong>됩니다. 클릭하면 해당 슬라이드 시작 지점으로 이동합니다. 제목을 인식하지 못한 구간은 회색 처리합니다. <strong>헤더 오른쪽 ON/OFF 스위치로 그 슬라이드 구간을 통째로 빼거나 넣습니다</strong> — 일부 문장만 포함된 슬라이드는 &lsquo;일부&rsquo;로 표시되고, 누르면 전체가 빠집니다.</td></tr>
+        <tr><td class="k2">Edit List</td><td>모든 행이 <strong>시간 · 길이 · ON/OFF</strong>의 같은 형식을 가집니다. 시간은 원본 영상 기준 하나만 씁니다. ON/OFF 스위치로 결과물에 넣을지만 정하며, 이것이 기존 에디터의 Show/Hide와 같은 값입니다. <strong>시간을 클릭하면 그 구간의 시작 지점부터 재생</strong>합니다 — 편집본 재생 중이면 그 구간부터 편집본이 이어집니다.</td></tr>
         <tr><td class="k2">ON / OFF</td><td><strong>ON</strong>은 결과물에 포함(기존 Show), <strong>OFF</strong>는 제외(기존 Hide)입니다. 행을 지우는 대신 OFF로 두면 되돌리기가 쉽고, 삭제 버튼이 없어 실수로 구간을 잃지 않습니다. <strong>OFF로 바뀌어도 행과 내용은 그대로 보이고 색만 흐려집니다</strong> — 접히거나 사라지지 않으므로 목록의 줄 위치가 흔들리지 않습니다. 인트로 행도 같은 ON/OFF로 켜고 끕니다.</td></tr>
         <tr><td class="k2">행 뱃지</td><td><span class="bdg intro">intro</span> 구간 사이에 삽입되는 전환 클립, <span class="bdg ppt">ppt</span> 슬라이드 전환 지점. 파일명은 적지 않고 뱃지로만 구분하며, 어떤 클립인지는 마우스 오버 툴팁과 패널 하단 범례로 확인합니다. 원본 구간 행에는 뱃지가 없어 세 종류가 한눈에 갈립니다. <strong>인트로 행에는 시간을 적지 않습니다</strong> — 바로 아래 구간 앞에 붙는다는 것이 위치로 이미 드러나기 때문입니다.</td></tr>
         <tr><td class="k2">탐색 구역</td><td>시간 눈금 아래 놓인 얇은 막대로, 역삼각형 헤드가 현재 재생 위치를 가리킵니다. <strong>클릭하거나 드래그하면 그 위치로 이동해 재생</strong>하며, 헤드와 아래 시크바의 재생 위치 표시가 함께 움직입니다. 편집본 재생 중에는 OFF 구간으로 이동할 수 없어 커서가 금지 표시로 바뀝니다. 전체 재생 모드에서는 어디든 이동할 수 있습니다.</td></tr>
@@ -728,7 +743,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
         d.title='슬라이드 '+h.n+' · '+f1(h.t)+' – '+f1(h.e);
         d.innerHTML='<span class="t">'+f1(h.t)+'</span><span class="bdg ppt">ppt</span>'+
           '<span class="x">'+(h.ok?h.title:'제목 인식 실패 — 전면 도해 슬라이드')+'</span>'+
-          '<button class="tgl stgl" type="button" aria-pressed="true">ON</button>';
+          '<span class="smix" hidden>일부</span><button class="tgl stgl" type="button" aria-pressed="true">ON</button>';
         frag.appendChild(d); headEls.push(d); hi++;
       }
       var e=document.createElement('div');
@@ -1252,8 +1267,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     var btn=document.getElementById('btnIntro');
     var has=rows.some(function(r){return r.m==='Intro'||r.m==='IntroOff';});
     var inserted = has && !rows.some(function(r){return r.m==='IntroOff';});
-    btn.classList.toggle('pri', inserted);
-    btn.setAttribute('aria-pressed', inserted?'true':'false');
+    btn.disabled=!has; btn.setAttribute('aria-pressed', inserted?'true':'false');
     btn.title = !has ? '' : (inserted?'인트로가 모든 구간에 삽입되어 있습니다 (누르면 전체 해제)':'인트로가 삽입되지 않았습니다 (누르면 전체 삽입)');
   }
   function renderEL(){
@@ -1291,7 +1305,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     h+='<div class="symkey">'+
        '<b><span class="bdg intro">intro</span>전환 클립</b>'+
        '<b><span class="bdg ppt">ppt</span>슬라이드 전환</b>'+
-       '<b><span class="tgl" aria-pressed="true" style="cursor:default">ON</span>결과물에 포함</b></div>';
+       '<b><span class="tgl" aria-pressed="true" style="cursor:default">ON</span>결과물에 포함</b><b><span class="tgl" aria-pressed="false" style="cursor:default">OFF</span>제외</b></div>';
     pane.innerHTML=h; markRow();
     var n=shows().length, tot=shows().reduce(function(a,r){return a+(r.e-r.s);},0);
     tot += rows.filter(function(r){return r.m==='Intro';}).length*INTRO;
@@ -1494,7 +1508,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       var st=slideState(k), b=el.lastChild;
       el.classList.toggle('cut', has && st==='off');
       b.setAttribute('aria-pressed', st==='on'?'true':st==='off'?'false':'mixed');
-      b.textContent = st==='on' ? 'ON' : st==='off' ? 'OFF' : '일부';
+      b.textContent = st==='on' ? 'ON' : st==='off' ? 'OFF' : '일부'; el.querySelector('.smix').hidden = st!=='mix';
       b.title = st==='off' ? '이 슬라이드 전체를 다시 결과물에 넣습니다 (ON)'
               : st==='mix' ? '이 슬라이드의 일부 문장만 포함되어 있습니다 · 누르면 슬라이드 전체를 뺍니다 (OFF)'
               : '이 슬라이드 전체를 결과물에서 뺍니다 (OFF)';

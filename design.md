@@ -88,18 +88,33 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 
 ## 컴포넌트
 
+에디터 화면의 누를 수 있는 요소는 **아래 여섯 종류뿐**이다. 새 버튼이 필요하면 이 중에서 고른다.
+
+| 종류 | 언제 쓰나 |
+|---|---|
+| 사각 버튼 (`.btn`) | 한 번 누르면 실행되는 동작 (업로드, 편집안 생성, 모달 확인·취소) |
+| 아이콘 버튼 (`.tb`) | 글자 없이 아이콘만 있는 동작 (재생·정지·자르기·실행취소·검색 이동) — 전부 같은 32×32 |
+| 칩 (`.chip`) | 미리 준비된 선택지 고르기 (프롬프트 예시) |
+| 탭 (`.tab`) | 화면 전환 (자막 스크립트 / Edit List) |
+| 세그먼트 (`.seg`) | 둘 중 하나 고르기 (전체 재생 / 편집본 재생) |
+| 스위치 (`.tgl`, `.swl`) | **켜짐/꺼짐 — 결과물에 넣을지 뺄지는 모두 스위치** (자막·슬라이드·Edit List 행, 인트로 전체 삽입) |
+
+- 테두리 있는 요소의 테두리색은 `--line`(#E0E0E0) 하나. 예외는 primary outlined(`.btn.pri-o`)뿐.
+- 프로토타입 확인용 컨트롤(자막 추출 상태 바꿔 보기)은 제품 UI가 아니므로 목업 밖 설명 영역에 text 버튼(`.btn.sm.txt`)으로 둔다.
+
 | 컴포넌트 | 스펙 | 클래스 |
 |---|---|---|
 | Button md | 높이 32, radius 6, 좌우 12, 15px **Regular(400)** — contained도 굵게 하지 않음(600은 lg 40px 전용). contained(primary) = `.btn.pri` 흰 글자, outlined(neutral) = `.btn` 글자 neutral/default, outlined(primary) = `.btn.pri-o` 글자 primary/default | `.btn` |
-| Button sm | 높이 28, radius 4, 12px | `.btn.sm` |
-| 아이콘 버튼 | 32×32, radius 6, 아이콘 20. `title`·`aria-label` 필수 | `.tb` |
-| ON/OFF | Button xs: 높이 22, radius 4, 12px. ON = primary 채움, OFF = neutral outlined, 일부 = primary surface | `.tgl` |
+| Button sm | 높이 28, radius 4, 12px. text variant(테두리·배경 없음) = `.btn.sm.txt` | `.btn.sm` |
+| 아이콘 버튼 | 32×32, radius 6, 아이콘 20, neutral outlined. 툴바·검색 이전/다음 공통. `title`·`aria-label` 필수. (모달 닫기 ✕만 laby Modal 스펙대로 테두리 없는 20px 아이콘) | `.tb` |
+| Toggle(Switch) xs | 트랙 32×20, 노브 16. on = primary, off = state/disabled(`--hide`), 일부 = primary surface + primary 테두리 + 노브 가운데(옆에 caption "일부"). 안의 ON/OFF 글자는 스크린리더용으로만 두고 화면엔 숨김 | `.tgl` |
+| Toggle(Switch) sm + 라벨 | 트랙 40×24, 노브 20, 라벨 caption 12px, 간격 8. 대상이 없으면 disabled | `.swl` |
 | Badge xs | 높이 22, pill, 12px. 상태는 시맨틱 subtle, 그 외 default | `.badge` |
 | 정적 라벨 뱃지 | 높이 22, radius 4, 12px. `ppt` = default outlined, `intro` = scene 채움 | `.bdg` |
 | 필터 칩 | 높이 28, pill, 12px. 선택 = primary 채움, 비선택 = default outlined, hover = primary 테두리·surface | `.chip` |
 | Tabs | 언더라인. 좌우 16·상하 10, 15px. 활성 600 + 하단 2px primary, 비활성 text/secondary 500 | `.tab` |
 | Segmented Toggle | 트랙 `--seg-track` · radius 6 · 안쪽 2. 활성 아이템은 흰 배경 + 보더 + 그림자(primary 채움 없음) | `.seg` |
-| Input | md 32 / sm 28, radius 4, 좌우 10. hover primary/subtle, focus primary/strong 테두리 | `.ai-in input`, `.srch input`, `.lenbox input` |
+| Input | md 32(에디터 입력은 모두 md; 목표 시간만 sm 28), radius 4, 좌우 10. hover primary/subtle, focus primary/strong 테두리 | `.ai-in input`, `.srch input`, `.lenbox input` |
 | Card | 보더 1px, radius 8. 제목 영역 raised 배경 · 좌우 20 · 상하 12 · 16px 600 | `.mock`, `.note`, `.tbl` |
 | Modal basic | 최대 572px, radius 8. 헤더·푸터 좌우 24 · 상하 16 + 구분선, 본문 24. 취소 = outlined, 확인 = contained, 간격 10 | `.modalcard` |
 | Spinner | 지름 20, 테두리 2, 트랙 `--hide` + 회전 구간 primary | `.spin` |
