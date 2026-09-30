@@ -88,7 +88,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 
 ## 컴포넌트
 
-에디터 화면의 누를 수 있는 요소는 **아래 여섯 종류뿐**이다. 새 버튼이 필요하면 이 중에서 고른다.
+에디터 화면의 누를 수 있는 요소는 **아래 일곱 종류뿐**이다. 새 버튼이 필요하면 이 중에서 고른다.
 
 | 종류 | 언제 쓰나 |
 |---|---|
@@ -97,7 +97,8 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | 칩 (`.chip`) | 미리 준비된 선택지 고르기 (프롬프트 예시) |
 | 탭 (`.tab`) | 화면 전환 (자막 스크립트 / Edit List) |
 | 세그먼트 (`.seg`) | 둘 중 하나 고르기 (전체 재생 / 편집본 재생) |
-| 스위치 (`.tgl`, `.swl`) | **켜짐/꺼짐 — 결과물에 넣을지 뺄지는 모두 스위치** (자막·슬라이드·Edit List 행, 인트로 전체 삽입) |
+| ON/OFF 버튼 (`.tgl`) | 목록 행 하나를 결과물에 넣거나 빼기 (자막 줄·슬라이드 헤더·Edit List 행). 글자로 ON/OFF/일부를 바로 읽을 수 있게 스위치 대신 버튼을 씀 (사용자 결정) |
+| 스위치 (`.swl`) | 화면 전체에 걸린 설정 켜기/끄기 (인트로 전체 삽입) |
 
 - 테두리 있는 요소의 테두리색은 `--line`(#E0E0E0) 하나. 예외는 primary outlined(`.btn.pri-o`)뿐.
 - 프로토타입 확인용 컨트롤(자막 추출 상태 바꿔 보기)은 제품 UI가 아니므로 목업 밖 설명 영역에 text 버튼(`.btn.sm.txt`)으로 둔다.
@@ -107,8 +108,8 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | Button md | 높이 32, radius 6, 좌우 12, 15px **Regular(400)** — contained도 굵게 하지 않음(600은 lg 40px 전용). contained(primary) = `.btn.pri` 흰 글자, outlined(neutral) = `.btn` 글자 neutral/default, outlined(primary) = `.btn.pri-o` 글자 primary/default | `.btn` |
 | Button sm | 높이 28, radius 4, 12px. text variant(테두리·배경 없음) = `.btn.sm.txt` | `.btn.sm` |
 | 아이콘 버튼 | 32×32, radius 6, 아이콘 20, neutral outlined. 툴바·검색 이전/다음 공통. `title`·`aria-label` 필수. (모달 닫기 ✕만 laby Modal 스펙대로 테두리 없는 20px 아이콘) | `.tb` |
-| Toggle(Switch) xs | 트랙 32×20, 노브 16. on = primary, off = state/disabled(`--hide`), 일부 = primary surface + primary 테두리 + 노브 가운데(옆에 caption "일부"). 안의 ON/OFF 글자는 스크린리더용으로만 두고 화면엔 숨김 | `.tgl` |
-| Toggle(Switch) sm + 라벨 | 트랙 40×24, 노브 20, 라벨 caption 12px, 간격 8. 대상이 없으면 disabled | `.swl` |
+| ON/OFF 버튼 | Button xs: 높이 22, radius 4, 12px, 최소 폭 44. ON = primary 채움, OFF = neutral outlined(`--line` 테두리), 일부 = primary surface + primary 테두리 | `.tgl` |
+| Toggle(Switch) sm + 라벨 | 트랙 40×24(`.sw`), 노브 20, 라벨 caption 12px, 간격 8. 대상이 없으면 disabled | `.swl` |
 | Badge xs | 높이 22, pill, 12px. 상태는 시맨틱 subtle, 그 외 default | `.badge` |
 | 정적 라벨 뱃지 | 높이 22, radius 4, 12px. `ppt` = default outlined, `intro` = scene 채움 | `.bdg` |
 | 필터 칩 | 높이 28, pill, 12px. 선택 = primary 채움, 비선택 = default outlined, hover = primary 테두리·surface | `.chip` |
