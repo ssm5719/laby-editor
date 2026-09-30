@@ -114,7 +114,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | Button sm | 높이 28, radius 4, 12px. text variant(테두리·배경 없음) = `.btn.sm.txt` | `.btn.sm` |
 | 아이콘 버튼 | 32×32, radius 6, 아이콘 20, neutral outlined. 툴바·검색 이전/다음 공통. `title`·`aria-label` 필수. (모달 닫기 ✕만 laby Modal 스펙대로 테두리 없는 20px 아이콘) | `.tb` |
 | ON/OFF 버튼 | Button xs: 높이 22, radius 4, 12px, 최소 폭 44. ON = primary outlined, OFF = neutral outlined(`--line` 테두리), 일부 = primary surface 바탕 + primary 테두리 | `.tgl` |
-| Toggle(Switch) sm + 라벨 | 트랙 40×24(`.sw`), 노브 20, 라벨 caption 12px, 간격 8. 대상이 없으면 disabled | `.swl` |
+| Toggle(Switch) xs + 라벨 | 트랙 32×20(`.sw`), 노브 16, 라벨 caption 12px, 간격 4 (laby xs 스펙). 대상이 없으면 disabled | `.swl` |
 | Badge xs | 높이 22, pill, 12px. 상태는 시맨틱 subtle, 그 외 default | `.badge` |
 | 정적 라벨 뱃지 | 높이 22, radius 4, 12px. `ppt` = default outlined, `intro` = scene 채움 | `.bdg` |
 | 필터 칩(AI 프롬프트) | 높이 28, pill, 12px. 선택 = AI outlined(`--ai` 테두리 · `--ai-ink` 글자), 비선택 = default outlined, hover = AI 테두리·`--ai-soft` | `.chip` |
