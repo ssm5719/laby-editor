@@ -15,8 +15,9 @@ LABY 에디터 "AI 편집 화면설계" 프로토타입. 강의자가 본인 강
 
 ## 핵심 상태 모델
 
-- `rows` 배열 = Edit List. 각 항목 `{s, e, m}`, `m`은 `Show`(ON) / `Hide`(OFF) / `Intro` / `IntroOff`
-- `Intro`·`IntroOff`는 길이 없는 마커 행 (바로 다음 Show 구간 앞에 인트로 삽입)
+- `rows` 배열 = Edit List. 각 항목 `{s, e, m}`, `m`은 `Show`(ON) / `Hide`(OFF)
+- 인트로는 행이 아니라 설정 하나(`introOn`). 켜면 떨어져 있는 모든 ON 구간 앞(첫 구간 포함)에 붙고, 바로 이어지는 ON 구간 사이에는 안 붙음 (`introBeforeRow()`, `introCount()`).
+  `data.js` 편집안의 `Intro` 행은 적용할 때 걸러내고 `introOn`으로 바꾼다. 실행취소 스냅샷에 `introOn`도 포함된다.
 - `rows`를 바꾼 뒤에는 `renderEL(); renderSk(); markCues();`로 화면 갱신
 
 ## 규칙
