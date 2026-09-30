@@ -19,8 +19,9 @@ LABY 에디터는 **laby-GUI 디자인 시스템**(Laby-4k 설정 프로그램�
 ## 색 위계
 
 - **primary(주황)** = 선택 · 포함 · 강조. 에디터에서는 **ON 구간**, 선택된 칩, 현재 재생 중인 줄, 활성 탭 인디케이터.
-- 카드(화면 영역) 하나에 **primary 채움 버튼은 하나**. 에디터 전체에서 채움은 "편집 완료 · 업로드"뿐이고,
-  "편집안 생성"은 primary outlined.
+- **[에디터 예외] 주황 채움(contained) 버튼은 쓰지 않는다.** 주황 위 흰 글자가 잘 안 보여서(사용자 결정, 09-30)
+  primary 버튼·선택된 칩·ON 버튼 모두 **primary outlined**(흰 바탕 + 주황 테두리·글자)로 통일한다.
+  주황 채움은 버튼이 아닌 표시(스위치 켜짐 트랙, 영상 위 태그, 검색 현재 결과)에만 남는다.
 - **초록(success)** 은 상태 표시 전용(자막 추출 완료, 완료 아이콘. 꺼둔 목표 시간 여유 표시 포함). 버튼·토글에 쓰지 않는다.
 - **파랑(secondary)·보라(custom)는 쓰지 않는다.** AI 기능도 별도 색 없이 기본 컴포넌트로 표현한다.
   - 예외: **타임라인(시크바) ON 블록만 secondary 파랑** (사용자 결정). 영상 트랙이 주황 UI 강조와 섞이지 않게 분리한 것으로, 다른 곳에 파랑을 쓰는 근거로 삼지 않는다.
@@ -97,7 +98,7 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 | 칩 (`.chip`) | 미리 준비된 선택지 고르기 (프롬프트 예시) |
 | 탭 (`.tab`) | 화면 전환 (자막 스크립트 / Edit List) |
 | 세그먼트 (`.seg`) | 둘 중 하나 고르기 (전체 재생 / 편집본 재생) |
-| ON/OFF 버튼 (`.tgl`) | 목록 행 하나를 결과물에 넣거나 빼기 (자막 줄·슬라이드 헤더·Edit List 행). 글자로 ON/OFF/일부를 바로 읽을 수 있게 스위치 대신 버튼을 씀 (사용자 결정) |
+| ON/OFF 버튼 (`.tgl`) | 목록 행 하나를 결과물에 넣거나 빼기 (슬라이드 헤더·Edit List 행. 자막 줄 버튼은 `FEATURES.cueToggle`로 꺼둠). 글자로 ON/OFF/일부를 바로 읽을 수 있게 스위치 대신 버튼을 씀 (사용자 결정) |
 | 스위치 (`.swl`) | 화면 전체에 걸린 설정 켜기/끄기 (인트로 전체 삽입) |
 
 - 테두리 있는 요소의 테두리색은 `--line`(#E0E0E0) 하나. 예외는 primary outlined(`.btn.pri-o`)뿐.
@@ -105,19 +106,19 @@ laby-GUI에 없는 영상 편집 상태를 기존 토큰에 매핑한 것이다.
 
 | 컴포넌트 | 스펙 | 클래스 |
 |---|---|---|
-| Button md | 높이 32, radius 6, 좌우 12, 15px **Regular(400)** — contained도 굵게 하지 않음(600은 lg 40px 전용). contained(primary) = `.btn.pri` 흰 글자, outlined(neutral) = `.btn` 글자 neutral/default, outlined(primary) = `.btn.pri-o` 글자 primary/default | `.btn` |
+| Button md | 높이 32, radius 6, 좌우 12, 15px **Regular(400)** — contained도 굵게 하지 않음(600은 lg 40px 전용). primary = `.btn.pri`·`.btn.pri-o` 둘 다 outlined(흰 바탕, 주황 테두리·글자, hover primary surface), neutral = `.btn` 글자 neutral/default | `.btn` |
 | Button sm | 높이 28, radius 4, 12px. text variant(테두리·배경 없음) = `.btn.sm.txt` | `.btn.sm` |
 | 아이콘 버튼 | 32×32, radius 6, 아이콘 20, neutral outlined. 툴바·검색 이전/다음 공통. `title`·`aria-label` 필수. (모달 닫기 ✕만 laby Modal 스펙대로 테두리 없는 20px 아이콘) | `.tb` |
-| ON/OFF 버튼 | Button xs: 높이 22, radius 4, 12px, 최소 폭 44. ON = primary 채움, OFF = neutral outlined(`--line` 테두리), 일부 = primary surface + primary 테두리 | `.tgl` |
+| ON/OFF 버튼 | Button xs: 높이 22, radius 4, 12px, 최소 폭 44. ON = primary outlined, OFF = neutral outlined(`--line` 테두리), 일부 = primary surface 바탕 + primary 테두리 | `.tgl` |
 | Toggle(Switch) sm + 라벨 | 트랙 40×24(`.sw`), 노브 20, 라벨 caption 12px, 간격 8. 대상이 없으면 disabled | `.swl` |
 | Badge xs | 높이 22, pill, 12px. 상태는 시맨틱 subtle, 그 외 default | `.badge` |
 | 정적 라벨 뱃지 | 높이 22, radius 4, 12px. `ppt` = default outlined, `intro` = scene 채움 | `.bdg` |
-| 필터 칩 | 높이 28, pill, 12px. 선택 = primary 채움, 비선택 = default outlined, hover = primary 테두리·surface | `.chip` |
+| 필터 칩 | 높이 28, pill, 12px. 선택 = primary outlined, 비선택 = default outlined, hover = primary 테두리·surface | `.chip` |
 | Tabs | 언더라인. 좌우 16·상하 10, 15px. 활성 600 + 하단 2px primary, 비활성 text/secondary 500 | `.tab` |
 | Segmented Toggle | 트랙 `--seg-track` · radius 6 · 안쪽 2. 활성 아이템은 흰 배경 + 보더 + 그림자(primary 채움 없음) | `.seg` |
 | Input | md 32(에디터 입력은 모두 md; 꺼둔 목표 시간 입력만 sm 28), radius 4, 좌우 10. hover primary/subtle, focus primary/strong 테두리 | `.ai-in input`, `.srch input`, `.lenbox input` |
 | Card | 보더 1px, radius 8. 제목 영역 raised 배경 · 좌우 20 · 상하 12 · 16px 600 | `.mock`, `.note`, `.tbl` |
-| Modal basic | 최대 572px, radius 8. 헤더·푸터 좌우 24 · 상하 16 + 구분선, 본문 24. 취소 = outlined, 확인 = contained, 간격 10 | `.modalcard` |
+| Modal basic | 최대 572px, radius 8. 헤더·푸터 좌우 24 · 상하 16 + 구분선, 본문 24. 취소 = neutral outlined, 확인 = primary outlined, 간격 10 | `.modalcard` |
 | Spinner | 지름 20, 테두리 2, 트랙 `--hide` + 회전 구간 primary | `.spin` |
 | Toast | 하단 중앙, radius 8, 좌우 16 · 상하 8, 12px, `--tip` 배경 | `.toast` |
 
