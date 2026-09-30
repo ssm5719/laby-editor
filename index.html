@@ -575,8 +575,8 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
         <tr><td class="k2">자막 검색</td><td>자막 탭 상단 검색창에 단어를 입력하면 자막과 슬라이드 제목에서 찾아 <strong>해당 줄로 이동하고 주황 형광펜으로 표시</strong>합니다. Enter로 다음, Shift+Enter로 이전 결과, ESC로 검색을 지웁니다. 음성인식이 띄어 적는 경우가 있어 띄어쓰기는 무시합니다. 목록을 거르지 않으므로 앞뒤 맥락을 보며 바로 ON/OFF 할 수 있고, 재생 위치는 바꾸지 않습니다.</td></tr>
         <tr><td class="k2">슬라이드 구분 헤더</td><td>OCR로 추출한 PPT 제목을 자막 흐름 사이에 삽입해 목차 역할을 합니다. <strong>시간이 자막 행과 같은 열에 정렬되고 <span class="bdg ppt">ppt</span> 뱃지로 구분</strong>됩니다. 클릭하면 해당 슬라이드 시작 지점으로 이동합니다. 제목을 인식하지 못한 구간은 회색 처리합니다. <strong>헤더 오른쪽 ON/OFF 버튼으로 그 슬라이드 구간을 통째로 빼거나 넣습니다</strong> — 일부 문장만 포함된 슬라이드는 &lsquo;일부&rsquo;로 표시되고, 누르면 전체가 빠집니다.</td></tr>
         <tr><td class="k2">Edit List</td><td>모든 행이 <strong>시간 · 길이 · ON/OFF</strong>의 같은 형식을 가집니다. 시간은 원본 영상 기준 하나만 씁니다. ON/OFF 버튼으로 결과물에 넣을지만 정하며, 이것이 기존 에디터의 Show/Hide와 같은 값입니다. <strong>시간을 클릭하면 그 구간의 시작 지점부터 재생</strong>합니다 — 편집본 재생 중이면 그 구간부터 편집본이 이어집니다.</td></tr>
-        <tr><td class="k2">ON / OFF</td><td><strong>ON</strong>은 결과물에 포함(기존 Show), <strong>OFF</strong>는 제외(기존 Hide)입니다. 행을 지우는 대신 OFF로 두면 되돌리기가 쉽고, 삭제 버튼이 없어 실수로 구간을 잃지 않습니다. <strong>OFF로 바뀌어도 행과 내용은 그대로 보이고 색만 흐려집니다</strong> — 접히거나 사라지지 않으므로 목록의 줄 위치가 흔들리지 않습니다. 인트로 행도 같은 ON/OFF로 켜고 끕니다.</td></tr>
-        <tr><td class="k2">행 뱃지</td><td><span class="bdg ai">AI</span> AI 편집안이 고른 구간(사용자가 경계를 고치면 <span class="bdg ai">AI · 수정</span>), <span class="bdg intro">intro</span> 구간 사이에 삽입되는 전환 클립, <span class="bdg ppt">ppt</span> 슬라이드 전환 지점. 파일명은 적지 않고 뱃지로만 구분하며, 어떤 클립인지는 마우스 오버 툴팁과 패널 하단 범례로 확인합니다. 원본 구간 행에는 뱃지가 없어 세 종류가 한눈에 갈립니다. <strong>인트로 행에는 시간을 적지 않습니다</strong> — 바로 아래 구간 앞에 붙는다는 것이 위치로 이미 드러나기 때문입니다.</td></tr>
+        <tr><td class="k2">ON / OFF</td><td><strong>ON</strong>은 결과물에 포함(기존 Show), <strong>OFF</strong>는 제외(기존 Hide)입니다. 행을 지우는 대신 OFF로 두면 되돌리기가 쉽고, 삭제 버튼이 없어 실수로 구간을 잃지 않습니다. <strong>OFF로 바뀌어도 행과 내용은 그대로 보이고 색만 흐려집니다</strong> — 접히거나 사라지지 않으므로 목록의 줄 위치가 흔들리지 않습니다. 인트로는 행으로 두지 않고 툴바의 &lsquo;인트로 전체 삽입&rsquo; 스위치로 다 넣거나 다 뺍니다.</td></tr>
+        <tr><td class="k2">행 뱃지</td><td><span class="bdg ai">AI</span> AI 편집안이 고른 구간(사용자가 경계를 고치면 <span class="bdg ai">AI · 수정</span>), <span class="bdg ppt">ppt</span> 슬라이드 전환 지점(자막 스크립트). 사용자가 만든 구간 행에는 뱃지가 없습니다. <strong>인트로는 Edit List에 행으로 두지 않습니다</strong> — 툴바 스위치를 켜면 떨어져 있는 모든 ON 구간 앞(첫 구간 포함)에 자동으로 붙고, 타임라인에 짙은 회색 막대로 표시됩니다.</td></tr>
         <tr><td class="k2">탐색 구역</td><td>시간 눈금 아래 놓인 재생바로, 유튜브처럼 <strong>지금까지 재생한 부분은 주황, 남은 부분은 회색</strong>으로 채워지고 동그란 손잡이가 현재 재생 위치를 가리킵니다. <strong>클릭하거나 드래그하면 그 위치로 이동해 재생</strong>하며, 헤드와 아래 시크바의 재생 위치 표시가 함께 움직입니다. 편집본 재생 중에는 OFF 구간으로 이동할 수 없어 커서가 금지 표시로 바뀝니다. 전체 재생 모드에서는 어디든 이동할 수 있습니다.</td></tr>
         <tr><td class="k2">시크바</td><td>ON 구간은 파란 박스, OFF 구간은 회색 박스로 표시합니다. 짙은 회색 막대는 인트로 삽입 지점, 세로선은 현재 재생 위치입니다. <strong>박스를 클릭하면 ON↔OFF가 즉시 전환</strong>됩니다. ON 박스는 양 끝을 드래그해 길이를 조절합니다(드래그 중 ESC로 취소). 서로 맞닿은 ON 박스는 옅은 테두리로 경계를 구분합니다. 편집으로 생긴 경계는 자동으로 합쳐지지 않으며, 같은 상태끼리 맞닿은 경계에는 작은 원 아이콘이 떠서 <strong>클릭하면 그 둘만 하나로 병합</strong>할 수 있습니다. 재생 위치 이동은 위쪽 탐색 구역이 담당합니다.</td></tr>
         <tr><td class="k2">편집 완료 · 업로드</td><td>누르면 <strong>최종 길이 · ON 구간 수 · 인트로 수</strong>를 요약한 확인 창이 뜨고, &lsquo;업로드&rsquo;를 눌러야 확정된 Edit List를 CMS로 전달합니다. &lsquo;계속 편집&rsquo;이나 ESC로 돌아갈 수 있습니다. 이후 처리는 기존 편집 기능과 동일하게 ffmpeg concat으로 새 콘텐츠를 생성하고 DB에 등록합니다.</td></tr>
@@ -613,7 +613,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       <tbody>
         <tr><td>사용자가 Cut으로 분할점 지정</td><td>AI가 구간 경계를 산출 후 무음 지점으로 스냅</td><td>경계가 문장 중간에서 잘리지 않음</td></tr>
         <tr><td>각 구간 Show/Hide 클릭</td><td>AI가 ON/OFF를 미리 설정</td><td>사용자는 검토·수정만</td></tr>
-        <tr><td>—</td><td><span class="bdg intro">intro</span> 행이 구간 사이에 삽입</td><td>행 단위로 ON/OFF</td></tr>
+        <tr><td>—</td><td><span class="bdg intro">intro</span> 클립을 ON 구간마다 앞에 삽입</td><td>&lsquo;인트로 전체 삽입&rsquo; 스위치로 다 넣거나 다 빼기</td></tr>
         <tr><td>저장 → ffmpeg concat</td><td class="n">동일</td><td>CMS 저장 로직 수정 불필요</td></tr>
       </tbody>
     </table>
@@ -642,6 +642,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     var e=v.error;
     console.warn('[LABY] video error:', e && ('code '+e.code+' — '+e.message));
   });
+  var introOn=false;  /* 인트로 전체 삽입 — 켜면 떨어져 있는 모든 ON 구간 앞(첫 구간 포함)에 인트로. Edit List에는 인트로 행을 두지 않음 */
   var rows=[], curPlan=null, mode='all', ci=-1, seeking=false, introUntil=0, introIdx=-1;
   var versions=[], verSeq=0, activeVerId=null; /* 편집안 목록 — AI 결과 + 수동 저장본 */
   var capState=2; /* 0 none 1 running 2 done */
@@ -651,7 +652,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   /* ---------- 실행취소 / 다시실행 ----------
      편집 상태(rows)를 바꾸는 모든 동작 직전에 recordUndo(설명)을 호출해 스냅샷을 쌓는다. */
   var undoStack=[], redoStack=[], UNDO_MAX=100;
-  function snapState(){ return { rows:rows.map(function(r){return Object.assign({},r);}), curPlan:curPlan }; }
+  function snapState(){ return { rows:rows.map(function(r){return Object.assign({},r);}), curPlan:curPlan, introOn:introOn }; }
   function recordUndo(label, state){
     undoStack.push({ label:label, state:state||snapState() });
     if(undoStack.length>UNDO_MAX) undoStack.shift();
@@ -659,7 +660,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     syncUndoBtns();
   }
   function restoreState(st){
-    rows=st.rows.map(function(r){return Object.assign({},r);}); curPlan=st.curPlan;
+    rows=st.rows.map(function(r){return Object.assign({},r);}); curPlan=st.curPlan; introOn=!!st.introOn;
     resetRangeUI();
     renderEL(); renderSk(); markCues();
     if(mode==='edit' && !shows().length){ mode='all'; setMode(); }
@@ -702,7 +703,8 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   function outLen(){               /* 편집안이 없으면 원본 전체가 결과물 */
     if(!rows.length) return TOT;
     var t=0;
-    rows.forEach(function(r){ if(r.m==='Show') t+=r.e-r.s; else if(r.m==='Intro') t+=INTRO; });
+    rows.forEach(function(r){ if(r.m==='Show') t+=r.e-r.s; });
+    t+=introCount()*INTRO;
     return t;
   }
   function updateLen(){
@@ -730,7 +732,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     var tg=document.getElementById('lenTarget').value;
     try{
       if(!rows.length && !tg) localStorage.removeItem(SAVE_KEY);
-      else localStorage.setItem(SAVE_KEY, JSON.stringify({ rows:rows, curPlan:curPlan, target:tg, ts:Date.now() }));
+      else localStorage.setItem(SAVE_KEY, JSON.stringify({ rows:rows, curPlan:curPlan, introOn:introOn, target:tg, ts:Date.now() }));
     }catch(err){ /* 사생활 보호 모드 등 저장소를 못 쓰면 조용히 건너뜀 */ }
   }
   function restoreSaved(){
@@ -744,7 +746,8 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       return typeof r.s==='number' && typeof r.e==='number' && r.s>=0 && r.e<=TOT+0.5 && r.e>=r.s;
     });
     if(!ok) return;               /* 깨진 저장본은 무시하고 빈 상태로 시작 */
-    rows=d.rows; curPlan = d.curPlan && D.plans[d.curPlan] ? d.curPlan : null;
+    introOn = d.introOn!==undefined ? !!d.introOn : d.rows.some(function(r){return r.m==='Intro';});   /* 예전 저장본의 인트로 행은 설정으로 변환 */
+    rows=d.rows.filter(function(r){return r.m==='Show'||r.m==='Hide';}); curPlan = d.curPlan && D.plans[d.curPlan] ? d.curPlan : null;
     if(FEATURES.lengthTarget && d.target) document.getElementById('lenTarget').value=d.target;
     if(shows().length){ mode='edit'; setMode(); }
   }
@@ -1073,7 +1076,8 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   }
   function applyPlan(k,p){
     recordUndo('AI 편집안 적용 · '+p.prompt);
-    curPlan=k; rows=p.rows.map(function(r){ var o=Object.assign({},r); if(o.title){ o.os=o.s; o.oe=o.e; } return o; });  /* os/oe: AI가 정한 원래 경계 — 사용자가 바꾸면 'AI · 수정' */
+    introOn=p.rows.some(function(r){return r.m==='Intro';});   /* 편집안의 인트로 행은 '인트로 전체 삽입' 설정으로 바꾸고 목록에는 두지 않음 */
+    curPlan=k; rows=p.rows.filter(function(r){return r.m==='Show'||r.m==='Hide';}).map(function(r){ var o=Object.assign({},r); if(o.title){ o.os=o.s; o.oe=o.e; } return o; });  /* os/oe: AI가 정한 원래 경계 — 사용자가 바꾸면 'AI · 수정' */
     resetRangeUI();
     selTab('E'); renderEL(); renderSk(); markCues();
     if(FEATURES.versionList) saveVersion('AI · '+p.prompt, 'ai'); /* renderEL()의 stampIntro() 이후에 스냅샷해야 저장본과 실제 상태가 일치함 */
@@ -1291,12 +1295,19 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       }
     }
   }
+  /* 인트로가 붙는 자리: 켜져 있으면 떨어져 있는 ON 구간마다 그 앞(첫 구간 포함).
+     바로 이어지는 ON 구간(자르기로 나뉜 경우 등) 사이에는 넣지 않음 */
+  function introBeforeRow(i){
+    var r=rows[i]; if(!introOn || !r || r.m!=='Show') return false;
+    var p=rows[i-1];
+    return !(p && p.m==='Show' && Math.abs(p.e-r.s)<0.05);
+  }
+  function introCount(){ var n=0; for(var i=0;i<rows.length;i++) if(introBeforeRow(i)) n++; return n; }
   function syncIntroBtn(){
     var btn=document.getElementById('btnIntro');
-    var has=rows.some(function(r){return r.m==='Intro'||r.m==='IntroOff';});
-    var inserted = has && !rows.some(function(r){return r.m==='IntroOff';});
+    var has=shows().length>0, inserted=has && introOn;
     btn.disabled=!has; btn.setAttribute('aria-pressed', inserted?'true':'false');
-    btn.title = !has ? '' : (inserted?'인트로가 모든 구간에 삽입되어 있습니다 (누르면 전체 해제)':'인트로가 삽입되지 않았습니다 (누르면 전체 삽입)');
+    btn.title = !has ? '' : (inserted?'인트로가 모든 구간 앞에 삽입됩니다 · '+introCount()+'개 (누르면 전체 해제)':'인트로가 삽입되지 않습니다 (누르면 모든 구간 앞에 삽입)');
   }
   function renderEL(){
     var pane=document.getElementById('paneE'); stampIntro();
@@ -1335,12 +1346,11 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     });
     h+='<div class="symkey">'+
        '<b><span class="bdg ai">AI</span>AI가 고른 구간</b>'+
-       '<b><span class="bdg intro">intro</span>전환 클립</b>'+
        '<b><span class="bdg ppt">ppt</span>슬라이드 전환</b>'+
        '<b><span class="tgl" aria-pressed="true" style="cursor:default">ON</span>결과물에 포함</b></div>';
     pane.innerHTML=h; markRow();
     var n=shows().length, tot=shows().reduce(function(a,r){return a+(r.e-r.s);},0);
-    tot += rows.filter(function(r){return r.m==='Intro';}).length*INTRO;
+    tot += introCount()*INTRO;
     document.getElementById('cntE').textContent=n+'/'+f1(tot); updateLen();
     syncIntroBtn(); syncQuickSave();
   }
@@ -1371,13 +1381,9 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     renderEL(); renderSk(); markCues();
   });
   document.getElementById('btnIntro').onclick=function(){
-    if(!rows.length) return;
-    var anyOff=rows.some(function(r){return r.m==='IntroOff';});
-    if(!rows.some(function(r){return r.m==='Intro'||r.m==='IntroOff';})) return;
-    recordUndo(anyOff?'인트로 전체 삽입':'인트로 전체 해제');
-    rows.forEach(function(r){
-      if(r.m==='Intro'||r.m==='IntroOff') r.m = anyOff?'Intro':'IntroOff';
-    });
+    if(!shows().length) return;
+    recordUndo(introOn?'인트로 전체 해제':'인트로 전체 삽입');
+    introOn=!introOn;
     renderEL(); renderSk();
   };
 
@@ -1399,9 +1405,8 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       }
     });
     rows.forEach(function(r,i){
-      if(r.m==='Intro'){ var nx=rows[i+1];
-        if(nx&&nx.m==='Show'){ var d=document.createElement('div'); d.className='ib';
-          d.style.left='calc('+(nx.s/TOT*100)+'% - 1px)'; b.appendChild(d); } }
+      if(introBeforeRow(i)){ var d=document.createElement('div'); d.className='ib';
+        d.style.left='calc('+(r.s/TOT*100)+'% - 1px)'; b.appendChild(d); }
     });
     for(var i=0;i<rows.length-1;i++){
       var a=rows[i], nx=rows[i+1];
@@ -1561,7 +1566,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
 
   function introBefore(k){
     var sh=shows(), target=sh[k], idx=rows.indexOf(target);
-    return idx>0 && rows[idx-1].m==='Intro';
+    return introBeforeRow(idx);
   }
   var introTok=0;
   function killIntro(){ introTok++; document.getElementById('introOvl').hidden=true; }
@@ -1693,7 +1698,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
       document.getElementById('upOk').focus();
       return;
     }
-    var n=shows().length, ni=rows.filter(function(r){return r.m==='Intro';}).length;
+    var n=shows().length, ni=introCount();
     var L=Math.floor(outLen()), tg=parseFloat(document.getElementById('lenTarget').value), T=tg>0 ? Math.round(tg*60) : 0;
     var tgt = !T ? '' :
       '<dt>목표 시간</dt><dd class="'+(L>T?'over':'ok')+'">'+tg+'분 · '+(L>T ? f1(L-T)+' 초과' : f1(T-L)+' 여유')+'</dd>';
