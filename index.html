@@ -8,7 +8,7 @@
   /* 표면 3단 · 보더 · 텍스트 */
   --page:#FAFAFA; --panel:#FFFFFF; --panel-2:#FAFAFA; --stage:#111111;
   --line:#E0E0E0; --line-2:#F0F0F0; --line-hi:#BDBDBD;
-  --ink:#212121; --ink-2:#616161; --muted:#9E9E9E; --dis:#BDBDBD; --dis-bg:#EEEEEE;
+  --ink:#212121; --ink-2:#616161; --neutral:#424242; --muted:#9E9E9E; --dis:#BDBDBD; --dis-bg:#EEEEEE;
   /* primary = 선택·포함·강조 (ON 구간도 primary) */
   --pri:#FF9800; --pri-strong:#F57C00; --pri-subtle:#FFA726; --pri-surface:#FFF3E0; --row-hl:#FFFBF4;
   --show:var(--pri); --show-soft:var(--pri-surface);
@@ -35,7 +35,7 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --page:#16130F; --panel:#1C1917; --panel-2:#232020; --stage:#111111;
   --line:#2E2A26; --line-2:#2E2A26; --line-hi:#3D3833;
-  --ink:#F5F5F5; --ink-2:#E0E0E0; --muted:#9E9E9E; --dis:#757575; --dis-bg:#2E2E2E;
+  --ink:#F5F5F5; --ink-2:#E0E0E0; --neutral:#F5F5F5; --muted:#9E9E9E; --dis:#757575; --dis-bg:#2E2E2E;
   --pri-strong:#FFA726; --pri-surface:#3D2C14; --row-hl:#2B2115;
   --hide:#3D3833; --hide-soft:#16130F;
   --intro:#C9C4BC; --intro-soft:#5A5651; --intro-lbl:#F5F5F5;
@@ -49,7 +49,7 @@
 :root[data-theme="dark"]{
   --page:#16130F; --panel:#1C1917; --panel-2:#232020; --stage:#111111;
   --line:#2E2A26; --line-2:#2E2A26; --line-hi:#3D3833;
-  --ink:#F5F5F5; --ink-2:#E0E0E0; --muted:#9E9E9E; --dis:#757575; --dis-bg:#2E2E2E;
+  --ink:#F5F5F5; --ink-2:#E0E0E0; --neutral:#F5F5F5; --muted:#9E9E9E; --dis:#757575; --dis-bg:#2E2E2E;
   --pri-strong:#FFA726; --pri-surface:#3D2C14; --row-hl:#2B2115;
   --hide:#3D3833; --hide-soft:#16130F;
   --intro:#C9C4BC; --intro-soft:#5A5651; --intro-lbl:#F5F5F5;
@@ -105,11 +105,11 @@ p{margin:0}
 /* Button md(32px) — contained / outlined, 색은 primary · neutral만 */
 .btn{font:400 var(--fs-body)/22px var(--ui);height:32px;padding:0 12px;border-radius:6px;cursor:pointer;display:inline-flex;
   align-items:center;justify-content:center;gap:6px;white-space:nowrap;
-  border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+  border:1px solid var(--line);background:var(--panel);color:var(--neutral)}
 .btn:hover{border-color:var(--pri-subtle)}
-.btn.pri{background:var(--pri);border-color:var(--pri);color:#FFFFFF;font-weight:600}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#FFFFFF}
 .btn.pri:hover{background:var(--pri-strong);border-color:var(--pri-strong)}
-.btn.pri-o{border-color:var(--pri);color:var(--pri-strong)}
+.btn.pri-o{border-color:var(--pri);color:var(--pri)}
 .btn.pri-o:hover{background:var(--pri-surface)}
 .btn.sm{height:28px;border-radius:4px;font-size:var(--fs-cap);line-height:20px}
 .btn:disabled{background:var(--dis-bg);border-color:var(--dis-bg);color:var(--dis);cursor:default}
@@ -190,7 +190,7 @@ p{margin:0}
 .srch input:hover{border-color:var(--pri-subtle)}
 .srch input:focus{outline:none;border-color:var(--pri-strong)}
 .srch .sc{font-family:var(--num);font-size:var(--fs-cap);line-height:20px;color:var(--muted);white-space:nowrap}
-.srch .sb{width:28px;height:28px;border-radius:4px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+.srch .sb{width:28px;height:28px;border-radius:4px;border:1px solid var(--line);background:var(--panel);color:var(--neutral);
   cursor:pointer;display:grid;place-items:center;padding:0}
 .srch .sb:hover{border-color:var(--pri-subtle)}
 .srch .sb:disabled{color:var(--dis);border-color:var(--line);cursor:default}
@@ -299,7 +299,7 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .mk-bot{border-top:1px solid var(--line);background:var(--panel);padding:12px 20px 16px}
 .trans{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .tb{width:32px;height:32px;border-radius:6px;border:1px solid var(--line);background:var(--panel);padding:0;
-  cursor:pointer;color:var(--ink);display:grid;place-items:center}
+  cursor:pointer;color:var(--neutral);display:grid;place-items:center}
 .tb:hover{border-color:var(--pri-subtle)}
 .tb:disabled{color:var(--dis);border-color:var(--line);cursor:default}
 .tbsep{width:1px;height:24px;background:var(--line);margin:0 2px}
