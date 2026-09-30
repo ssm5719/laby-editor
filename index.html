@@ -526,7 +526,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     <div class="trans">
       <button class="tb" id="btnPlay" type="button" title="재생/정지" aria-label="재생/정지"><span class="ic fill">play_arrow</span></button>
       <button class="tb" id="btnStop" type="button" title="정지" aria-label="정지"><span class="ic fill">stop</span></button>
-      <button class="tb" id="btnCut" type="button" title="현재 위치에서 Cut" aria-label="현재 위치에서 Cut"><span class="ic">content_cut</span></button>
+      <button class="tb" id="btnCut" type="button" title="현재 위치에서 Cut (Space)" aria-label="현재 위치에서 Cut (Space)" aria-keyshortcuts="Space"><span class="ic">content_cut</span></button>
       <span class="tbsep" aria-hidden="true"></span>
       <button class="tb" id="btnUndo" type="button" title="실행취소 (Ctrl+Z)" aria-label="실행취소" disabled><span class="ic">undo</span></button>
       <button class="tb" id="btnRedo" type="button" title="다시실행 (Ctrl+Shift+Z)" aria-label="다시실행" disabled><span class="ic">redo</span></button>
@@ -1611,11 +1611,12 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   };
   document.getElementById('btnCut').onclick=function(){
     var t=v.currentTime, before=snapState();
-    if(!rows.length){ rows=[{s:0,e:t,m:'Hide'},{s:t,e:TOT,m:'Show'}]; }
+    if(!rows.length){ if(t>0.2 && t<TOT-0.2) rows=[{s:0,e:t,m:'Hide'},{s:t,e:TOT,m:'Show'}]; }   /* 맨 앞·끝에서는 0초짜리 구간이 생기므로 나누지 않음 */
     else{ for(var i=0;i<rows.length;i++){ var r=rows[i];
       if(r.m!=='Intro' && t>r.s+0.2 && t<r.e-0.2){
         rows.splice(i+1,0,{s:t,e:r.e,m:r.m}); r.e=t; break; } } }
-    if(rows.length!==before.rows.length) recordUndo(f1(t)+' 지점 Cut', before);
+    if(rows.length!==before.rows.length){ recordUndo(f1(t)+' 지점 Cut', before); toast(f1(t)+' 지점에서 구간을 나눴습니다'); }
+    else toast('구간 경계와 너무 가까워 나누지 않았습니다');
     renderEL(); renderSk(); markCues(); selTab('E');
   };
   v.addEventListener('seeked',function(){ seeking=false; });
@@ -1742,6 +1743,16 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   document.getElementById('lenTarget').addEventListener('input', updateLen);
   document.getElementById('btnUndo').onclick=undo;
   document.getElementById('btnRedo').onclick=redo;
+  /* Space = 현재 위치에서 Cut (✂ 버튼과 같음). 입력창에서는 띄어쓰기, 모달이 열려 있으면 무시 */
+  document.addEventListener('keydown',function(e){
+    if(e.code!=='Space' || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+    var tg=e.target, tn=tg && tg.tagName;
+    if(tn==='INPUT' || tn==='TEXTAREA' || (tg && tg.isContentEditable)) return;
+    if(!aiModal.hidden) return;
+    e.preventDefault();             /* 페이지 스크롤·포커스된 버튼 눌림 대신 Cut */
+    if(e.repeat) return;            /* 꾹 누르고 있어도 한 번만 */
+    document.getElementById('btnCut').click();
+  });
   document.addEventListener('keydown',function(e){
     if(!(e.ctrlKey||e.metaKey) || e.altKey) return;
     var z = e.code==='KeyZ' || (e.key||'').toLowerCase()==='z';   /* 한글 입력 상태에서도 동작하도록 code 우선 */
