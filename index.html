@@ -109,10 +109,9 @@ p{margin:0}
   align-items:center;justify-content:center;gap:6px;white-space:nowrap;
   border:1px solid var(--line);background:var(--panel);color:var(--neutral)}
 .btn:hover{border-color:var(--pri-subtle)}
-.btn.pri{background:var(--pri);border-color:var(--pri);color:#FFFFFF}
-.btn.pri:hover{background:var(--pri-strong);border-color:var(--pri-strong)}
-.btn.pri-o{border-color:var(--pri);color:var(--pri)}
-.btn.pri-o:hover{background:var(--pri-surface)}
+/* primary 버튼은 모두 outlined(흰 바탕 + 주황 테두리·글자) — 주황 채움 위 흰 글자가 잘 안 보여 사용자 결정으로 통일 */
+.btn.pri,.btn.pri-o{border-color:var(--pri);color:var(--pri)}
+.btn.pri:hover,.btn.pri-o:hover{background:var(--pri-surface)}
 .btn.sm{height:28px;border-radius:4px;font-size:var(--fs-cap);line-height:20px;gap:2px}
 .btn.txt{border-color:transparent;background:transparent}
 .btn.txt:hover{border-color:transparent;background:var(--hide-soft)}
@@ -151,7 +150,7 @@ p{margin:0}
 .chip{font:400 var(--fs-cap)/20px var(--ui);height:28px;padding:0 10px;border-radius:9999px;cursor:pointer;display:inline-flex;
   align-items:center;gap:4px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2)}
 .chip:hover{border-color:var(--pri);background:var(--pri-surface);color:var(--pri-strong)}
-.chip[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#FFFFFF}
+.chip[aria-pressed="true"]{background:var(--panel);border-color:var(--pri);color:var(--pri)}
 .chip:disabled{background:var(--dis-bg);border-color:var(--dis-bg);color:var(--dis);cursor:not-allowed}
 .chip .lock{font-size:16px}
 
@@ -226,6 +225,7 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .cue.cut .x{text-decoration:line-through;text-decoration-color:var(--muted);color:var(--muted)}
 .cue.cut .t{color:var(--dis)}
 .cue .ctgl{margin-left:auto;opacity:0}
+.pane.nocuetgl .ctgl{display:none}   /* FEATURES.cueToggle 꺼짐 — 문장 단위 ON/OFF·드래그 숨김 */
 .cue:hover .ctgl,.cue .ctgl:focus-visible{opacity:1}
 @media(hover:none){.cue .ctgl{opacity:1}}
 .pane.painting{cursor:ns-resize}
@@ -267,7 +267,7 @@ mark.hl{background:var(--pri-surface);color:inherit;box-shadow:inset 0 -2px 0 va
 .tgl{flex:none;font:400 var(--fs-cap)/20px var(--num);height:22px;padding:0 6px;border-radius:4px;cursor:pointer;
   border:1px solid var(--line);background:var(--panel);color:var(--ink-2);min-width:44px;text-align:center}
 .tgl:hover{border-color:var(--pri-subtle)}
-.tgl[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#FFFFFF}
+.tgl[aria-pressed="true"]{background:var(--panel);border-color:var(--pri);color:var(--pri)}
 .tgl[aria-pressed="mixed"]{background:var(--pri-surface);border-color:var(--pri);color:var(--pri-strong)}
 /* 라벨 붙은 스위치(인트로 전체 삽입) — laby Toggle sm 40×24 + caption 라벨 */
 .sw{position:relative;flex:none;display:inline-block;width:40px;height:24px;border-radius:9999px;background:var(--hide);transition:background .15s}
@@ -550,7 +550,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
         <tr><td class="k2">프롬프트 예시 칩</td><td>자주 쓰는 프롬프트를 칩으로 제공. 자막이 없으면 자막 필요 칩에 자물쇠가 표시되고 비활성화됩니다.</td></tr>
         <tr><td class="k2">플레이어</td><td>편집 전에는 원본 전체를 재생합니다. 편집안 생성 후 &lsquo;편집본 재생&rsquo;으로 전환하면 Show 구간만 이어서 재생합니다.</td></tr>
         <tr><td class="k2">자막 스크립트 / Edit List 탭</td><td>기본은 자막 스크립트. 편집안이 생성되면 Edit List 탭으로 자동 전환됩니다.</td></tr>
-        <tr><td class="k2">자막 행</td><td>시간과 발화 텍스트. 클릭하면 시크바가 해당 시간으로 이동합니다. 재생 중에는 현재 자막이 강조되고 자동 스크롤됩니다. 편집안에 포함된 구간의 자막은 왼쪽에 주황 띠가 붙습니다. <strong>마우스를 올리면 나오는 ON/OFF 버튼으로 그 문장을 결과물에서 빼거나 넣습니다</strong> — 뺀 문장은 취소선으로 표시되어 자막만 읽어도 결과물의 대본이 보입니다. 연속된 문장을 빼면 사이의 짧은 공백도 함께 빠집니다. 버튼을 누른 채 위아래로 끌면 지나간 줄이 모두 같은 상태로 바뀝니다.</td></tr>
+        <tr><td class="k2">자막 행</td><td>시간과 발화 텍스트. 클릭하면 시크바가 해당 시간으로 이동합니다. 재생 중에는 현재 자막이 강조되고 자동 스크롤됩니다. 편집안에 포함된 구간의 자막은 왼쪽에 주황 띠가 붙습니다. 결과물에서 빠진 문장은 <strong>취소선</strong>으로 표시되어 자막만 읽어도 결과물의 대본이 보입니다. 편집은 슬라이드 헤더의 ON/OFF, Edit List, 타임라인에서 합니다.</td></tr>
         <tr><td class="k2">자막 검색</td><td>자막 탭 상단 검색창에 단어를 입력하면 자막과 슬라이드 제목에서 찾아 <strong>해당 줄로 이동하고 주황 형광펜으로 표시</strong>합니다. Enter로 다음, Shift+Enter로 이전 결과, ESC로 검색을 지웁니다. 음성인식이 띄어 적는 경우가 있어 띄어쓰기는 무시합니다. 목록을 거르지 않으므로 앞뒤 맥락을 보며 바로 ON/OFF 할 수 있고, 재생 위치는 바꾸지 않습니다.</td></tr>
         <tr><td class="k2">슬라이드 구분 헤더</td><td>OCR로 추출한 PPT 제목을 자막 흐름 사이에 삽입해 목차 역할을 합니다. <strong>시간이 자막 행과 같은 열에 정렬되고 <span class="bdg ppt">ppt</span> 뱃지로 구분</strong>됩니다. 클릭하면 해당 슬라이드 시작 지점으로 이동합니다. 제목을 인식하지 못한 구간은 회색 처리합니다. <strong>헤더 오른쪽 ON/OFF 버튼으로 그 슬라이드 구간을 통째로 빼거나 넣습니다</strong> — 일부 문장만 포함된 슬라이드는 &lsquo;일부&rsquo;로 표시되고, 누르면 전체가 빠집니다.</td></tr>
         <tr><td class="k2">Edit List</td><td>모든 행이 <strong>시간 · 길이 · ON/OFF</strong>의 같은 형식을 가집니다. 시간은 원본 영상 기준 하나만 씁니다. ON/OFF 버튼으로 결과물에 넣을지만 정하며, 이것이 기존 에디터의 Show/Hide와 같은 값입니다. <strong>시간을 클릭하면 그 구간의 시작 지점부터 재생</strong>합니다 — 편집본 재생 중이면 그 구간부터 편집본이 이어집니다.</td></tr>
@@ -625,7 +625,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   var versions=[], verSeq=0, activeVerId=null; /* 편집안 목록 — AI 결과 + 수동 저장본 */
   var capState=2; /* 0 none 1 running 2 done */
   /* 임시 비활성화 — 필요해지면 아래 값을 true로 되돌리면 해당 기능/UI가 그대로 복원됩니다 */
-  var FEATURES = { timelineDragSelect:false, versionList:false, cueRangeSelect:false, lengthTarget:false, autosave:false };
+  var FEATURES = { timelineDragSelect:false, versionList:false, cueRangeSelect:false, lengthTarget:false, autosave:false, cueToggle:false };
 
   /* ---------- 실행취소 / 다시실행 ----------
      편집 상태(rows)를 바꾸는 모든 동작 직전에 recordUndo(설명)을 호출해 스냅샷을 쌓는다. */
@@ -885,7 +885,7 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
   }
   paneS.addEventListener('mousedown',function(e){
     var tb=e.target.closest('.ctgl');
-    if(!tb || e.button!==0) return;
+    if(!FEATURES.cueToggle || !tb || e.button!==0) return;
     e.preventDefault();
     var i=+tb.parentElement.dataset.i;
     paint={ from:i, to:i, on:!cueOn(i), y:e.clientY };
@@ -1714,6 +1714,10 @@ code{font-family:var(--num);font-size:var(--fs-cap);background:var(--panel-2);bo
     if(y || e.shiftKey) redo(); else undo();
   });
 
+  if(!FEATURES.cueToggle){   /* 문장 단위 ON/OFF 끔 — 슬라이드 헤더 ON/OFF만 남김 */
+    paneS.classList.add('nocuetgl');
+    document.getElementById('hintRange').innerHTML='슬라이드 제목 옆 <b>ON/OFF</b> 버튼으로 그 슬라이드 전체를 결과물에서 빼거나 넣을 수 있습니다. 결과물에서 빠진 문장은 취소선으로 표시됩니다.';
+  }
   document.getElementById('lenTargetBox').hidden=!FEATURES.lengthTarget;   /* 목표 시간 입력 — 꺼두면 입력이 비어 있어 여유/초과 표시도 전부 사라짐 */
   if(FEATURES.autosave) restoreSaved();
   else { try{ localStorage.removeItem(SAVE_KEY); }catch(err){} }   /* 목업은 새로고침하면 처음 상태로 — 예전 저장본도 정리 */
