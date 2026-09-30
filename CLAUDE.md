@@ -23,7 +23,7 @@ LABY 에디터 "AI 편집 화면설계" 프로토타입. 강의자가 본인 강
 - **`rows`를 바꾸는 코드를 새로 넣을 때는 변경 직전에 `recordUndo('설명')`을 호출한다.** 빠뜨리면 실행취소가 조용히 동작하지 않는다.
   설명 문구는 토스트/툴팁에 그대로 노출되므로 강의자가 읽을 수 있는 한국어로 (예: `08:07–09:01 구간 ON → OFF`).
 - 쓰지 않게 된 기능은 삭제하지 않고 `FEATURES` 플래그로 끈다 (코드는 백업으로 유지).
-  현재 꺼진 것: `timelineDragSelect`(타임라인 드래그 구간 선택), `versionList`(편집안 목록 탭 + 새 버전으로 저장 버튼), `cueRangeSelect`(자막 Shift+클릭 다중선택 + 추가/제외 바)
+  현재 꺼진 것: `timelineDragSelect`(타임라인 드래그 구간 선택), `versionList`(편집안 목록 탭 + 새 버전으로 저장 버튼), `cueRangeSelect`(자막 Shift+클릭 다중선택 + 추가/제외 바), `lengthTarget`(목표 시간 입력 + 여유/초과 표시)
 - UI 문구는 강의자 대상 한국어. 색은 `:root`의 CSS 변수만 쓰고, 다크 모드 블록 두 곳(`prefers-color-scheme`, `[data-theme="dark"]`)에도 같이 반영한다.
 - **디자인은 `design.md`(laby-GUI)의 토큰만 쓴다.** 글자 크기 28/20/18/16/15/12, 간격 2/4/6/8/10/12/16/20/24/30, radius 4/6/8/12/16/pill 밖의 값, 새 HEX, 문자 기호 아이콘(▶ ✕ 등)은 쓰지 않는다.
   아이콘은 `<span class="ic">이름</span>`(Material Symbols). 새 색·아이콘·컴포넌트가 필요하면 먼저 묻고, 추가했으면 design.md에 기록한다.
