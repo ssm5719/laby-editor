@@ -28,6 +28,7 @@ npx serve .
 | `design.md` | 디자인 시스템 (Laby-4k와 같은 laby-GUI 기준 + 에디터 전용 확장) |
 | `proxy.mp4` | 미리보기용 강의 영상 (약 80MB) |
 | `CLAUDE.md` | Claude Code로 작업할 때 지키는 규칙 |
+| `HANDOFF.md` | 개발 전달 문서 — 동작 규칙·수치, 목업 vs 실제 구현, CMS 전달 형식, 결정 기록 |
 
 ## 현재 기능
 
