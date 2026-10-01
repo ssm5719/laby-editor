@@ -29,6 +29,7 @@ npx serve .
 | `proxy.mp4` | 미리보기용 강의 영상 (약 80MB) |
 | `CLAUDE.md` | Claude Code로 작업할 때 지키는 규칙 |
 | `HANDOFF.md` | 개발 전달 문서 — 동작 규칙·수치, 목업 vs 실제 구현, CMS 전달 형식, 결정 기록 |
+| `DESIGN-REVIEW.md` | 개발 중인 실제 화면에 대한 디자인 보완 요청 (확정된 항목만) |
 
 ## 현재 기능
 
