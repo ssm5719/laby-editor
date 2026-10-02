@@ -508,11 +508,11 @@ var vid=$('#vid');
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
 var DR=[ {id:'03', t:'슬라이드 줄 (블록 + 제목)'}, // DR-06(볼륨 슬라이더)은 확정 후 기본 모양으로 넣고 목록에서 뺌
   {id:'04', t:'지금 배치 + 목록 구분 (설명·출처·강조)', draft:true}, {id:'05', t:'구간 목록 탭 독립 + AI 아래 고정', draft:true},
-  {id:'07', t:'영상 위 AI 버튼 → 편집 요청 모달', draft:true} ]; // draft = 확정 전 시안(기본 꺼짐), by = 다른 항목으로 대체됨(기본 꺼짐)
+  {id:'07', t:'영상 위 AI 버튼 → 편집 요청 모달', draft:true, on:true} ]; // draft = 확정 전 시안(기본 꺼짐, on:true면 기본 켜짐), by = 다른 항목으로 대체됨(기본 꺼짐)
 var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
   var q=new URLSearchParams(location.search).get('dr');
-  DR.forEach(function(d){ drSel[d.id]=!d.draft&&!d.by; });
+  DR.forEach(function(d){ drSel[d.id]=!!((!d.draft||d.on)&&!d.by); });
   if(q==='none') drOn=false;
   else if(q){ if(q!=='all'){ DR.forEach(function(d){ drSel[d.id]=q.split(',').indexOf(d.id)>=0; }); } }
   $('#drItems').innerHTML=DR.map(function(d){ return '<label data-id="'+d.id+'"><input type="checkbox"'+(drSel[d.id]?' checked':'')+'>'+(d.draft?'<span class="dt">시안</span>':'')+(d.by?'<span class="dt rp">대체됨 → DR-'+d.by+'</span>':'')+'<b>DR-'+d.id+'</b> '+d.t+'</label>'; }).join('');
