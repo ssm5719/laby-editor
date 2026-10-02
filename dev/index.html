@@ -372,11 +372,12 @@ var vid=$('#vid');
 
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
 var DR=[ {id:'01', t:'목차 라인 마우스 올림 → #E0E0E0'} ];
-var drOn=false, drSel={};
+var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
   var q=new URLSearchParams(location.search).get('dr');
   DR.forEach(function(d){ drSel[d.id]=true; });
-  if(q){ drOn=true; if(q!=='all'){ DR.forEach(function(d){ drSel[d.id]=q.split(',').indexOf(d.id)>=0; }); } }
+  if(q==='none') drOn=false;
+  else if(q){ if(q!=='all'){ DR.forEach(function(d){ drSel[d.id]=q.split(',').indexOf(d.id)>=0; }); } }
   $('#drItems').innerHTML=DR.map(function(d){ return '<label data-id="'+d.id+'"><input type="checkbox"'+(drSel[d.id]?' checked':'')+'><b>DR-'+d.id+'</b> '+d.t+'</label>'; }).join('');
   $('#drItems').addEventListener('change',function(e){ var l=e.target.closest('label'); drSel[l.dataset.id]=e.target.checked; applyDR(); });
   $('#drMode').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; drOn=b.dataset.v==='1'; applyDR(); });
