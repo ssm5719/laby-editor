@@ -120,8 +120,9 @@ body.dr03 .slt{display:block}
 body.dr05 #drbar #aiCol{display:flex}
 
 /* DR-04·05 (시안) 공통: 구간 목록이 "모든 편집의 결과"임을 보여 줌 */
-.sld{display:none;margin:-4px 16px 8px;font-size:11px;color:var(--tx-3)}
-body.dr04 .sld,body.dr05 .sld{display:block}
+.sld{display:none;align-items:center;gap:4px;margin:-4px 16px 10px;font-size:12px;color:var(--tx-2)}
+.sld .ic{font-size:15px;color:var(--tx-2)}
+body.dr04 .sld,body.dr05 .sld{display:flex}
 .meb{display:none;flex:0 0 auto;align-items:center;gap:2px;padding:1px 4px;border-radius:3px;background:var(--bd);color:var(--tx-2);font-size:10px;font-weight:800}
 .meb .ic{font-size:11px}
 body.dr04 .meb,body.dr05 .meb{display:inline-flex}
@@ -420,7 +421,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
       <div class="spl" id="spl" title="드래그해서 높이 조절 · 두 번 누르면 원래대로"><i></i></div>
       <div class="sl">
         <div class="sl-h"><b>구간 목록</b><small id="slc"></small></div>
-        <p class="sld">AI 요청 · 자르기 · 자막에서 바꾼 내용이 모두 여기에 모여요</p>
+        <p class="sld"><span class="ic">info</span>AI 요청 · 자르기 · 자막에서 바꾼 내용이 모두 여기에 모여요</p>
         <div class="sl-l" id="sl"></div>
       </div>
     </div>
