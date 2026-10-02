@@ -105,6 +105,9 @@ body.edit .ch1{top:52px}
 .ch.cur i{background:var(--or)}
 /* DR-01 목차 라인 마우스 올림 → #E0E0E0, 굵기 그대로 */
 body.dr01 .ch:hover i{background:#E0E0E0}
+.chb{position:absolute;top:0;height:14px;border-radius:2px;display:none;pointer-events:none}
+/* DR-02 목차 라인 마우스 올림 → 그 목차 구간(다음 목차 전까지)을 회색 띠 #2A2C33로 */
+body.dr02 .chb.on{display:block;background:#2A2C33}
 .pg{position:relative;height:16px;margin-top:4px;cursor:pointer}
 .pg .tr{position:absolute;left:0;right:0;top:5px;height:6px;border-radius:3px;background:var(--bd);overflow:hidden}
 .pg .ht{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(-45deg,var(--hat1) 0 4px,var(--bg) 4px 8px)}
@@ -371,7 +374,7 @@ var D=window.D, TOT=D.dur, $=function(s){return document.querySelector(s);};
 var vid=$('#vid');
 
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
-var DR=[ {id:'01', t:'목차 라인 마우스 올림 → #E0E0E0'} ];
+var DR=[ {id:'01', t:'목차 라인 마우스 올림 → #E0E0E0'}, {id:'02', t:'목차 라인 마우스 올림 → 구간 회색 띠'} ];
 var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
   var q=new URLSearchParams(location.search).get('dr');
@@ -538,7 +541,7 @@ function renderTL(){
   fixWin(); var s=SP(), step=span===120?20:span===600?120:600, h='';
   for(var t=Math.ceil(ws/step)*step;t<ws+s;t+=step) h+='<span style="left:'+X(t)+'%">'+ms(t)+'</span>';
   $('#ru').innerHTML=h;
-  $('#chs').innerHTML=HEADS.map(function(hd,i){ return '<div class="ch" data-i="'+i+'" style="left:'+X(hd.t)+'%"><i></i></div>'; }).join('');
+  $('#chs').innerHTML='<div class="chb" id="chb"></div>'+HEADS.map(function(hd,i){ return '<div class="ch" data-i="'+i+'" style="left:'+X(hd.t)+'%"><i></i></div>'; }).join('');
   h=''; var bds={};
   rows.forEach(function(r,i){ h+='<div class="blk '+r.m+'" data-i="'+i+'" style="left:'+X(r.s)+'%;width:'+((r.e-r.s)/s*100)+'%"></div>';
     if(r.m==='on'){ bds[i-1]=r.s; bds[i]=r.e; } });
@@ -551,10 +554,11 @@ function renderTL(){
   tick(true);
 }
 var tip=$('#tip');
-$('#chs').addEventListener('mouseover',function(e){ var c=e.target.closest('.ch'); if(!c) return; var hd=HEADS[+c.dataset.i];
+$('#chs').addEventListener('mouseover',function(e){ var c=e.target.closest('.ch'); if(!c) return; var hd=HEADS[+c.dataset.i], nx=HEADS[+c.dataset.i+1];
+  var bd=$('#chb'), be=nx?nx.t:TOT; bd.style.left=X(hd.t)+'%'; bd.style.width=((be-hd.t)/SP()*100)+'%'; bd.classList.add('on');
   tip.textContent='#'+hd.n+' '+(hd.title||'제목 없는 슬라이드')+' · '+hms(hd.t); tip.style.display='block';
   var r=$('#tl').getBoundingClientRect(), cr=c.getBoundingClientRect(); tip.style.left=Math.max(tip.offsetWidth/2,Math.min(r.width-tip.offsetWidth/2,cr.left+4-r.left))+'px'; tip.style.top=($('#chs').offsetTop)+'px'; });
-$('#chs').addEventListener('mouseout',function(e){ if(e.target.closest('.ch')) tip.style.display='none'; });
+$('#chs').addEventListener('mouseout',function(e){ if(e.target.closest('.ch')){ tip.style.display='none'; $('#chb').classList.remove('on'); } });
 $('#chs').addEventListener('click',function(e){ var c=e.target.closest('.ch'); if(c){ var t=HEADS[+c.dataset.i].t; goTo(t); } });
 function goTo(t){ if(mode==='edit'){ var i=rowAt(t); if(rows[i].m==='off'){ toast('편집 결과 재생 중에는 꺼진 구간으로 이동할 수 없어요'); return; } } seek(t); tick(true); }
 $('#bk').addEventListener('click',function(e){ if(e.target.closest('.bd')) return; var b=e.target.closest('.blk'); if(!b) return; var r=rows[+b.dataset.i];
