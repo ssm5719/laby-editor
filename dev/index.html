@@ -139,7 +139,7 @@ body.dr05.aiblue{--az-bg:#13222A;--az-bd:#23515F;--az-ic:#4CC3E8}
 body.dr05 .dock{display:block;flex:0 0 auto;padding:10px 12px 12px;border-top:1px solid var(--bd-2)}
 body.dr05 .dock .ai{padding:12px;border-radius:12px;background:var(--az-bg);border:1px solid var(--az-bd)}
 body.dr05 .dock .ai-h{margin-bottom:8px}
-body.dr05 .dock .ai-h .ic{color:var(--az-ic)}
+body.dr05 .dock .ai-h .spk{fill:var(--az-ic)}
 body.dr05 .dock .log{display:none}
 body.dr05 .dock .ai.open .log{display:block;max-height:240px;padding-top:4px;border-top:1px solid var(--az-bd);margin-top:4px}
 body.dr05 .ai-x{display:flex;align-items:center;gap:2px;margin-left:auto;font-size:11px;font-weight:500;color:var(--tx-3)}
@@ -161,7 +161,7 @@ body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .log,
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .chips,
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp .f>span{display:none}
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 10px}
-body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp::before{content:"add";font-family:"Material Symbols Outlined";font-size:16px;color:var(--az-ic)}
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp::before{content:"";flex:0 0 auto;width:14px;height:14px;background:var(--az-ic);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12%202C12.6%207.6%2016.4%2011.4%2022%2012C16.4%2012.6%2012.6%2016.4%2012%2022C11.4%2016.4%207.6%2012.6%202%2012C7.6%2011.4%2011.4%207.6%2012%202Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12%202C12.6%207.6%2016.4%2011.4%2022%2012C16.4%2012.6%2012.6%2016.4%2012%2022C11.4%2016.4%207.6%2012.6%202%2012C7.6%2011.4%2011.4%207.6%2012%202Z'/%3E%3C/svg%3E") center/contain no-repeat}
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp textarea{flex:1;height:22px;line-height:22px;overflow:hidden;white-space:nowrap}
 /* 접힌 상태: 보내기 대신 위로 펼치기 버튼 / 펼친 상태: 머리줄 오른쪽에 접기 버튼 */
 .inp .go.ai-open,.ai-h .ai-fold{display:none}
@@ -213,6 +213,8 @@ body.edit .blk.off{cursor:not-allowed}
 .ai{flex:0 1 auto;min-height:0;display:flex;flex-direction:column;padding:12px 16px 14px}
 .ai-h{flex:0 0 auto;display:flex;align-items:center;gap:6px;font-weight:700;margin-bottom:8px}
 .ai-h .ic{font-size:16px;color:var(--or)}
+/* AI 아이콘: 개발 화면의 주황 4각 반짝임(✦) */
+.spk{flex:0 0 auto;width:14px;height:14px;fill:var(--or)}
 .log{flex:0 1 auto;min-height:0;overflow:auto;margin:0 -6px 10px -2px;padding:0 6px 0 2px}
 .log:empty{display:none}
 .mu{display:flex;justify-content:flex-end;margin:4px 0 12px}
@@ -402,7 +404,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
 
     <div class="pane on" id="p-edit">
       <div class="ai">
-        <div class="ai-h"><span class="ic">add</span>AI 편집 요청<button class="ai-x" id="aiX"></button><button class="ai-fold" id="aiFold" title="한 줄로 접기"><span class="ic">expand_more</span>접기</button></div>
+        <div class="ai-h"><svg class="spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C12.6 7.6 16.4 11.4 22 12C16.4 12.6 12.6 16.4 12 22C11.4 16.4 7.6 12.6 2 12C7.6 11.4 11.4 7.6 12 2Z"/></svg>AI 편집 요청<button class="ai-x" id="aiX"></button><button class="ai-fold" id="aiFold" title="한 줄로 접기"><span class="ic">expand_more</span>접기</button></div>
         <div class="ai-last" id="aiLast"></div>
         <div class="log" id="log"></div>
         <div class="inp">
