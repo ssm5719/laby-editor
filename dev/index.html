@@ -9,7 +9,7 @@
 <style>
 /* 개발 중인 실제 에디터 화면을 캡처 기준으로 재현한 페이지.
    design.md(목업용 laby-GUI 토큰) 대신 개발 화면에서 뽑은 색·치수를 쓴다.
-   디자인 보완안(DR-xx)은 body 클래스(dr01 …)로 켜고 끈다. */
+   디자인 보완안(DR-xx)은 body 클래스(dr03 …)로 켜고 끈다. */
 :root{
   --bg:#141519; --bg-2:#1B1C21; --bg-in:#0F1013; --bd:#2A2C33; --bd-2:#24262C;
   --tx:#E6E6EA; --tx-2:#B4B6BE; --tx-3:#82838E; --tx-4:#5A5D66;
@@ -103,12 +103,7 @@ body.edit .ch1{top:52px}
 .ch{position:absolute;top:2px;width:9px;margin-left:-4px;height:10px;cursor:pointer;z-index:2}
 .ch i{position:absolute;left:4px;top:0;width:1px;height:10px;background:var(--tick)}
 .ch.cur i{background:var(--or)}
-/* DR-01 목차 라인 마우스 올림 → #E0E0E0, 굵기 그대로 */
-body.dr01 .ch:hover i{background:#E0E0E0}
-.chb{position:absolute;top:0;height:14px;border-radius:2px;display:none;pointer-events:none}
-/* DR-02 목차 라인 마우스 올림 → 그 목차 구간(다음 목차 전까지)을 회색 띠 #2A2C33로 */
-body.dr02 .chb.on{display:block;background:#2A2C33}
-/* DR-03 슬라이드 줄: 목차를 세로선 대신 블록+제목으로. 켜면 위의 목차 라인 줄(DR-01·02 포함)을 대신함 */
+/* DR-03 슬라이드 줄: 목차를 세로선 대신 블록+제목으로. 켜면 위의 목차 라인 줄을 대신함 */
 .slt{position:relative;height:22px;margin-top:8px;display:none}
 body.dr03 .chs{display:none}
 body.dr03 .slt{display:block}
@@ -168,6 +163,15 @@ body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp .f span{display:none
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 10px}
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp::before{content:"add";font-family:"Material Symbols Outlined";font-size:16px;color:var(--az-ic)}
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp textarea{flex:1;height:22px;line-height:22px;overflow:hidden;white-space:nowrap}
+/* 접힌 상태: 보내기 대신 위로 펼치기 버튼 / 펼친 상태: 머리줄 오른쪽에 접기 버튼 */
+.inp .go.ai-open,.ai-h .ai-fold{display:none}
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) #bGo{display:none}
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .ai-open{display:flex;background:var(--az-bd);color:var(--az-ic)}
+body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-fold{display:flex;align-items:center;gap:2px;height:22px;padding:0 8px 0 4px;margin-left:8px;border:1px solid var(--az-bd);border-radius:11px;font-size:11px;color:var(--tx-2)}
+body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-fold .ic{font-size:16px;color:var(--tx-2)!important}
+body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-fold:hover{color:var(--tx);border-color:var(--az-ic)}
+body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-x{margin-left:auto}
+body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-x:empty+.ai-fold{margin-left:auto}
 
 .pg{position:relative;height:16px;margin-top:4px;cursor:pointer}
 .pg .tr{position:absolute;left:0;right:0;top:5px;height:6px;border-radius:3px;background:var(--bd);overflow:hidden}
@@ -396,12 +400,12 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
 
     <div class="pane on" id="p-edit">
       <div class="ai">
-        <div class="ai-h"><span class="ic">add</span>AI 편집 요청<button class="ai-x" id="aiX"></button></div>
+        <div class="ai-h"><span class="ic">add</span>AI 편집 요청<button class="ai-x" id="aiX"></button><button class="ai-fold" id="aiFold" title="한 줄로 접기"><span class="ic">expand_more</span>접기</button></div>
         <div class="ai-last" id="aiLast"></div>
         <div class="log" id="log"></div>
         <div class="inp">
           <textarea id="q" placeholder="무엇이든 말해 보세요. 예: 임대차 설명 부분만 남겨줘"></textarea>
-          <div class="f"><span>Enter 보내기 · Shift+Enter 줄바꿈</span><button class="go" id="bGo"><span class="ic">arrow_upward</span></button></div>
+          <div class="f"><span>Enter 보내기 · Shift+Enter 줄바꿈</span><button class="go" id="bGo"><span class="ic">arrow_upward</span></button><button class="go ai-open" id="aiOpen" title="펼치기"><span class="ic">expand_less</span></button></div>
         </div>
         <div class="chips" id="chips"></div>
       </div>
@@ -440,8 +444,7 @@ var D=window.D, TOT=D.dur, $=function(s){return document.querySelector(s);};
 var vid=$('#vid');
 
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
-var DR=[ {id:'01', t:'목차 라인 마우스 올림 → #E0E0E0', by:'03'}, {id:'02', t:'목차 라인 마우스 올림 → 구간 회색 띠', by:'03'},
-  {id:'03', t:'슬라이드 줄 (블록 + 제목)'},
+var DR=[ {id:'03', t:'슬라이드 줄 (블록 + 제목)'},
   {id:'04', t:'지금 배치 + 목록 구분 (설명·출처·강조)', draft:true}, {id:'05', t:'구간 목록 탭 독립 + AI 아래 고정', draft:true} ]; // draft = 확정 전 시안(기본 꺼짐), by = 다른 항목으로 대체됨(기본 꺼짐)
 var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
@@ -554,6 +557,8 @@ function renderLast(msg){ var c=cards[cards.length-1], h='';
 $('.ai').addEventListener('focusin',function(){ this.classList.add('focus'); });
 document.addEventListener('mousedown',function(e){ if(!e.target.closest('.ai')) $('.ai').classList.remove('focus'); });
 $('#aiLast').addEventListener('click',function(e){ if(e.target.closest('.gl')){ $('.ai').classList.remove('focus'); $('#tabs').children[0].click(); } });
+$('#aiOpen').addEventListener('mousedown',function(e){ e.preventDefault(); $('.ai').classList.add('focus'); $('#q').focus(); }); // 누르는 순간 숨겨지므로 click 대신 mousedown
+$('#aiFold').addEventListener('click',function(){ var a=$('.ai'); a.classList.remove('focus','open'); this.blur(); renderLast(); });
 $('#aiX').addEventListener('click',function(){ $('.ai').classList.toggle('open'); renderLast(); var l=$('#log'); l.scrollTop=l.scrollHeight; });
 function placeAI(){ var ai=$('.ai'), on=document.body.classList.contains('dr05');
   if(on&&ai.parentNode!==$('#dock')) $('#dock').appendChild(ai);
@@ -633,7 +638,7 @@ function renderTL(){
   for(var t=Math.ceil(ws/step)*step;t<ws+s;t+=step) h+='<span style="left:'+X(t)+'%">'+ms(t)+'</span>';
   $('#ru').innerHTML=h;
   renderSlt();
-  $('#chs').innerHTML='<div class="chb" id="chb"></div>'+HEADS.map(function(hd,i){ return '<div class="ch" data-i="'+i+'" style="left:'+X(hd.t)+'%"><i></i></div>'; }).join('');
+  $('#chs').innerHTML=HEADS.map(function(hd,i){ return '<div class="ch" data-i="'+i+'" style="left:'+X(hd.t)+'%"><i></i></div>'; }).join('');
   h=''; var bds={};
   rows.forEach(function(r,i){ h+='<div class="blk '+r.m+'" data-i="'+i+'" style="left:'+X(r.s)+'%;width:'+((r.e-r.s)/s*100)+'%"></div>';
     if(r.m==='on'){ bds[i-1]=r.s; bds[i]=r.e; } });
@@ -646,8 +651,7 @@ function renderTL(){
   tick(true);
 }
 var tip=$('#tip');
-$('#chs').addEventListener('mouseover',function(e){ var c=e.target.closest('.ch'); if(!c) return; var hd=HEADS[+c.dataset.i], nx=HEADS[+c.dataset.i+1];
-  var bd=$('#chb'), be=nx?nx.t:TOT; bd.style.left=X(hd.t)+'%'; bd.style.width=((be-hd.t)/SP()*100)+'%'; bd.classList.add('on');
+$('#chs').addEventListener('mouseover',function(e){ var c=e.target.closest('.ch'); if(!c) return; var hd=HEADS[+c.dataset.i];
   tip.textContent='#'+hd.n+' '+(hd.title||'제목 없는 슬라이드')+' · '+hms(hd.t); tip.style.display='block';
   var r=$('#tl').getBoundingClientRect(), cr=c.getBoundingClientRect(); tip.style.left=Math.max(tip.offsetWidth/2,Math.min(r.width-tip.offsetWidth/2,cr.left+4-r.left))+'px'; tip.style.top=($('#chs').offsetTop)+'px'; });
 // DR-03 슬라이드 줄: 블록 폭이 56px 이상일 때만 제목, 좁으면 블록만 (이름은 툴팁)
@@ -661,7 +665,7 @@ $('#slt').addEventListener('mouseover',function(e){ var c=e.target.closest('.sb'
   tip.style.left=Math.max(tip.offsetWidth/2,Math.min(r.width-tip.offsetWidth/2,cx-r.left))+'px'; tip.style.top=($('#slt').offsetTop)+'px'; });
 $('#slt').addEventListener('mouseout',function(e){ if(e.target.closest('.sb')) tip.style.display='none'; });
 $('#slt').addEventListener('click',function(e){ var c=e.target.closest('.sb'); if(c) goTo(HEADS[+c.dataset.i].t); });
-$('#chs').addEventListener('mouseout',function(e){ if(e.target.closest('.ch')){ tip.style.display='none'; $('#chb').classList.remove('on'); } });
+$('#chs').addEventListener('mouseout',function(e){ if(e.target.closest('.ch')){ tip.style.display='none'; } });
 $('#chs').addEventListener('click',function(e){ var c=e.target.closest('.ch'); if(c){ var t=HEADS[+c.dataset.i].t; goTo(t); } });
 function goTo(t){ if(mode==='edit'){ var i=rowAt(t); if(rows[i].m==='off'){ toast('편집 결과 재생 중에는 꺼진 구간으로 이동할 수 없어요'); return; } } seek(t); tick(true); }
 $('#bk').addEventListener('click',function(e){ if(e.target.closest('.bd')) return; var b=e.target.closest('.blk'); if(!b) return; var r=rows[+b.dataset.i];
