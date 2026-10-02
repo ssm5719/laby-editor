@@ -121,6 +121,43 @@ body.dr03 .slt{display:block}
 .sb.cur::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--or)}
 #drbar label .dt{padding:0 4px;border-radius:3px;background:var(--dr);color:#fff;font-size:10px;font-weight:700}
 #drbar label .dt.rp{background:var(--bd);color:var(--tx-3)}
+#aiCol{display:none;align-items:center;gap:6px}
+body.dr05 #aiCol{display:flex}
+
+/* DR-04·05 (시안) 공통: 구간 목록이 "모든 편집의 결과"임을 보여 줌 */
+.sld{display:none;margin:-4px 16px 8px;font-size:11px;color:var(--tx-3)}
+body.dr04 .sld,body.dr05 .sld{display:block}
+.meb{display:none;flex:0 0 auto;align-items:center;gap:2px;padding:1px 4px;border-radius:3px;background:var(--bd);color:var(--tx-2);font-size:10px;font-weight:800}
+.meb .ic{font-size:11px}
+body.dr04 .meb,body.dr05 .meb{display:inline-flex}
+body.dr04 .aib.x,body.dr05 .aib.x{display:none}
+@keyframes nw{from{background:rgba(76,195,232,.22)}to{background:transparent}}
+body.dr04 .row.nw,body.dr05 .row.nw{animation:nw 1.6s ease-out}
+/* DR-04 (시안) 지금 배치 유지: AI 영역 배경 한 단계 + 목록 앞 구분선 진하게 */
+body.dr04:not(.dr05) .ai{background:#18191E}
+body.dr04:not(.dr05) .sl{border-top:1px solid #34363E}
+/* DR-05 (시안) 구간 목록 탭 독립 + AI 입력을 패널 아래 색 구역으로 고정 */
+.dock{display:none}
+.ai-x,.ai-last{display:none}
+body.dr05{--az-bg:#241A12;--az-bd:#5A3A1E;--az-ic:#F59F45}
+body.dr05.aiblue{--az-bg:#13222A;--az-bd:#23515F;--az-ic:#4CC3E8}
+body.dr05 .dock{display:block;flex:0 0 auto;padding:10px 12px 12px;border-top:1px solid var(--bd-2)}
+body.dr05 .dock .ai{padding:12px;border-radius:12px;background:var(--az-bg);border:1px solid var(--az-bd)}
+body.dr05 .dock .ai-h{margin-bottom:8px}
+body.dr05 .dock .ai-h .ic{color:var(--az-ic)}
+body.dr05 .dock .log{display:none}
+body.dr05 .dock .ai.open .log{display:block;max-height:240px;padding-top:4px;border-top:1px solid var(--az-bd);margin-top:4px}
+body.dr05 .ai-x{display:flex;align-items:center;gap:2px;margin-left:auto;font-size:11px;font-weight:500;color:var(--tx-3)}
+body.dr05 .ai-x .ic{font-size:16px;color:var(--tx-3)!important}
+body.dr05 .ai-x:empty{display:none}
+body.dr05 .ai-last{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:var(--tx-2)}
+body.dr05 .ai-last:empty{display:none}
+.ai-last .q{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ai-last .q b{color:var(--tx)}
+.ai-last button{flex:0 0 auto;height:24px;padding:0 8px;border-radius:6px;font-size:11px;border:1px solid var(--bd);background:var(--bg)}
+.ai-last .pri{background:var(--cy);border-color:var(--cy);color:#0F1013;font-weight:600}
+body.dr05:not(.pristine) .dock .chips{display:none}
+
 .pg{position:relative;height:16px;margin-top:4px;cursor:pointer}
 .pg .tr{position:absolute;left:0;right:0;top:5px;height:6px;border-radius:3px;background:var(--bd);overflow:hidden}
 .pg .ht{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(-45deg,var(--hat1) 0 4px,var(--bg) 4px 8px)}
@@ -284,6 +321,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
   <b>개발 화면 재현</b><span>디자인 보완안 확인용 — 이 줄은 실제 화면에 없어요</span>
   <div class="seg2" id="drMode"><button data-v="0">현재</button><button data-v="1">개선안</button></div>
   <div class="items" id="drItems"></div>
+  <div class="seg2" id="aiCol"><button data-v="or" class="on">AI 구역 주황</button><button data-v="bl">하늘</button></div>
   <a href="../DESIGN-REVIEW.md" target="_blank">보완 문서</a>
   <a href="../" target="_blank">목업 에디터</a>
 </div>
@@ -347,7 +385,8 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
 
     <div class="pane on" id="p-edit">
       <div class="ai">
-        <div class="ai-h"><span class="ic">add</span>AI 편집 요청</div>
+        <div class="ai-h"><span class="ic">add</span>AI 편집 요청<button class="ai-x" id="aiX"></button></div>
+        <div class="ai-last" id="aiLast"></div>
         <div class="log" id="log"></div>
         <div class="inp">
           <textarea id="q" placeholder="무엇이든 말해 보세요. 예: 임대차 설명 부분만 남겨줘"></textarea>
@@ -357,6 +396,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
       </div>
       <div class="sl">
         <div class="sl-h"><b>구간 목록</b><small id="slc"></small></div>
+        <p class="sld">AI 요청 · 자르기 · 자막에서 바꾼 내용이 모두 여기에 모여요</p>
         <div class="sl-l" id="sl"></div>
       </div>
     </div>
@@ -377,6 +417,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
       <div class="note">검색 탭은 아직 캡처를 받기 전이라 임시로 만든 화면이에요.</div>
       <div class="sr" id="sr"><div class="empty">찾을 단어를 입력하세요</div></div>
     </div>
+    <div class="dock" id="dock"></div>
   </aside>
 </div>
 <div class="toast" id="toast"></div>
@@ -389,7 +430,8 @@ var vid=$('#vid');
 
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
 var DR=[ {id:'01', t:'목차 라인 마우스 올림 → #E0E0E0', by:'03'}, {id:'02', t:'목차 라인 마우스 올림 → 구간 회색 띠', by:'03'},
-  {id:'03', t:'슬라이드 줄 (블록 + 제목)'} ]; // draft = 확정 전 시안(기본 꺼짐), by = 다른 항목으로 대체됨(기본 꺼짐)
+  {id:'03', t:'슬라이드 줄 (블록 + 제목)'},
+  {id:'04', t:'지금 배치 + 목록 구분 (설명·출처·강조)', draft:true}, {id:'05', t:'구간 목록 탭 독립 + AI 아래 고정', draft:true} ]; // draft = 확정 전 시안(기본 꺼짐), by = 다른 항목으로 대체됨(기본 꺼짐)
 var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
   var q=new URLSearchParams(location.search).get('dr');
@@ -402,7 +444,7 @@ var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화�
 })();
 function applyDR(){
   DR.forEach(function(d){ document.body.classList.toggle('dr'+d.id, drOn&&drSel[d.id]); });
-  renderSlt();
+  renderSlt(); placeAI();
   [].forEach.call($('#drMode').children,function(b){ b.classList.toggle('on',(b.dataset.v==='1')===drOn); });
   [].forEach.call($('#drItems').children,function(l){ l.classList.toggle('dis',!drOn); });
 }
@@ -459,13 +501,13 @@ function findPlan(q){ var k=q.replace(/\s/g,'');
   return null; }
 function ask(q){
   q=q.trim(); if(!q) return;
-  var log=$('#log');
+  var log=$('#log'); busy=q; renderLast();
   log.insertAdjacentHTML('beforeend','<div class="mu"><span>'+esc(q)+'</span></div><div class="ma th" id="think">AI가 편집하는 중…</div>');
   log.scrollTop=log.scrollHeight;
   setTimeout(function(){
-    var th=$('#think'); if(th) th.remove();
+    var th=$('#think'); if(th) th.remove(); busy=null;
     var p=findPlan(q);
-    if(!p){ log.insertAdjacentHTML('beforeend','<div class="ma"><p>재현 화면에서는 아래 예시 요청만 동작해요.</p></div>'); log.scrollTop=log.scrollHeight; return; }
+    if(!p){ log.insertAdjacentHTML('beforeend','<div class="ma"><p>재현 화면에서는 아래 예시 요청만 동작해요.</p></div>'); log.scrollTop=log.scrollHeight; renderLast('재현 화면에서는 예시 요청만 동작해요'); return; }
     // 새 요청은 직전 AI 변경을 되돌린 상태에서 시작
     var last=cards[cards.length-1]; recordUndo();
     if(last&&last.st==='on'){ rows=last.base.map(function(r){ return Object.assign({},r); }); last.st='rev'; }
@@ -486,13 +528,31 @@ function renderLog(){
       '<div class="st"><div><small>편집 후</small><b>'+ms(c.tot)+'</b></div><div><small>원본</small><b>'+ms(TOT)+'</b></div><div><small>구간</small><b>'+c.n+'개</b></div></div>'+
       '<div class="bt"><button class="pri" data-pv="'+i+'">결과 미리보기</button><button class="sec" data-rv="'+i+'">이 변경 되돌리기</button></div></div>';
   });
-  var log=$('#log'); log.innerHTML=h; log.scrollTop=log.scrollHeight;
+  var log=$('#log'); log.innerHTML=h; log.scrollTop=log.scrollHeight; renderLast();
 }
-$('#log').addEventListener('click',function(e){
+// DR-05: 패널 아래 AI 구역 — 마지막 요청 한 줄 + 이전 요청 펼치기
+var busy=null;
+function renderLast(msg){ var c=cards[cards.length-1], h='';
+  if(busy) h='<span class="q">AI가 편집하는 중… <b>'+esc(busy)+'</b></span>';
+  else if(msg) h='<span class="q">'+esc(msg)+'</span>';
+  else if(c) h='<span class="q">최근 요청 <b>'+esc(c.q)+'</b> · 구간 '+c.n+'개 · '+ms(c.tot)+(c.st==='rev'?' · 되돌렸어요':'')+'</span>'+
+    (c.st==='on'?'<button class="pri" data-pv="'+(cards.length-1)+'">미리보기</button><button data-rv="'+(cards.length-1)+'">되돌리기</button>':'');
+  $('#aiLast').innerHTML=h;
+  $('#aiX').innerHTML=cards.length?'이전 요청 '+cards.length+'개<span class="ic">'+($('.ai').classList.contains('open')?'expand_less':'expand_more')+'</span>':''; }
+$('#aiX').addEventListener('click',function(){ $('.ai').classList.toggle('open'); renderLast(); var l=$('#log'); l.scrollTop=l.scrollHeight; });
+function placeAI(){ var ai=$('.ai'), on=document.body.classList.contains('dr05');
+  if(on&&ai.parentNode!==$('#dock')) $('#dock').appendChild(ai);
+  if(!on&&ai.parentNode!==$('#p-edit')) $('#p-edit').insertBefore(ai,$('#p-edit .sl'));
+  $('#tabs').children[0].textContent=on?'구간 목록':'편집 목록'; }
+$('#aiCol').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; document.body.classList.toggle('aiblue',b.dataset.v==='bl');
+  [].forEach.call(this.children,function(x){ x.classList.toggle('on',x===b); }); });
+if(new URLSearchParams(location.search).get('ai')==='blue') $('#aiCol').children[1].click();
+function onCard(e){
   var pv=e.target.closest('[data-pv]'), rv=e.target.closest('[data-rv]');
   if(pv){ setMode('edit'); var f=onRows()[0]; if(f){ seek(f.s); play(); } }
   if(rv){ var c=cards[+rv.dataset.rv]; recordUndo(); rows=c.base.map(function(r){ return Object.assign({},r); }); c.st='rev'; touched(); renderLog(); renderAll(); }
-});
+}
+$('#log').addEventListener('click',onCard); $('#aiLast').addEventListener('click',onCard);
 $('#chips').innerHTML=PLANS.map(function(p,i){ return '<button class="chip" data-i="'+i+'">'+esc(p.q)+'</button>'; }).join('');
 $('#chips').addEventListener('click',function(e){ var c=e.target.closest('.chip'); if(c) ask(PLANS[+c.dataset.i].q); });
 $('#q').addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){ e.preventDefault(); ask(this.value); this.value=''; } });
@@ -501,15 +561,15 @@ $('#bGo').addEventListener('click',function(){ ask($('#q').value); $('#q').value
 /* ── 구간 편집 동작 ── */
 function toggleRow(i){ recordUndo(); var r=rows[i]; r.m=r.m==='on'?'off':'on'; touched(); renderAll(); }
 function mergeRow(i){ if(!rows[i+1]) return; recordUndo(); var a=rows[i], b=rows[i+1];
-  rows.splice(i,2,{s:a.s,e:b.e,m:a.m,ai:a.ai&&b.ai,ti:titleFor(a.s,b.e)}); touched(); renderAll(); }
+  rows.splice(i,2,{s:a.s,e:b.e,m:a.m,ai:a.ai&&b.ai,src:a.src||b.src,ti:titleFor(a.s,b.e)}); touched(); renderAll(); }
 function cutAt(t){ var i=rowAt(t), r=rows[i];
   if(t-r.s<0.5||r.e-t<0.5){ toast('구간 경계와 너무 가까워서 자르지 않았어요'); return; }
-  recordUndo(); rows.splice(i,1,Object.assign({},r,{e:t,ti:titleFor(r.s,t)}),Object.assign({},r,{s:t,ti:titleFor(t,r.e)}));
-  touched(); renderAll(); toast(hms(t)+'에서 구간을 나눴어요'); }
+  recordUndo(); rows.splice(i,1,Object.assign({},r,{e:t,src:'me',ti:titleFor(r.s,t)}),Object.assign({},r,{s:t,src:'me',ti:titleFor(t,r.e)}));
+  fresh=[i,i+1]; touched(); renderAll(); toast(hms(t)+'에서 구간을 나눴어요'); }
 function setRange(a,b,m){ // a~b 구간을 m으로 (필요하면 경계에서 나눔)
   recordUndo();
   [a,b].forEach(function(t){ var i=rowAt(t), r=rows[i]; if(t-r.s>0.3&&r.e-t>0.3) rows.splice(i,1,Object.assign({},r,{e:t}),Object.assign({},r,{s:t})); });
-  rows.forEach(function(r){ if(r.s>=a-0.31&&r.e<=b+0.31) r.m=m; });
+  rows.forEach(function(r){ if(r.s>=a-0.31&&r.e<=b+0.31){ r.m=m; r.src='me'; } });
   rows.forEach(function(r){ r.ti=titleFor(r.s,r.e); });
   touched(); renderAll(); }
 function doUndo(){ if(!undo.length) return; redo.push(snap()); rows=undo.pop(); touched(); renderAll(); }
@@ -603,18 +663,20 @@ $('#bk').addEventListener('mousedown',function(e){ var b=e.target.closest('.bd.d
   function mv(ev){ var a=rows[k], c=rows[k+1], t=Math.max(a.s+0.5,Math.min(c.e-0.5,tFromX(ev.clientX)));
     if(!rec){ recordUndo(); rec=true; } a.e=t; c.s=t; renderTL(); }
   function up(){ document.removeEventListener('mousemove',mv); document.removeEventListener('mouseup',up);
-    if(rec){ rows[k].ti=titleFor(rows[k].s,rows[k].e); rows[k+1].ti=titleFor(rows[k+1].s,rows[k+1].e); touched(); renderAll(); } }
+    if(rec){ rows[k].ti=titleFor(rows[k].s,rows[k].e); rows[k+1].ti=titleFor(rows[k+1].s,rows[k+1].e); rows[k].src=rows[k+1].src='me'; touched(); renderAll(); } }
   document.addEventListener('mousemove',mv); document.addEventListener('mouseup',up);
 });
 
 /* ── 구간 목록 ── */
+var fresh=[]; // 방금 자른 줄 (DR-04·05에서 잠깐 강조)
 function renderList(){
   var h=''; rows.forEach(function(r,i){ var n=rows[i+1];
-    h+='<div class="row '+r.m+'" data-i="'+i+'"><div class="ix"><i></i>'+(i+1)+'</div>'+
-      '<div class="mn"><div class="tt">'+hmsd(r.s)+' – '+hmsd(r.e)+'</div><div class="s2">'+(r.ai?'<b class="aib">AI</b>':'')+'<span>'+(r.ti?esc(r.ti)+' · ':'')+ms(r.e-r.s)+'</span></div></div>'+
+    h+='<div class="row '+r.m+(fresh.indexOf(i)>=0?' nw':'')+'" data-i="'+i+'"><div class="ix"><i></i>'+(i+1)+'</div>'+
+      '<div class="mn"><div class="tt">'+hmsd(r.s)+' – '+hmsd(r.e)+'</div><div class="s2">'+(r.ai?'<b class="aib'+(r.src?' x':'')+'">AI</b>':'')+(r.src?'<b class="meb"><span class="ic">content_cut</span>직접</b>':'')+'<span>'+(r.ti?esc(r.ti)+' · ':'')+ms(r.e-r.s)+'</span></div></div>'+
       '<button class="tg"><span class="ic">'+(r.m==='on'?'visibility':'visibility_off')+'</span>'+(r.m==='on'?'켜짐':'꺼짐')+'</button>'+
       (n&&n.m===r.m?'<button class="mg" data-i="'+i+'" title="두 구간 병합"><span class="ic">compress</span></button>':'')+'</div>'; });
   $('#sl').innerHTML=h;
+  if(fresh.length){ var nr=$('#sl .row.nw'); if(nr&&/dr0[45]/.test(document.body.className)) nr.scrollIntoView({block:'nearest'}); fresh=[]; }
   $('#slc').textContent='켜짐 '+onRows().length+' · 전체 '+rows.length;
 }
 $('#sl').addEventListener('click',function(e){ var m=e.target.closest('.mg'); if(m){ mergeRow(+m.dataset.i); return; }
@@ -695,6 +757,7 @@ function renderAll(){
   var on=onRows();
   $('#sum').textContent='켜진 구간 '+on.length+'개 · '+ms(onTotal())+' / '+ms(TOT)+(savedAt?' · 임시 저장됨 · '+pad(savedAt.getHours())+':'+pad(savedAt.getMinutes()):'');
   $('#bApply').disabled=rows.length===1&&rows[0].m==='on';
+  document.body.classList.toggle('pristine',rows.length===1&&rows[0].m==='on');
   $('#bUndo').disabled=!undo.length; $('#bRedo').disabled=!redo.length;
   $('#hint').textContent=mode==='edit'?'편집 결과 재생 중 · 꺼진 구간으로는 이동할 수 없어요':rows.length===1?'재생 위치에서 자르거나 AI에게 요청하세요':'구간을 누르면 처음부터 재생 · 경계를 드래그해 조정';
   lastRow=-1;
