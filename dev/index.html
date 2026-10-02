@@ -126,10 +126,7 @@ body.dr03 .slt{display:block}
 .sb.cur::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--or)}
 #drbar label .dt{padding:0 4px;border-radius:3px;background:var(--dr);color:#fff;font-size:10px;font-weight:700}
 #drbar label .dt.rp{background:var(--bd);color:var(--tx-3)}
-#drbar #aiCol,#drbar #aiIc{display:none}
-body.dr07 #drbar #aiIc{display:flex}
-#aiIc button{display:flex;align-items:center;gap:4px}
-#aiIc svg{width:13px;height:13px;fill:currentColor}
+#drbar #aiCol{display:none}
 body.dr05 #drbar #aiCol{display:flex}
 
 /* DR-04·05 (시안) 공통: 구간 목록이 "모든 편집의 결과"임을 보여 줌 */
@@ -400,7 +397,6 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
   <b>개발 화면 재현</b><span>디자인 보완안 확인용 — 이 줄은 실제 화면에 없어요</span>
   <div class="seg2" id="drMode"><button data-v="0">현재</button><button data-v="1">개선안</button></div>
   <div class="items" id="drItems"></div>
-  <div class="seg2" id="aiIc" title="AI 아이콘 비교 (DR-07)"><button data-v="a">지금</button><button data-v="b">별 셋</button><button data-v="c">별 둘</button></div>
   <div class="seg2" id="aiCol"><button data-v="or" class="on">AI 구역 주황</button><button data-v="bl">하늘</button></div>
   <a href="../DESIGN-REVIEW.md" target="_blank">보완 문서</a>
   <a href="../" target="_blank">목업 에디터</a>
@@ -527,7 +523,7 @@ var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화�
 })();
 function applyDR(){
   DR.forEach(function(d){ document.body.classList.toggle('dr'+d.id, drOn&&drSel[d.id]); });
-  renderSlt(); placeAI(); syncPh(); syncIc();
+  renderSlt(); placeAI(); syncPh();
   [].forEach.call($('#drMode').children,function(b){ b.classList.toggle('on',(b.dataset.v==='1')===drOn); });
   [].forEach.call($('#drItems').children,function(l){ l.classList.toggle('dis',!drOn); });
 }
@@ -658,16 +654,6 @@ $('#spl').addEventListener('dblclick',function(){ var ai=$('.ai'); ai.style.heig
 $('#aiCol').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; document.body.classList.toggle('aiblue',b.dataset.v==='bl');
   [].forEach.call(this.children,function(x){ x.classList.toggle('on',x===b); }); });
 if(new URLSearchParams(location.search).get('ai')==='blue') $('#aiCol').children[1].click();
-// DR-07: AI 아이콘 비교 — a 지금(개발 화면 ✦, 제미나이 로고와 실루엣이 비슷) / b 별 셋(Material Symbols auto_awesome) / c 큰 별+작은 별
-var ICS={a:'M12 2C12.6 7.6 16.4 11.4 22 12C16.4 12.6 12.6 16.4 12 22C11.4 16.4 7.6 12.6 2 12C7.6 11.4 11.4 7.6 12 2Z',
-  b:'M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L18 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z',
-  c:'M10 5C10.54 10.04 13.96 13.46 19 14C13.96 14.54 10.54 17.96 10 23C9.46 17.96 6.04 14.54 1 14C6.04 13.46 9.46 10.04 10 5ZM19.5 1C19.71 2.96 21.04 4.29 23 4.5C21.04 4.71 19.71 6.04 19.5 8C19.29 6.04 17.96 4.71 16 4.5C17.96 4.29 19.29 2.96 19.5 1Z'};
-var icv=ICS[new URLSearchParams(location.search).get('icon')]?new URLSearchParams(location.search).get('icon'):'b'; // 기본은 별 셋
-[].forEach.call($('#aiIc').children,function(b){ b.insertAdjacentHTML('afterbegin','<svg viewBox="0 0 24 24"><path d="'+ICS[b.dataset.v]+'"/></svg>'); });
-function syncIc(){ var k=document.body.classList.contains('dr07')?icv:'a'; // DR-07이 꺼지면 개발 화면 그대로
-  [].forEach.call(document.querySelectorAll('.spk path'),function(p){ p.setAttribute('d',ICS[k]); });
-  [].forEach.call($('#aiIc').children,function(b){ b.classList.toggle('on',b.dataset.v===icv); }); }
-$('#aiIc').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; icv=b.dataset.v; syncIc(); });
 function onCard(e){
   var pv=e.target.closest('[data-pv]'), rv=e.target.closest('[data-rv]');
   if(pv){ aim(false); setMode('edit'); var f=onRows()[0]; if(f){ seek(f.s); play(); } }
