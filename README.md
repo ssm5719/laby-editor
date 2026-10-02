@@ -30,6 +30,7 @@ npx serve .
 | `CLAUDE.md` | Claude Code로 작업할 때 지키는 규칙 |
 | `HANDOFF.md` | 개발 전달 문서 — 동작 규칙·수치, 목업 vs 실제 구현, CMS 전달 형식, 결정 기록 |
 | `DESIGN-REVIEW.md` | 개발 중인 실제 화면에 대한 디자인 보완 요청 (확정된 항목만) |
+| `dev/index.html` | 개발 중인 실제 화면을 캡처 기준으로 재현한 페이지 (`/dev/`). 상단 `현재 / 개선안`으로 DESIGN-REVIEW 항목을 켜고 끔 |
 
 ## 현재 기능
 
