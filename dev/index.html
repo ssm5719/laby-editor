@@ -108,6 +108,18 @@ body.dr01 .ch:hover i{background:#E0E0E0}
 .chb{position:absolute;top:0;height:14px;border-radius:2px;display:none;pointer-events:none}
 /* DR-02 목차 라인 마우스 올림 → 그 목차 구간(다음 목차 전까지)을 회색 띠 #2A2C33로 */
 body.dr02 .chb.on{display:block;background:#2A2C33}
+/* DR-03 (시안) 슬라이드 줄: 목차를 세로선 대신 블록+제목으로. 켜면 위의 목차 라인 줄(DR-01·02 포함)을 대신함 */
+.slt{position:relative;height:18px;margin-top:4px;display:none}
+body.dr03 .chs{display:none}
+body.dr03 .slt{display:block}
+.sb{position:absolute;top:0;bottom:0;border-radius:2px;background:#1F2026;cursor:pointer;overflow:hidden;
+  font-size:10px;line-height:18px;padding:0 6px;color:var(--tx-3);white-space:nowrap;text-overflow:ellipsis}
+.sb.b{background:#26272D}
+.sb.nt{font-style:italic;color:var(--tx-4)}
+.sb:hover{background:#3A3C44;color:var(--tx)}
+.sb.cur{color:var(--tx)}
+.sb.cur::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--or)}
+#drbar label .dt{padding:0 4px;border-radius:3px;background:var(--dr);color:#fff;font-size:10px;font-weight:700}
 .pg{position:relative;height:16px;margin-top:4px;cursor:pointer}
 .pg .tr{position:absolute;left:0;right:0;top:5px;height:6px;border-radius:3px;background:var(--bd);overflow:hidden}
 .pg .ht{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(-45deg,var(--hat1) 0 4px,var(--bg) 4px 8px)}
@@ -312,6 +324,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
         <div class="tl" id="tl">
           <div class="ru" id="ru"></div>
           <div class="chs" id="chs"></div>
+          <div class="slt" id="slt"></div>
           <div class="pg" id="pg"><div class="tr" id="tr"><div class="fl" id="fl"></div></div><div class="kn" id="kn"></div></div>
           <div class="bk" id="bk"></div>
           <div class="mgs" id="mgs"></div>
@@ -374,19 +387,21 @@ var D=window.D, TOT=D.dur, $=function(s){return document.querySelector(s);};
 var vid=$('#vid');
 
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
-var DR=[ {id:'01', t:'목차 라인 마우스 올림 → #E0E0E0'}, {id:'02', t:'목차 라인 마우스 올림 → 구간 회색 띠'} ];
+var DR=[ {id:'01', t:'목차 라인 마우스 올림 → #E0E0E0'}, {id:'02', t:'목차 라인 마우스 올림 → 구간 회색 띠'},
+  {id:'03', t:'슬라이드 줄 (블록 + 제목)', draft:true} ]; // draft = 확정 전 시안 (기본 꺼짐, 문서에는 아직 없음)
 var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
   var q=new URLSearchParams(location.search).get('dr');
-  DR.forEach(function(d){ drSel[d.id]=true; });
+  DR.forEach(function(d){ drSel[d.id]=!d.draft; });
   if(q==='none') drOn=false;
   else if(q){ if(q!=='all'){ DR.forEach(function(d){ drSel[d.id]=q.split(',').indexOf(d.id)>=0; }); } }
-  $('#drItems').innerHTML=DR.map(function(d){ return '<label data-id="'+d.id+'"><input type="checkbox"'+(drSel[d.id]?' checked':'')+'><b>DR-'+d.id+'</b> '+d.t+'</label>'; }).join('');
+  $('#drItems').innerHTML=DR.map(function(d){ return '<label data-id="'+d.id+'"><input type="checkbox"'+(drSel[d.id]?' checked':'')+'>'+(d.draft?'<span class="dt">시안</span>':'')+'<b>DR-'+d.id+'</b> '+d.t+'</label>'; }).join('');
   $('#drItems').addEventListener('change',function(e){ var l=e.target.closest('label'); drSel[l.dataset.id]=e.target.checked; applyDR(); });
   $('#drMode').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; drOn=b.dataset.v==='1'; applyDR(); });
 })();
 function applyDR(){
   DR.forEach(function(d){ document.body.classList.toggle('dr'+d.id, drOn&&drSel[d.id]); });
+  renderSlt();
   [].forEach.call($('#drMode').children,function(b){ b.classList.toggle('on',(b.dataset.v==='1')===drOn); });
   [].forEach.call($('#drItems').children,function(l){ l.classList.toggle('dis',!drOn); });
 }
@@ -541,6 +556,7 @@ function renderTL(){
   fixWin(); var s=SP(), step=span===120?20:span===600?120:600, h='';
   for(var t=Math.ceil(ws/step)*step;t<ws+s;t+=step) h+='<span style="left:'+X(t)+'%">'+ms(t)+'</span>';
   $('#ru').innerHTML=h;
+  renderSlt();
   $('#chs').innerHTML='<div class="chb" id="chb"></div>'+HEADS.map(function(hd,i){ return '<div class="ch" data-i="'+i+'" style="left:'+X(hd.t)+'%"><i></i></div>'; }).join('');
   h=''; var bds={};
   rows.forEach(function(r,i){ h+='<div class="blk '+r.m+'" data-i="'+i+'" style="left:'+X(r.s)+'%;width:'+((r.e-r.s)/s*100)+'%"></div>';
@@ -558,6 +574,17 @@ $('#chs').addEventListener('mouseover',function(e){ var c=e.target.closest('.ch'
   var bd=$('#chb'), be=nx?nx.t:TOT; bd.style.left=X(hd.t)+'%'; bd.style.width=((be-hd.t)/SP()*100)+'%'; bd.classList.add('on');
   tip.textContent='#'+hd.n+' '+(hd.title||'제목 없는 슬라이드')+' · '+hms(hd.t); tip.style.display='block';
   var r=$('#tl').getBoundingClientRect(), cr=c.getBoundingClientRect(); tip.style.left=Math.max(tip.offsetWidth/2,Math.min(r.width-tip.offsetWidth/2,cr.left+4-r.left))+'px'; tip.style.top=($('#chs').offsetTop)+'px'; });
+// DR-03 슬라이드 줄: 블록 폭이 56px 이상일 때만 제목, 좁으면 블록만 (이름은 툴팁)
+function renderSlt(){ var el=$('#slt'); if(!el) return; if(!document.body.classList.contains('dr03')){ el.innerHTML=''; return; }
+  var W=$('#tl').clientWidth, s=SP();
+  el.innerHTML=HEADS.map(function(hd,i){ var e=HEADS[i+1]?HEADS[i+1].t:TOT, w=(e-hd.t)/s*100, px=w*W/100;
+    return '<div class="sb'+(i%2?' b':'')+(hd.title?'':' nt')+(i===lastCh?' cur':'')+'" data-i="'+i+'" style="left:'+X(hd.t)+'%;width:calc('+w+'% - 1px)">'+(px>=56?esc(hd.title||'제목 없음'):'')+'</div>'; }).join(''); }
+$('#slt').addEventListener('mouseover',function(e){ var c=e.target.closest('.sb'); if(!c) return; var hd=HEADS[+c.dataset.i];
+  tip.textContent='#'+hd.n+' '+(hd.title||'제목 없는 슬라이드')+' · '+hms(hd.t); tip.style.display='block';
+  var r=$('#tl').getBoundingClientRect(), cr=c.getBoundingClientRect(), cx=Math.max(cr.left,r.left)+Math.min(cr.width,40)/2;
+  tip.style.left=Math.max(tip.offsetWidth/2,Math.min(r.width-tip.offsetWidth/2,cx-r.left))+'px'; tip.style.top=($('#slt').offsetTop)+'px'; });
+$('#slt').addEventListener('mouseout',function(e){ if(e.target.closest('.sb')) tip.style.display='none'; });
+$('#slt').addEventListener('click',function(e){ var c=e.target.closest('.sb'); if(c) goTo(HEADS[+c.dataset.i].t); });
 $('#chs').addEventListener('mouseout',function(e){ if(e.target.closest('.ch')){ tip.style.display='none'; $('#chb').classList.remove('on'); } });
 $('#chs').addEventListener('click',function(e){ var c=e.target.closest('.ch'); if(c){ var t=HEADS[+c.dataset.i].t; goTo(t); } });
 function goTo(t){ if(mode==='edit'){ var i=rowAt(t); if(rows[i].m==='off'){ toast('편집 결과 재생 중에는 꺼진 구간으로 이동할 수 없어요'); return; } } seek(t); tick(true); }
@@ -690,14 +717,15 @@ function tick(force){
   else $('#tm').innerHTML=hms(t)+' <span class="g">/ '+hms(TOT)+'</span>';
   var ci=cueIdx(t); $('#sub').textContent=ci>=0?D.cues[ci].x:'';
   var r=rowAt(t); if(r!==lastRow){ var o=$('#sl .row.cur'); if(o) o.classList.remove('cur'); var nr=$('#sl .row[data-i="'+r+'"]'); if(nr) nr.classList.add('cur'); lastRow=r; }
-  var hi=headAt(t); if(hi!==lastCh||force){ var oc=$('#chs .ch.cur'); if(oc) oc.classList.remove('cur'); var nc=$('#chs .ch[data-i="'+hi+'"]'); if(nc) nc.classList.add('cur'); lastCh=hi; }
+  var hi=headAt(t); if(hi!==lastCh||force){ var oc=$('#chs .ch.cur'); if(oc) oc.classList.remove('cur'); var nc=$('#chs .ch[data-i="'+hi+'"]'); if(nc) nc.classList.add('cur');
+    var os=$('#slt .sb.cur'); if(os) os.classList.remove('cur'); var ns=$('#slt .sb[data-i="'+hi+'"]'); if(ns) ns.classList.add('cur'); lastCh=hi; }
   if(ci!==lastCue){ var oq=$('#cl .cu.cur'); if(oq) oq.classList.remove('cur'); var nq=$('#cl .cu[data-c="'+ci+'"]'); if(nq){ nq.classList.add('cur'); if(follow&&$('#p-cap').classList.contains('on')) nq.scrollIntoView({block:'nearest'}); } lastCue=ci; }
   if(hi!==lastHead){ var ot=$('#tc .ti.cur'); if(ot) ot.classList.remove('cur'); var nt=$('#tc .ti[data-i="'+hi+'"]'); if(nt){ nt.classList.add('cur'); if($('#p-toc').classList.contains('on')) nt.scrollIntoView({block:'nearest'}); } lastHead=hi; }
 }
 function loop(){ tick(false); requestAnimationFrame(loop); }
 
 renderToc(); renderLog(); applyDR(); renderAll(); loop();
-window.addEventListener('resize',function(){ tick(true); });
+window.addEventListener('resize',function(){ renderSlt(); tick(true); });
 })();
 </script>
 </body>
