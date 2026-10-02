@@ -156,6 +156,18 @@ body.dr05 .ai-last:empty{display:none}
 .ai-last .q b{color:var(--tx)}
 .ai-last button{flex:0 0 auto;height:24px;padding:0 8px;border-radius:6px;font-size:11px;border:1px solid var(--bd);background:var(--bg)}
 .ai-last .pri{background:var(--cy);border-color:var(--cy);color:#0F1013;font-weight:600}
+/* DR-05: 구간 목록이 아닌 탭에서는 입력창 한 줄로 접고, 입력창을 누르면 펼침 */
+.ai-last .gl{display:none}
+body.dr05:not([data-tab="edit"]) .ai-last .gl{display:inline-block}
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus){padding:8px}
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .ai-h,
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .ai-last,
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .log,
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .chips,
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp .f span{display:none}
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 10px}
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp::before{content:"add";font-family:"Material Symbols Outlined";font-size:16px;color:var(--az-ic)}
+body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp textarea{flex:1;height:22px;line-height:22px;overflow:hidden;white-space:nowrap}
 
 .pg{position:relative;height:16px;margin-top:4px;cursor:pointer}
 .pg .tr{position:absolute;left:0;right:0;top:5px;height:6px;border-radius:3px;background:var(--bd);overflow:hidden}
@@ -314,7 +326,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
 }
 </style>
 </head>
-<body>
+<body data-tab="edit">
 
 <div id="drbar">
   <b>개발 화면 재현</b><span>디자인 보완안 확인용 — 이 줄은 실제 화면에 없어요</span>
@@ -535,9 +547,13 @@ function renderLast(msg){ var c=cards[cards.length-1], h='';
   if(busy) h='<span class="q">AI가 편집하는 중… <b>'+esc(busy)+'</b></span>';
   else if(msg) h='<span class="q">'+esc(msg)+'</span>';
   else if(c) h='<span class="q">최근 요청 <b>'+esc(c.q)+'</b> · 구간 '+c.n+'개 · '+ms(c.tot)+(c.st==='rev'?' · 되돌렸어요':'')+'</span>'+
-    (c.st==='on'?'<button class="pri" data-pv="'+(cards.length-1)+'">미리보기</button><button data-rv="'+(cards.length-1)+'">되돌리기</button>':'');
+    (c.st==='on'?'<button class="pri" data-pv="'+(cards.length-1)+'">미리보기</button><button data-rv="'+(cards.length-1)+'">되돌리기</button>':'')+'<button class="gl">목록 보기</button>';
   $('#aiLast').innerHTML=h;
   $('#aiX').innerHTML=cards.length?'이전 요청 '+cards.length+'개<span class="ic">'+($('.ai').classList.contains('open')?'expand_less':'expand_more')+'</span>':''; }
+// 다른 탭에서 접힌 AI 구역: 안을 누르면 펼치고, 바깥을 누르면 접음
+$('.ai').addEventListener('focusin',function(){ this.classList.add('focus'); });
+document.addEventListener('mousedown',function(e){ if(!e.target.closest('.ai')) $('.ai').classList.remove('focus'); });
+$('#aiLast').addEventListener('click',function(e){ if(e.target.closest('.gl')){ $('.ai').classList.remove('focus'); $('#tabs').children[0].click(); } });
 $('#aiX').addEventListener('click',function(){ $('.ai').classList.toggle('open'); renderLast(); var l=$('#log'); l.scrollTop=l.scrollHeight; });
 function placeAI(){ var ai=$('.ai'), on=document.body.classList.contains('dr05');
   if(on&&ai.parentNode!==$('#dock')) $('#dock').appendChild(ai);
@@ -745,7 +761,7 @@ $('#sr').addEventListener('click',function(e){ var c=e.target.closest('.cu'); if
 
 /* ── 탭 ── */
 $('#tabs').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
-  [].forEach.call($('#tabs').children,function(x){ x.classList.toggle('on',x===b); });
+  [].forEach.call($('#tabs').children,function(x){ x.classList.toggle('on',x===b); }); document.body.dataset.tab=b.dataset.p;
   ['edit','cap','toc','find'].forEach(function(p){ $('#p-'+p).classList.toggle('on',p===b.dataset.p); });
   if(b.dataset.p==='toc'){ makeThumbs(); lastHead=-1; } if(b.dataset.p==='cap') lastCue=-1;
 });
