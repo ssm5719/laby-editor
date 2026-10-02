@@ -87,8 +87,10 @@ body.edit .ch1{top:52px}
 .vol input::-moz-range-track{height:8px;border-radius:4px;box-sizing:border-box;border:1px solid #858585;background:linear-gradient(90deg,#E6E6EA var(--v),#3B3B3B var(--v))}
 .vol input::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-5px;border-radius:50%;background:#fff;border:0}
 .vol input::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:0}
-/* DR-06 볼륨 손잡이 16px → 12px (트랙 세로 8px는 그대로) */
-body.dr06 .vol input::-webkit-slider-thumb{width:12px;height:12px;margin-top:-3px}
+/* DR-06 볼륨 슬라이더: 트랙 세로 8px → 4px, 손잡이 16px → 12px */
+body.dr06 .vol input::-webkit-slider-runnable-track{height:4px;border-radius:2px}
+body.dr06 .vol input::-moz-range-track{height:4px;border-radius:2px}
+body.dr06 .vol input::-webkit-slider-thumb{width:12px;height:12px;margin-top:-5px}
 body.dr06 .vol input::-moz-range-thumb{width:12px;height:12px}
 .tm{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 .tm .g{color:var(--tx-3);font-weight:400}
@@ -462,7 +464,7 @@ var D=window.D, TOT=D.dur, $=function(s){return document.querySelector(s);};
 var vid=$('#vid');
 
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
-var DR=[ {id:'03', t:'슬라이드 줄 (블록 + 제목)'}, {id:'06', t:'볼륨 손잡이 16→12px'},
+var DR=[ {id:'03', t:'슬라이드 줄 (블록 + 제목)'}, {id:'06', t:'볼륨 트랙 4px · 손잡이 12px'},
   {id:'04', t:'지금 배치 + 목록 구분 (설명·출처·강조)', draft:true}, {id:'05', t:'구간 목록 탭 독립 + AI 아래 고정', draft:true} ]; // draft = 확정 전 시안(기본 꺼짐), by = 다른 항목으로 대체됨(기본 꺼짐)
 var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
