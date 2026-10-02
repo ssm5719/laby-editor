@@ -163,12 +163,8 @@ body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp .f>span{display:none
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 10px}
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp::before{content:"";flex:0 0 auto;width:14px;height:14px;background:var(--az-ic);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12%202C12.6%207.6%2016.4%2011.4%2022%2012C16.4%2012.6%2012.6%2016.4%2012%2022C11.4%2016.4%207.6%2012.6%202%2012C7.6%2011.4%2011.4%207.6%2012%202Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12%202C12.6%207.6%2016.4%2011.4%2022%2012C16.4%2012.6%2012.6%2016.4%2012%2022C11.4%2016.4%207.6%2012.6%202%2012C7.6%2011.4%2011.4%207.6%2012%202Z'/%3E%3C/svg%3E") center/contain no-repeat}
 body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .inp textarea{flex:1;height:22px;line-height:22px;overflow:hidden;white-space:nowrap}
-/* 접힌 상태: 보내기 대신 위로 펼치기 버튼 / 펼친 상태: 머리줄 오른쪽에 접기 버튼 */
-.inp .go.ai-open,.ai-h .ai-fold{display:none}
-body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) #bGo{display:none}
-body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .ai-open{display:flex;background:var(--az-bd);color:var(--az-ic)}
-body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .ai-open .ic{font-size:20px}
-body.dr05:not([data-tab="edit"]) .dock .ai:not(.focus) .ai-open:hover{background:var(--az-ic);color:var(--az-bg)}
+/* 접힌 상태: 입력창을 누르면 펼침(오른쪽은 그대로 보내기) / 펼친 상태: 머리줄 오른쪽에 접기 버튼 */
+.ai-h .ai-fold{display:none}
 body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-fold{display:flex;align-items:center;gap:2px;height:22px;padding:0 8px 0 4px;margin-left:8px;border:1px solid var(--az-bd);border-radius:11px;font-size:11px;color:var(--tx-2)}
 body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-fold .ic{font-size:16px;color:var(--tx-2)!important}
 body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-fold:hover{color:var(--tx);border-color:var(--az-ic)}
@@ -409,7 +405,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
         <div class="log" id="log"></div>
         <div class="inp">
           <textarea id="q" placeholder="무엇이든 말해 보세요. 예: 임대차 설명 부분만 남겨줘"></textarea>
-          <div class="f"><span>Enter 보내기 · Shift+Enter 줄바꿈</span><button class="go" id="bGo"><span class="ic">arrow_upward</span></button><button class="go ai-open" id="aiOpen" title="펼치기"><span class="ic">expand_less</span></button></div>
+          <div class="f"><span>Enter 보내기 · Shift+Enter 줄바꿈</span><button class="go" id="bGo"><span class="ic">arrow_upward</span></button></div>
         </div>
         <div class="chips" id="chips"></div>
       </div>
@@ -462,7 +458,7 @@ var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화�
 })();
 function applyDR(){
   DR.forEach(function(d){ document.body.classList.toggle('dr'+d.id, drOn&&drSel[d.id]); });
-  renderSlt(); placeAI();
+  renderSlt(); placeAI(); syncPh();
   [].forEach.call($('#drMode').children,function(b){ b.classList.toggle('on',(b.dataset.v==='1')===drOn); });
   [].forEach.call($('#drItems').children,function(l){ l.classList.toggle('dis',!drOn); });
 }
@@ -534,6 +530,7 @@ function ask(q){
     var d=p.d||('3초 넘는 무음 '+(rows.filter(function(r){ return r.m==='off'; }).length)+'곳을 뺀');
     cards.push({q:q,d:d,base:base,n:onRows().length,tot:onTotal(),before:before,st:'on'});
     touched(); renderLog(); renderAll();
+    if(document.body.classList.contains('dr05')&&document.body.dataset.tab!=='edit'&&!$('.ai').classList.contains('focus')) toast('AI 요청을 반영했어요 · 구간 '+onRows().length+'개 · '+ms(onTotal())); // 접힌 상태에서 보낸 경우 결과 알림
   },900);
 }
 function renderLog(){
@@ -558,11 +555,12 @@ function renderLast(msg){ var c=cards[cards.length-1], h='';
   $('#aiLast').innerHTML=h;
   $('#aiX').innerHTML=cards.length?'이전 요청 '+cards.length+'개<span class="ic">'+($('.ai').classList.contains('open')?'expand_less':'expand_more')+'</span>':''; }
 // 다른 탭에서 접힌 AI 구역: 안을 누르면 펼치고, 바깥을 누르면 접음
-$('.ai').addEventListener('focusin',function(){ this.classList.add('focus'); });
-document.addEventListener('mousedown',function(e){ if(!e.target.closest('.ai')) $('.ai').classList.remove('focus'); });
+var PH=$('#q').placeholder, PH1='AI에게 요청하기 (눌러서 예시 보기)';
+function syncPh(){ var c=document.body.classList.contains('dr05')&&document.body.dataset.tab!=='edit'&&!$('.ai').classList.contains('focus'); $('#q').placeholder=c?PH1:PH; }
+$('.ai').addEventListener('focusin',function(){ this.classList.add('focus'); syncPh(); });
+document.addEventListener('mousedown',function(e){ if(!e.target.closest('.ai')){ $('.ai').classList.remove('focus'); syncPh(); } });
 $('#aiLast').addEventListener('click',function(e){ if(e.target.closest('.gl')){ $('.ai').classList.remove('focus'); $('#tabs').children[0].click(); } });
-$('#aiOpen').addEventListener('mousedown',function(e){ e.preventDefault(); $('.ai').classList.add('focus'); $('#q').focus(); }); // 누르는 순간 숨겨지므로 click 대신 mousedown
-$('#aiFold').addEventListener('click',function(){ var a=$('.ai'); a.classList.remove('focus','open'); this.blur(); renderLast(); });
+$('#aiFold').addEventListener('click',function(){ var a=$('.ai'); a.classList.remove('focus','open'); this.blur(); renderLast(); syncPh(); });
 $('#aiX').addEventListener('click',function(){ $('.ai').classList.toggle('open'); renderLast(); var l=$('#log'); l.scrollTop=l.scrollHeight; });
 function placeAI(){ var ai=$('.ai'), on=document.body.classList.contains('dr05');
   if(on&&ai.parentNode!==$('#dock')) $('#dock').appendChild(ai);
@@ -580,7 +578,8 @@ $('#log').addEventListener('click',onCard); $('#aiLast').addEventListener('click
 $('#chips').innerHTML=PLANS.map(function(p,i){ return '<button class="chip" data-i="'+i+'">'+esc(p.q)+'</button>'; }).join('');
 $('#chips').addEventListener('click',function(e){ var c=e.target.closest('.chip'); if(c) ask(PLANS[+c.dataset.i].q); });
 $('#q').addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){ e.preventDefault(); ask(this.value); this.value=''; } });
-$('#bGo').addEventListener('click',function(){ ask($('#q').value); $('#q').value=''; });
+$('#bGo').addEventListener('mousedown',function(e){ e.preventDefault(); }); // 누를 때 포커스가 옮겨가며 접힌 구역이 펼쳐져 클릭이 빗나가지 않도록
+$('#bGo').addEventListener('click',function(){ var q=$('#q'); if(!q.value.trim()){ q.focus(); return; } ask(q.value); q.value=''; });
 
 /* ── 구간 편집 동작 ── */
 function toggleRow(i){ recordUndo(); var r=rows[i]; r.m=r.m==='on'?'off':'on'; touched(); renderAll(); }
@@ -769,7 +768,7 @@ $('#sr').addEventListener('click',function(e){ var c=e.target.closest('.cu'); if
 
 /* ── 탭 ── */
 $('#tabs').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
-  [].forEach.call($('#tabs').children,function(x){ x.classList.toggle('on',x===b); }); document.body.dataset.tab=b.dataset.p;
+  [].forEach.call($('#tabs').children,function(x){ x.classList.toggle('on',x===b); }); document.body.dataset.tab=b.dataset.p; syncPh();
   ['edit','cap','toc','find'].forEach(function(p){ $('#p-'+p).classList.toggle('on',p===b.dataset.p); });
   if(b.dataset.p==='toc'){ makeThumbs(); lastHead=-1; } if(b.dataset.p==='cap') lastCue=-1;
 });
