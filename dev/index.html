@@ -190,6 +190,37 @@ body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-fold:hover{color:var(--tx);
 body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-x{margin-left:auto}
 body.dr05:not([data-tab="edit"]) .dock .ai.focus .ai-x:empty+.ai-fold{margin-left:auto}
 
+/* DR-07 (시안) 영상 오른쪽 아래 떠 있는 AI 버튼 → AI 편집 요청을 모달로 */
+@keyframes aig{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes aip{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+.aifab{display:none;position:absolute;right:20px;bottom:20px;width:52px;height:52px;border-radius:50%;z-index:16;align-items:center;justify-content:center;
+  background:linear-gradient(120deg,#B4835F,#6F9CAD,#9A8C7E,#B4835F);background-size:300% 300%;animation:aig 7s ease-in-out infinite;
+  box-shadow:0 8px 20px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .15s,box-shadow .15s}
+body.dr07 .aifab{display:flex}
+.aifab:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.5),0 3px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25)}
+.aifab .spk{width:24px;height:24px;fill:#fff}
+.aifab .ic{display:none;font-size:24px;color:#fff}
+body.aimon .aifab .spk{display:none} body.aimon .aifab .ic{display:block}
+.aifab .lb{position:absolute;right:62px;top:50%;transform:translateY(-50%);padding:5px 10px;border-radius:6px;background:rgba(15,16,19,.88);color:#fff;font-size:12px;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.aifab:hover .lb{opacity:1} body.aimon .aifab .lb{display:none}
+.aim{display:none;position:fixed;inset:0;z-index:15}
+body.aimon .aim{display:block}
+.aim-bg{position:absolute;inset:0;background:rgba(0,0,0,.3)}
+.aim-p{position:absolute;width:400px;max-width:calc(100vw - 32px);display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:#17181D;
+  border:1px solid rgba(255,255,255,.09);box-shadow:0 20px 50px rgba(0,0,0,.55),0 4px 12px rgba(0,0,0,.4);transform-origin:100% 100%;animation:aip .2s ease-out}
+.aim-p::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(180,131,95,.24),rgba(111,156,173,.2),rgba(154,140,126,.12),rgba(180,131,95,.22));background-size:300% 300%;animation:aig 9s ease-in-out infinite}
+body.dr07 #aimP .ai{position:relative;flex:1 1 auto;padding:16px;background:none}
+body.dr07 #aimP .ai-h{font-size:15px;margin-bottom:12px}
+body.dr07 #aimP .ai-x,body.dr07 #aimP .ai-last,body.dr07 #aimP .ai-fold{display:none}
+.ai-cl{display:none}
+body.dr07 #aimP .ai-cl{display:flex;align-items:center;justify-content:center;width:28px;height:28px;margin:-4px -4px -4px auto;border-radius:50%;color:var(--tx-2)}
+body.dr07 #aimP .ai-cl:hover{background:rgba(255,255,255,.08);color:var(--tx)}
+body.dr07 #aimP .ai-cl .ic{font-size:20px}
+body.dr07 #aimP .inp{background:rgba(15,16,19,.72);border-color:rgba(255,255,255,.1)}
+body.dr07 #aimP .chip{background:rgba(22,23,28,.6);border-color:rgba(255,255,255,.1)}
+body.dr07 #aimP .card{background:rgba(22,27,30,.85)}
+body.dr07 .dock,body.dr07 #p-edit .spl{display:none}
+
 .pg{position:relative;height:16px;margin-top:4px;cursor:pointer}
 .pg .tr{position:absolute;left:0;right:0;top:5px;height:6px;border-radius:3px;background:var(--bd);overflow:hidden}
 .pg .ht{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(-45deg,var(--hat1) 0 4px,var(--bg) 4px 8px)}
@@ -375,6 +406,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
       <div class="ch1">CH1 <span class="ic">volume_up</span></div>
       <div class="pv"><span class="b"><i></i>편집 결과 미리보기</span><span class="n" id="pvN"></span></div>
       <div class="sub" id="sub"></div>
+      <button class="aifab" id="aiFab" aria-label="AI 편집 요청"><svg class="spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C12.6 7.6 16.4 11.4 22 12C16.4 12.6 12.6 16.4 12 22C11.4 16.4 7.6 12.6 2 12C7.6 11.4 11.4 7.6 12 2Z"/></svg><span class="ic">close</span><span class="lb">AI 편집 요청</span></button>
     </div>
     <div class="ctl">
       <div class="r1">
@@ -419,7 +451,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
 
     <div class="pane on" id="p-edit">
       <div class="ai">
-        <div class="ai-h"><svg class="spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C12.6 7.6 16.4 11.4 22 12C16.4 12.6 12.6 16.4 12 22C11.4 16.4 7.6 12.6 2 12C7.6 11.4 11.4 7.6 12 2Z"/></svg>AI 편집 요청<button class="ai-x" id="aiX"></button><button class="ai-fold" id="aiFold" title="한 줄로 접기"><span class="ic">expand_more</span>접기</button></div>
+        <div class="ai-h"><svg class="spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C12.6 7.6 16.4 11.4 22 12C16.4 12.6 12.6 16.4 12 22C11.4 16.4 7.6 12.6 2 12C7.6 11.4 11.4 7.6 12 2Z"/></svg>AI 편집 요청<button class="ai-x" id="aiX"></button><button class="ai-fold" id="aiFold" title="한 줄로 접기"><span class="ic">expand_more</span>접기</button><button class="ai-cl" id="aiCl" title="닫기 (Esc)"><span class="ic">close</span></button></div>
         <div class="ai-last" id="aiLast"></div>
         <div class="log" id="log"></div>
         <div class="inp">
@@ -455,6 +487,7 @@ mark{background:rgba(240,140,42,.35);color:inherit;border-radius:2px}
     <div class="dock" id="dock"></div>
   </aside>
 </div>
+<div class="aim" id="aim"><div class="aim-bg" id="aimBg"></div><div class="aim-p" id="aimP"></div></div>
 <div class="toast" id="toast"></div>
 
 <script src="../data.js"></script>
@@ -465,7 +498,8 @@ var vid=$('#vid');
 
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
 var DR=[ {id:'03', t:'슬라이드 줄 (블록 + 제목)'}, {id:'06', t:'볼륨 트랙 4px · 손잡이 12px'},
-  {id:'04', t:'지금 배치 + 목록 구분 (설명·출처·강조)', draft:true}, {id:'05', t:'구간 목록 탭 독립 + AI 아래 고정', draft:true} ]; // draft = 확정 전 시안(기본 꺼짐), by = 다른 항목으로 대체됨(기본 꺼짐)
+  {id:'04', t:'지금 배치 + 목록 구분 (설명·출처·강조)', draft:true}, {id:'05', t:'구간 목록 탭 독립 + AI 아래 고정', draft:true},
+  {id:'07', t:'영상 위 AI 버튼 → 편집 요청 모달', draft:true} ]; // draft = 확정 전 시안(기본 꺼짐), by = 다른 항목으로 대체됨(기본 꺼짐)
 var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
   var q=new URLSearchParams(location.search).get('dr');
@@ -550,7 +584,7 @@ function ask(q){
     var d=p.d||('3초 넘는 무음 '+(rows.filter(function(r){ return r.m==='off'; }).length)+'곳을 뺀');
     cards.push({q:q,d:d,base:base,n:onRows().length,tot:onTotal(),before:before,st:'on'});
     touched(); renderLog(); renderAll();
-    if(document.body.classList.contains('dr05')&&document.body.dataset.tab!=='edit'&&!$('.ai').classList.contains('focus')) toast('AI 요청을 반영했어요 · 구간 '+onRows().length+'개 · '+ms(onTotal())); // 접힌 상태에서 보낸 경우 결과 알림
+    if(docked()&&document.body.dataset.tab!=='edit'&&!$('.ai').classList.contains('focus')) toast('AI 요청을 반영했어요 · 구간 '+onRows().length+'개 · '+ms(onTotal())); // 접힌 상태에서 보낸 경우 결과 알림
   },900);
 }
 function renderLog(){
@@ -576,17 +610,29 @@ function renderLast(msg){ var c=cards[cards.length-1], h='';
   $('#aiX').innerHTML=cards.length?'이전 요청 '+cards.length+'개<span class="ic">'+($('.ai').classList.contains('open')?'expand_less':'expand_more')+'</span>':''; }
 // 다른 탭에서 접힌 AI 구역: 안을 누르면 펼치고, 바깥을 누르면 접음
 var PH=$('#q').placeholder, PH1='AI에게 요청하기 (눌러서 예시 보기)';
-function syncPh(){ var c=document.body.classList.contains('dr05')&&document.body.dataset.tab!=='edit'&&!$('.ai').classList.contains('focus'); $('#q').placeholder=c?PH1:PH; }
+function docked(){ return $('.ai').parentNode===$('#dock'); }
+function syncPh(){ var c=docked()&&document.body.dataset.tab!=='edit'&&!$('.ai').classList.contains('focus'); $('#q').placeholder=c?PH1:PH; }
 $('.ai').addEventListener('focusin',function(){ this.classList.add('focus'); syncPh(); });
 document.addEventListener('mousedown',function(e){ if(!e.target.closest('.ai')){ $('.ai').classList.remove('focus'); syncPh(); } });
 $('#aiLast').addEventListener('click',function(e){ if(e.target.closest('.gl')){ $('.ai').classList.remove('focus'); $('#tabs').children[0].click(); } });
 $('#aiFold').addEventListener('click',function(){ var a=$('.ai'); a.classList.remove('focus','open'); this.blur(); renderLast(); syncPh(); });
 $('#aiX').addEventListener('click',function(){ $('.ai').classList.toggle('open'); renderLast(); var l=$('#log'); l.scrollTop=l.scrollHeight; });
-function placeAI(){ var ai=$('.ai'), on=document.body.classList.contains('dr05');
+function placeAI(){ var ai=$('.ai'), bc=document.body.classList, md=bc.contains('dr07'), on=!md&&bc.contains('dr05'); // DR-07이 켜지면 모달이 우선
+  if(md&&ai.parentNode!==$('#aimP')) $('#aimP').appendChild(ai);
   if(on&&ai.parentNode!==$('#dock')) $('#dock').appendChild(ai);
-  if(!on&&ai.parentNode!==$('#p-edit')) $('#p-edit').insertBefore(ai,$('#spl'));
-  if(on||!document.body.classList.contains('dr04')){ ai.classList.remove('sized'); ai.style.height=''; }
-  $('#tabs').children[0].textContent=on?'구간 목록':'편집 목록'; }
+  if(!md&&!on&&ai.parentNode!==$('#p-edit')) $('#p-edit').insertBefore(ai,$('#spl'));
+  if(md||on||!bc.contains('dr04')){ ai.classList.remove('sized'); ai.style.height=''; }
+  if(!md) aim(false);
+  $('#tabs').children[0].textContent=md||on?'구간 목록':'편집 목록'; }
+// DR-07: 영상 위 AI 버튼 → 버튼 위로 모달 (바깥·닫기·Esc로 닫기, 결과 미리보기 누르면 닫고 재생)
+function posAim(){ var r=$('#aiFab').getBoundingClientRect(), p=$('#aimP');
+  p.style.right=Math.max(16,innerWidth-r.right)+'px'; p.style.bottom=(innerHeight-r.top+12)+'px'; p.style.maxHeight=Math.min(640,Math.max(260,r.top-28))+'px'; }
+function aim(o){ document.body.classList.toggle('aimon',o); if(o){ posAim(); var l=$('#log'); l.scrollTop=l.scrollHeight; $('#q').focus(); } }
+$('#aiFab').addEventListener('click',function(){ aim(!document.body.classList.contains('aimon')); this.blur(); });
+$('#aimBg').addEventListener('click',function(){ aim(false); });
+$('#aiCl').addEventListener('click',function(){ aim(false); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.body.classList.contains('aimon')) aim(false); });
+addEventListener('resize',function(){ if(document.body.classList.contains('aimon')) posAim(); });
 // DR-04: AI 영역과 구간 목록 사이 경계선을 위아래로 끌어 높이 조절
 $('#spl').addEventListener('mousedown',function(e){ e.preventDefault(); var ai=$('.ai'), pn=$('#p-edit'), y0=e.clientY, h0=ai.offsetHeight, sp=this; sp.classList.add('on');
   function mv(ev){ var h=Math.max(120,Math.min(pn.clientHeight-132,h0+ev.clientY-y0)); ai.style.height=h+'px'; ai.classList.add('sized'); }
@@ -598,7 +644,7 @@ $('#aiCol').addEventListener('click',function(e){ var b=e.target.closest('button
 if(new URLSearchParams(location.search).get('ai')==='blue') $('#aiCol').children[1].click();
 function onCard(e){
   var pv=e.target.closest('[data-pv]'), rv=e.target.closest('[data-rv]');
-  if(pv){ setMode('edit'); var f=onRows()[0]; if(f){ seek(f.s); play(); } }
+  if(pv){ aim(false); setMode('edit'); var f=onRows()[0]; if(f){ seek(f.s); play(); } }
   if(rv){ var c=cards[+rv.dataset.rv]; recordUndo(); rows=c.base.map(function(r){ return Object.assign({},r); }); c.st='rev'; touched(); renderLog(); renderAll(); }
 }
 $('#log').addEventListener('click',onCard); $('#aiLast').addEventListener('click',onCard);
