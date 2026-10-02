@@ -81,7 +81,15 @@ body.edit .ch1{top:52px}
 .r1 .ib .ic{font-size:22px}
 .r1 .ib:disabled{color:var(--tx-4);cursor:default}
 .vol{display:flex;align-items:center;gap:8px}
-.vol input{width:68px;accent-color:#fff;height:4px}
+.vol input{-webkit-appearance:none;appearance:none;width:70px;height:16px;margin:0;background:none;cursor:pointer;--v:80%}
+/* 개발 화면 볼륨 슬라이더: 트랙 세로 8px(채운 쪽 흰색, 남은 쪽 #3B3B3B + 1px #858585 테두리), 손잡이 16px */
+.vol input::-webkit-slider-runnable-track{height:8px;border-radius:4px;box-sizing:border-box;border:1px solid #858585;background:linear-gradient(90deg,#E6E6EA var(--v),#3B3B3B var(--v))}
+.vol input::-moz-range-track{height:8px;border-radius:4px;box-sizing:border-box;border:1px solid #858585;background:linear-gradient(90deg,#E6E6EA var(--v),#3B3B3B var(--v))}
+.vol input::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-5px;border-radius:50%;background:#fff;border:0}
+.vol input::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:0}
+/* DR-06 볼륨 손잡이 16px → 12px (트랙 세로 8px는 그대로) */
+body.dr06 .vol input::-webkit-slider-thumb{width:12px;height:12px;margin-top:-3px}
+body.dr06 .vol input::-moz-range-thumb{width:12px;height:12px}
 .tm{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 .tm .g{color:var(--tx-3);font-weight:400}
 .tm .lb{color:var(--or);font-weight:700;margin-right:4px}
@@ -454,7 +462,7 @@ var D=window.D, TOT=D.dur, $=function(s){return document.querySelector(s);};
 var vid=$('#vid');
 
 /* ── 디자인 보완안 (DESIGN-REVIEW.md의 DR 번호와 같게) ── */
-var DR=[ {id:'03', t:'슬라이드 줄 (블록 + 제목)'},
+var DR=[ {id:'03', t:'슬라이드 줄 (블록 + 제목)'}, {id:'06', t:'볼륨 손잡이 16→12px'},
   {id:'04', t:'지금 배치 + 목록 구분 (설명·출처·강조)', draft:true}, {id:'05', t:'구간 목록 탭 독립 + AI 아래 고정', draft:true} ]; // draft = 확정 전 시안(기본 꺼짐), by = 다른 항목으로 대체됨(기본 꺼짐)
 var drOn=true, drSel={}; // 기본은 개선안 (?dr=none → 현재 개발 화면)
 (function(){
@@ -636,7 +644,7 @@ function pause(){ if(sim) simPlay=false; else vid.pause(); }
 function jumpNextOn(i){ for(var j=i;j<rows.length;j++) if(rows[j].m==='on'){ seek(rows[j].s); return true; } pause(); return false; }
 $('#bPlay').onclick=function(){ playing()?pause():play(); };
 $('#bStop').onclick=function(){ pause(); var f=mode==='edit'?onRows()[0]:null; seek(f?f.s:0); };
-$('#vol').oninput=function(){ vid.volume=+this.value; };
+$('#vol').oninput=function(){ vid.volume=+this.value; this.style.setProperty('--v',(this.value*100)+'%'); };
 var RATES=[1,1.25,1.5,2,0.75];
 $('#bSpd').onclick=function(){ rate=RATES[(RATES.indexOf(rate)+1)%RATES.length]; vid.playbackRate=rate; this.textContent=rate.toFixed(rate%1?2:1).replace(/0$/,'')+'x'; if(rate===1) this.textContent='1.0x'; };
 
